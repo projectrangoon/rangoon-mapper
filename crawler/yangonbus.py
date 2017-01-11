@@ -8,7 +8,9 @@ import json
 HEADERS = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.77 Safari/537.36'}
 
 bus_lines = []
-for bus in xrange(1, 51):
+routes = range(1, 61)
+routes.remove(13)
+for bus in routes:
     line = {}
     route_page = 'http://www.yangonbus.com/services/route%d/index.html' % bus
     response = requests.get(route_page, headers=HEADERS)
