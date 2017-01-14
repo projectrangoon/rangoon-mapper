@@ -1,0 +1,14 @@
+#Map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 25vw;
+    background-color: #E5E3DF;
+}
+.MapBtn {
+    position: absolute;
+    top: 2em;
+    right: 2em;
+    max-width: 25em;
+}
