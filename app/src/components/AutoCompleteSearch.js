@@ -1,30 +1,71 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, { Component } from 'react'; 
+import _ from 'lodash';
 import Input from 'antd/lib/input';
 
-export default class AutoCompleteSearch extends React.Component {
-    static propTypes = {
-        name: React.PropTypes.string.isRequired,
-        placeholder: React.PropTypes.string,
-        className: React.PropTypes.string,
-        onPlacesChanged: React.PropTypes.func
+class AutoCompleteSearch extends Component {
+  componentWillMount() {
+    const source = [];
+    this.props.source.forEach(obj => {
+        let found = source.some(el => {
+            return el.bus_stop_id === obj.bus_stop_id;
+        })
+        if (!found) { source.push(obj) }
+    })
+    this.resetComponent();
+    this.setState({ source });
+  }
+
+  resetComponent = () => this.setState({ isLoading: false, results: [], value: '' })
+
+  handleResultSelect = (payload) => {
+    this.setState({ 
+        value: payload.name_mm,
+        results: []
+    })
+    if (this.props.onSelect) {
+        this.props.onSelect(payload);
     }
-    render() {
-        const { name, className, placeholder } = this.props;
-        return <Input ref={name} className={className} placeholder={placeholder} size="large" />;
-    }
-    onPlacesChanged = () => {
-        if (this.props.onPlacesChanged) {
-            this.props.onPlacesChanged(this.searchBox.getPlaces());
-        }
-    }   
-    componentDidMount() {
-        const { name } = this.props;
-        const searchInput = ReactDOM.findDOMNode(this.refs[name]);
-        this.searchBox = new window.google.maps.places.SearchBox(searchInput);
-        this.searchBox.addListener('places_changed', this.onPlacesChanged);
-    }
-    componentWillUnmount() {
-        this.searchBox.removeListener('places_changed', this.onPlacesChanged);
-    }
+  }
+
+  handleSearchChange = (e) => {
+    this.setState({ isLoading: true, value: e.target.value })
+
+    setTimeout(() => {
+      if (this.state.value.length < 1) return this.resetComponent()
+
+      const re = new RegExp(_.escapeRegExp(this.state.value), 'i')
+      const isMatch = (result) => re.test(result.name_en) || re.test(result.name_mm)
+
+      this.setState({
+        isLoading: false,
+        results: _.filter(this.state.source, isMatch),
+      })
+    }, 500)
+  }
+
+  render() {
+    const { value, results } = this.state
+
+    return (
+        <div style={{minHeight:'35vh'}}>
+            <Input
+                style={{borderRadius:0,height:'3.5em'}}
+                onChange={this.handleSearchChange}
+                value={value}
+                placeholder={this.props.placeholder}
+            />
+            <ul style={{maxHeight:'30vh', overflow:'scroll'}}>
+            {results.map(r => 
+                <li onClick={() => this.handleResultSelect(r)} key={r.bus_stop_id}>{r.name_mm}</li>
+            )}
+            </ul>
+        </div>
+    )
+  }
 }
+
+AutoCompleteSearch.propTypes = {
+    source: React.PropTypes.array.isRequired,
+}
+
+export default AutoCompleteSearch;

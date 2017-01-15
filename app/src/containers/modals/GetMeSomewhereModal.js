@@ -43,10 +43,3 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(GetMeSomewhereModal);
-
-                // <AutoCompleteSearch
-                //     name="start"
-                //     className="SearchInput"
-                //     placeholder="Start"
-                //     onPlacesChanged={this.props.handlePlacesChanged}
-                // />

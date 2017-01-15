@@ -6,3 +6,10 @@ export const handlePlacesChanged = (places) => {
     places
   }
 }
+
+export const updateMapCenter = (center) => {
+  return {
+    type: types.UPDATE_MAP_CENTER,
+    center
+  }
+}

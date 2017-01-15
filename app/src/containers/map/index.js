@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import GoogleMap from 'google-map-react';
-import Button from 'antd/lib/button';
 
 import './index.css';
+import Marker from '../../components/Marker';
 import { handlePlacesChanged } from '../../actions/map';
 import { showModal } from '../../actions/modals';
 import ModalNames from '../../constants/ModalNames';
@@ -12,23 +12,35 @@ import ModalNames from '../../constants/ModalNames';
 class Map extends Component {
     render() {
         const { center, zoom } = this.props.map
+        const { start_stop, end_stop } = this.props.busStops
         return (
             <section id="Map">
                 <GoogleMap
                     center={center}
                     zoom={zoom}
-                />
-                <Button onClick={this.props.showGetMeSomewhereModal} className="MapBtn" type="primary" shape="circle" icon="search"></Button>
+                >
+                    {start_stop ? (
+                        <Marker lat={start_stop.lat} lng={start_stop.lng} text="Start" />
+                    ) : (
+                        null
+                    )}
+                    {end_stop ? (
+                        <Marker lat={end_stop.lat} lng={end_stop.lng} text="End" />
+                    ) : (
+                        null
+                    )}
+                </GoogleMap>
             </section>
         )
     }
 }
 
 function mapStateToProps(state) {
-  const { map } = state
+  const { map, busStops } = state
 
   return {
     map,
+    busStops
   }
 }
 
@@ -39,7 +51,7 @@ function mapDispatchToProps(dispatch) {
     },
     showGetMeSomewhereModal: () => {
         dispatch(showModal(ModalNames.GET_ME_SOMEWHERE));
-    }
+    },
   };
 }
 

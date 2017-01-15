@@ -13,6 +13,10 @@ const map = (state = initialState, action) => {
       return Object.assign({}, state, {
           center: center,
       })
+    case types.UPDATE_MAP_CENTER:
+      return Object.assign({}, state, {
+          center: action.center,
+      })
     default:
       return state
   }
