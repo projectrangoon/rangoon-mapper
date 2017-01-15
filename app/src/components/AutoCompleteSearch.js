@@ -1,6 +1,9 @@
 import React, { Component } from 'react'; 
 import _ from 'lodash';
 import Input from 'antd/lib/input';
+import Icon from 'antd/lib/icon';
+
+import { isEnglish } from '../utils';
 
 class AutoCompleteSearch extends Component {
   componentWillMount() {
@@ -19,7 +22,7 @@ class AutoCompleteSearch extends Component {
 
   handleResultSelect = (payload) => {
     this.setState({ 
-        value: payload.name_mm,
+        value: isEnglish.test(this.state.value) ? payload.name_en + ` (${payload.road_en})` : payload.name_mm +  ` (${payload.road_mm})`,
         results: []
     })
     if (this.props.onSelect) {
@@ -47,17 +50,23 @@ class AutoCompleteSearch extends Component {
     const { value, results } = this.state
 
     return (
-        <div style={{minHeight:'35vh'}}>
+        <div>
             <Input
                 style={{borderRadius:0,height:'3.5em'}}
                 onChange={this.handleSearchChange}
                 value={value}
                 placeholder={this.props.placeholder}
             />
-            <ul style={{maxHeight:'30vh', overflow:'scroll'}}>
-            {results.map(r => 
-                <li onClick={() => this.handleResultSelect(r)} key={r.bus_stop_id}>{r.name_mm}</li>
-            )}
+            <ul className="bus-menu">
+                {results.map(r => 
+                <li key={r.bus_stop_id}>
+                    <a onClick={() => this.handleResultSelect(r)}>
+                        <Icon type="environment-o" />
+                        <strong>{isEnglish.test(value) ? r.name_en : r.name_mm}</strong>
+                        <small>{isEnglish.test(value) ? r.road_en : r.road_mm}</small>
+                    </a>
+                </li>
+                )}
             </ul>
         </div>
     )

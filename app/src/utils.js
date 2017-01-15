@@ -5,3 +5,5 @@ export function createConstants(...constants) {
     })
   }, {});
 }
+
+export const isEnglish = /^[A-Za-z0-9]*$/;
