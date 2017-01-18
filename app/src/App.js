@@ -6,7 +6,12 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        {this.props.children}
+          <section id="Map">
+            {this.props.main}
+          </section>
+          <aside id="Sidebar">
+            {this.props.sidebar}
+          </aside>
       </div>
     );
   }

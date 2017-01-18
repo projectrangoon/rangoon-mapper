@@ -1,35 +1,55 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import GoogleMap from 'google-map-react';
+import { withGoogleMap, GoogleMap, Marker, Polyline } from 'react-google-maps';
 
 import './index.css';
-import Marker from '../../components/Marker';
 import { handlePlacesChanged } from '../../actions/map';
-import { showModal } from '../../actions/modals';
-import ModalNames from '../../constants/ModalNames';
 import customMapStyles from '../../constants/CustomMapStyles.json';
-// import AutoCompleteSearch from '../../components/AutoCompleteSearch';
 
+const GoogleMapWrapper = withGoogleMap(props => (
+  <GoogleMap
+    zoom={props.zoom}
+    center={props.center}
+    options={{styles: customMapStyles}}
+  >
+        {props.markers ? (
+            props.markers.map((marker, index) => {
+                return (
+                    <Marker
+                        position={{ lat: marker[1], lng: marker[0] }}
+                        key={index}
+                    />
+                )
+            })
+        ) : (
+            null
+        )}
+        {props.path ? (
+            <Polyline
+                path={props.path}
+            />
+        ) : (
+            null
+        )}
+  </GoogleMap>
+));
 
 class Map extends Component {
     render() {
-        const { center, zoom } = this.props.map
-        const { start_stop, end_stop } = this.props.busStops
+        const { center, zoom, route_markers, route_path } = this.props.map
         return (
-            <section id="Map">
-                <GoogleMap center={center} zoom={zoom} options={{styles: customMapStyles}} >
-                    {start_stop ? (
-                        <Marker lat={start_stop.lat} lng={start_stop.lng} text="Start" />
-                    ) : (
-                        null
-                    )}
-                    {end_stop ? (
-                        <Marker lat={end_stop.lat} lng={end_stop.lng} text="End" />
-                    ) : (
-                        null
-                    )}
-                </GoogleMap>
-            </section>
+            <GoogleMapWrapper
+                containerElement={
+                    <div style={{ height: `100%` }} />
+                }
+                mapElement={
+                    <div style={{ height: `100%` }} />
+                }
+                zoom={zoom}
+                center={center}
+                markers={route_markers}
+                path={route_path}
+             />
         )
     }
 }
@@ -47,9 +67,6 @@ function mapDispatchToProps(dispatch) {
   return {
     handlePlacesChanged: (places) => {
         dispatch(handlePlacesChanged(places));
-    },
-    showGetMeSomewhereModal: () => {
-        dispatch(showModal(ModalNames.GET_ME_SOMEWHERE));
     },
   };
 }

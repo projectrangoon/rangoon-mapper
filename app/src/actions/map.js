@@ -13,3 +13,12 @@ export const updateMapCenter = (center) => {
     center
   }
 }
+
+export const calculateRoute = (start_stop, end_stop) => {
+  console.log(start_stop, end_stop);
+  return {
+    type: types.CALCULATE_ROUTE,
+    start_stop,
+    end_stop
+  }
+}

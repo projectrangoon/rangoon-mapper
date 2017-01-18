@@ -2,7 +2,9 @@ import types  from '../constants/ActionTypes';
 
 const initialState = {
     center: {lat: 16.7943528, lng: 96.1518985},
-    zoom: 14
+    zoom: 14,
+    route_markers: null,
+    ruote_path: null,
 }
 
 const map = (state = initialState, action) => {
@@ -16,6 +18,14 @@ const map = (state = initialState, action) => {
     case types.UPDATE_MAP_CENTER:
       return Object.assign({}, state, {
           center: action.center,
+      })
+    case types.DRAW_ROUTE:
+      return Object.assign({}, state, {
+        route_markers: action.route_markers,
+      })
+    case types.CALCULATE_ROUTE:
+      return Object.assign({}, state, {
+        route_markers: action.route_markers,
       })
     default:
       return state

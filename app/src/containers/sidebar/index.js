@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './index.css'
 
-import { loadAllBusStops, selectStartStop, selectEndStop } from '../../actions/busStops';
-import { updateMapCenter } from '../../actions/map';
+import { loadAllBusStops, selectStartStop, selectEndStopAndCalculateRoute } from '../../actions/busStops';
 import AutoCompleteSearch from '../../components/AutoCompleteSearch';
-// const busServicesJson = require('../../../../experiment/bus_services.json');
 const busStops = require('../../../../experiment/bus_stops.json');
 
 class Sidebar extends Component {
@@ -13,50 +11,42 @@ class Sidebar extends Component {
         this.props.loadAllBusStops();
     }
 
-    resultRenderer(props) {
-        console.log(props);
-    }
-
     render() {
         return (
-            <aside id="Sidebar">
-                <AutoCompleteSearch
-                    source={busStops}
-                    placeholder="Start"
-                    onSelect={this.props.handleStartStopSelect}
-                />
-                <AutoCompleteSearch
-                    source={busStops}
-                    placeholder="End"
-                    onSelect={this.props.handleEndStopSelect}
-                />
-            </aside>
+          <div>
+              <AutoCompleteSearch
+                  source={busStops}
+                  placeholder="Start"
+                  onSelect={this.props.handleStartStopSelect}
+              />
+              <AutoCompleteSearch
+                  source={busStops}
+                  placeholder="End"
+                  onSelect={this.props.handleEndStopSelect}
+              />
+          </div>
         );
     }
 }
 
 function mapStateToProps(state) {
-  const { bus_stops } = state;
+  const { busStops } = state;
 
   return {
-    bus_stops,
+    bus_stops: busStops,
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps, stateProps) {
   return {
     loadAllBusStops: () => {
         dispatch(loadAllBusStops(busStops));
     },
     handleStartStopSelect: (bus_stop) => {
         dispatch(selectStartStop(bus_stop));
-        const center = {lat: parseFloat(bus_stop.lat), lng: parseFloat(bus_stop.lng)};
-        dispatch(updateMapCenter(center));
     },
     handleEndStopSelect: (bus_stop) => {
-        dispatch(selectEndStop(bus_stop));
-        const center = {lat: parseFloat(bus_stop.lat), lng: parseFloat(bus_stop.lng)};
-        dispatch(updateMapCenter(center));
+        dispatch(selectEndStopAndCalculateRoute(bus_stop));
     },
   };
 }

@@ -8,6 +8,8 @@ export default createConstants(
 
   'PLACES_CHANGED',
   'UPDATE_MAP_CENTER',
+  'DRAW_ROUTE',
+  'CALCULATE_ROUTE',
 
   'LOAD_ALL_BUS_STOPS',
   'SELECT_START_STOP',
