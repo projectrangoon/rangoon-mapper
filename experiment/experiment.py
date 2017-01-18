@@ -1,6 +1,8 @@
 from pprint import pprint
+from operator import itemgetter
 import csv
 import json
+import itertools
 
 with open('bus_stops_by_service_000115.tsv') as f:
     raw_data = csv.reader(f, delimiter='\t')
@@ -21,6 +23,12 @@ with open('bus_stops_by_service_000115.tsv') as f:
         }
         bus_stops.append(stop)
     bus_stops = bus_stops[1:]
+    for b in bus_stops:
+        b['service_name'] = int(b['service_name'])
+        b['sequence'] = int(b['sequence'])
+        b['bus_stop_id'] = int(b['bus_stop_id'])
+
+
 
 
 with open('all_bus_stops.json', 'wb') as f:
@@ -41,16 +49,29 @@ for bus in bus_stops:
             'lng': bus['lng'],
             'services': [
                 {
-                    'service_name': bus['service_name'],
-                    'sequence': bus['sequence']
+                    'service_name': int(bus['service_name']),
+                    'sequence': int(bus['sequence'])
                 }
             ]
         }
     else:
         unique_stops[bus['bus_stop_id']]['services'].append({
-            'service_name': bus['service_name'],
-            'sequence': bus['sequence']
+            'service_name': int(bus['service_name']),
+            'sequence': int(bus['sequence'])
         })
 
 with open('unique_stops.json', 'wb') as f:
     f.write(json.dumps(unique_stops))
+
+bus_stops = sorted(bus_stops, key=lambda x: (x['service_name'], x['sequence']))
+bus_stops = itertools.groupby(bus_stops, key=itemgetter('service_name'))
+
+all_bus_stops = {}
+for routeNo, stops in bus_stops:
+    all_bus_stops[int(routeNo)] = list(stops)
+
+
+with open('all_bus_routes.json', 'wb') as f:
+    f.write(json.dumps(list(bus_stops)))
+
+

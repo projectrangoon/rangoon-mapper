@@ -9,7 +9,7 @@ cost_per_stop = float(sys.argv[3]) # 0.5
 cost_per_transfer = float(sys.argv[4]) # 5
 
 print 'Loading JSON'
-bus_stops = json.loads(open('bus_stops.json', 'rb').read())
+bus_stops = json.loads(open('all_bus_stops.json', 'rb').read())
 # stops = [{'service_name': x['service_name'], 'sequence': x['sequence'], 'bus_stop_id': x['bus_stop_id'], 'name_en': x['name_en']} for x in stops]
 bus_stops = sorted(bus_stops, key=lambda x: (int(x['service_name']), int(x['sequence'])))
 
@@ -68,7 +68,11 @@ for no, stops in groups:
         assert distance >= 0, (current_stop, next_stop)
 
         graph[key][(next_stop['bus_stop_id'], next_stop['service_name'])] = distance
-pprint(graph)
+pprint(graph[1])
+pprint(graph[2])
+pprint(graph[3])
+pprint(graph[4])
+pprint(graph[5])
 
 
 # print 'Breadth First Search'
