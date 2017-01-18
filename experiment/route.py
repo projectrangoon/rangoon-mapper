@@ -68,6 +68,7 @@ for no, stops in groups:
         assert distance >= 0, (current_stop, next_stop)
 
         graph[key][(next_stop['bus_stop_id'], next_stop['service_name'])] = distance
+pprint(graph)
 
 
 # print 'Breadth First Search'

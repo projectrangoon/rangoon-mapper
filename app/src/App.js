@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
+import busStops from '../../experiment/unique_stops.json';
+import createLogger from 'redux-logger';
 
 import './App.css';
 
 class App extends Component {
+  componentWillMount() {
+  }
   render() {
     return (
       <div className="App">
