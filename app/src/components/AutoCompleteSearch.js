@@ -1,4 +1,4 @@
-import React, { Component } from 'react'; 
+import React, { Component } from 'react';
 import _ from 'lodash';
 import Input from 'antd/lib/input';
 import Icon from 'antd/lib/icon';
@@ -21,7 +21,7 @@ class AutoCompleteSearch extends Component {
   resetComponent = () => this.setState({ isLoading: false, results: [], value: '' })
 
   handleResultSelect = (payload) => {
-    this.setState({ 
+    this.setState({
         value: isEnglish.test(this.state.value) ? payload.name_en + ` (${payload.road_en})` : payload.name_mm +  ` (${payload.road_mm})`,
         results: []
     })
@@ -43,7 +43,7 @@ class AutoCompleteSearch extends Component {
         isLoading: false,
         results: _.filter(this.state.source, isMatch),
       })
-    }, 500)
+    }, 100)
   }
 
   render() {
@@ -58,7 +58,7 @@ class AutoCompleteSearch extends Component {
                 placeholder={this.props.placeholder}
             />
             <ul className="bus-menu">
-                {results.map(r => 
+                {results.map(r =>
                 <li key={r.bus_stop_id}>
                     <a onClick={() => this.handleResultSelect(r)}>
                         <Icon type="environment-o" />

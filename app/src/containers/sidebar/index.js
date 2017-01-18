@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './index.css'
 
-import { loadAllBusStops, selectStartStop, selectEndStopAndCalculateRoute } from '../../actions/busStops';
+import { loadAllBusStops, selectStartEndStop } from '../../actions/busStops';
 import AutoCompleteSearch from '../../components/AutoCompleteSearch';
 const busStops = require('../../../../experiment/bus_stops.json');
 
@@ -17,12 +17,12 @@ class Sidebar extends Component {
               <AutoCompleteSearch
                   source={busStops}
                   placeholder="Start"
-                  onSelect={this.props.handleStartStopSelect}
+                  onSelect={(start_stop) => this.props.handleStartEndSelect(start_stop, null)}
               />
               <AutoCompleteSearch
                   source={busStops}
                   placeholder="End"
-                  onSelect={this.props.handleEndStopSelect}
+                  onSelect={(end_stop) => this.props.handleStartEndSelect(null, end_stop)}
               />
           </div>
         );
@@ -42,12 +42,9 @@ function mapDispatchToProps(dispatch, ownProps, stateProps) {
     loadAllBusStops: () => {
         dispatch(loadAllBusStops(busStops));
     },
-    handleStartStopSelect: (bus_stop) => {
-        dispatch(selectStartStop(bus_stop));
-    },
-    handleEndStopSelect: (bus_stop) => {
-        dispatch(selectEndStopAndCalculateRoute(bus_stop));
-    },
+    handleStartEndSelect: (start_stop, end_stop) => {
+        dispatch(selectStartEndStop(start_stop, end_stop));
+    }
   };
 }
 

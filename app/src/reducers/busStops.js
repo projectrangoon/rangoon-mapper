@@ -14,11 +14,11 @@ export default function modal(state = INITIAL_STATE, action) {
         })
     case types.SELECT_START_STOP:
       return Object.assign({}, state, {
-          start_stop: action.bus_stop,
+          start_stop: action.start_stop,
       })
     case types.SELECT_END_STOP:
       return Object.assign({}, state, {
-          end_stop: action.bus_stop,
+          end_stop: action.end_stop,
       })
     default:
       return state;

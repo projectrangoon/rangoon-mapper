@@ -1,5 +1,5 @@
 import types  from '../constants/ActionTypes';
-import { calculateRoute } from './map';
+import { updateMapCenter, calculateRoute } from './map';
 
 export const loadAllBusStops = (bus_stops) => {
   return {
@@ -8,24 +8,38 @@ export const loadAllBusStops = (bus_stops) => {
   }
 }
 
-export const selectStartStop = (bus_stop) => {
+export const selectStartStop = (start_stop) => {
   return {
     type: types.SELECT_START_STOP,
-    bus_stop
+    start_stop
   }
 }
 
-export const selectEndStop = (bus_stop) => {
+export const selectEndStop = (end_stop) => {
   return {
     type: types.SELECT_END_STOP,
-    bus_stop
+    end_stop
   }
 }
 
-export const selectEndStopAndCalculateRoute = (end_stop) => {
+export const selectStartEndStop = (start_stop, end_stop) => {
   return function(dispatch, getState) {
     const { busStops } = getState();
-    dispatch(selectEndStop(end_stop));
-    dispatch(calculateRoute(busStops.start_stop, busStops.end_stop));
+    if (start_stop) {
+      dispatch(selectStartStop(start_stop));
+      if (busStops.end_stop) {
+        dispatch(calculateRoute(start_stop, busStops.end_stop));
+        const center = {lat: parseFloat(start_stop.lat), lng: parseFloat(start_stop.lng)}
+        dispatch(updateMapCenter(center));
+      }
+    }
+    if (end_stop) {
+      dispatch(selectEndStop(end_stop));
+      if (busStops.start_stop) {
+        dispatch(calculateRoute(busStops.start_stop, end_stop));
+        const center = {lat: parseFloat(busStops.start_stop.lat), lng: parseFloat(busStops.start_stop.lng)};
+        dispatch(updateMapCenter(center));
+      }
+    }
   }
 }

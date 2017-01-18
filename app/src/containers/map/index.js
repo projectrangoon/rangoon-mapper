@@ -10,13 +10,18 @@ const GoogleMapWrapper = withGoogleMap(props => (
   <GoogleMap
     zoom={props.zoom}
     center={props.center}
-    options={{styles: customMapStyles}}
+    options={{
+      styles: customMapStyles,
+      zoomControl: false,
+      streetViewControl: false,
+      mapTypeControl: false
+    }}
   >
         {props.markers ? (
             props.markers.map((marker, index) => {
                 return (
                     <Marker
-                        position={{ lat: marker[1], lng: marker[0] }}
+                        position={marker}
                         key={index}
                     />
                 )
@@ -24,9 +29,9 @@ const GoogleMapWrapper = withGoogleMap(props => (
         ) : (
             null
         )}
-        {props.path ? (
+        {props.markers ? (
             <Polyline
-                path={props.path}
+                path={props.markers}
             />
         ) : (
             null
