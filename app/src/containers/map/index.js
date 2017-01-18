@@ -7,7 +7,9 @@ import Marker from '../../components/Marker';
 import { handlePlacesChanged } from '../../actions/map';
 import { showModal } from '../../actions/modals';
 import ModalNames from '../../constants/ModalNames';
+import customMapStyles from '../../constants/CustomMapStyles.json';
 // import AutoCompleteSearch from '../../components/AutoCompleteSearch';
+
 
 class Map extends Component {
     render() {
@@ -15,10 +17,7 @@ class Map extends Component {
         const { start_stop, end_stop } = this.props.busStops
         return (
             <section id="Map">
-                <GoogleMap
-                    center={center}
-                    zoom={zoom}
-                >
+                <GoogleMap center={center} zoom={zoom} options={{styles: customMapStyles}} >
                     {start_stop ? (
                         <Marker lat={start_stop.lat} lng={start_stop.lng} text="Start" />
                     ) : (
