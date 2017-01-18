@@ -4,7 +4,7 @@ import './index.css'
 
 import { loadAllBusStops, selectStartEndStop } from '../../actions/busStops';
 import AutoCompleteSearch from '../../components/AutoCompleteSearch';
-const busStops = require('../../../../experiment/bus_stops.json');
+const busStops = require('../../../../experiment/all_bus_stops.json');
 
 class Sidebar extends Component {
     componentWillMount() {

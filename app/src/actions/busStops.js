@@ -24,11 +24,11 @@ export const selectEndStop = (end_stop) => {
 
 export const selectStartEndStop = (start_stop, end_stop) => {
   return function(dispatch, getState) {
-    const { busStops } = getState();
+    const { busStops, map } = getState();
     if (start_stop) {
       dispatch(selectStartStop(start_stop));
       if (busStops.end_stop) {
-        dispatch(calculateRoute(start_stop, busStops.end_stop));
+        dispatch(calculateRoute(map.graph, start_stop, busStops.end_stop));
         const center = {lat: parseFloat(start_stop.lat), lng: parseFloat(start_stop.lng)}
         dispatch(updateMapCenter(center));
       }
@@ -36,7 +36,7 @@ export const selectStartEndStop = (start_stop, end_stop) => {
     if (end_stop) {
       dispatch(selectEndStop(end_stop));
       if (busStops.start_stop) {
-        dispatch(calculateRoute(busStops.start_stop, end_stop));
+        dispatch(calculateRoute(map.graph, busStops.start_stop, end_stop));
         const center = {lat: parseFloat(busStops.start_stop.lat), lng: parseFloat(busStops.start_stop.lng)};
         dispatch(updateMapCenter(center));
       }

@@ -4,7 +4,8 @@ const initialState = {
     center: {lat: 16.7943528, lng: 96.1518985},
     zoom: 14,
     route_markers: null,
-    ruote_path: null,
+    route_path: null,
+    graph: null,
 }
 
 const map = (state = initialState, action) => {
@@ -27,6 +28,10 @@ const map = (state = initialState, action) => {
       return Object.assign({}, state, {
         route_markers: action.route_markers,
       })
+    case types.AJACENCY_LIST_LOADED:
+      return Object.assign({}, state, {
+        graph: action.graph
+      });
     default:
       return state
   }
