@@ -1,32 +1,33 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import './index.css'
+import './index.css';
 
 import { loadAllBusStops, selectStartEndStop } from '../../actions/busStops';
 import AutoCompleteSearch from '../../components/AutoCompleteSearch';
+
 const busStops = require('../../../../experiment/all_bus_stops.json');
 
 class Sidebar extends Component {
-    componentWillMount() {
-        this.props.loadAllBusStops();
-    }
+  componentWillMount() {
+    this.props.loadAllBusStops();
+  }
 
-    render() {
-        return (
-          <div>
-              <AutoCompleteSearch
-                  source={busStops}
-                  placeholder="Start"
-                  onSelect={(start_stop) => this.props.handleStartEndSelect(start_stop, null)}
-              />
-              <AutoCompleteSearch
-                  source={busStops}
-                  placeholder="End"
-                  onSelect={(end_stop) => this.props.handleStartEndSelect(null, end_stop)}
-              />
-          </div>
-        );
-    }
+  render() {
+    return (
+      <div>
+        <AutoCompleteSearch
+          source={busStops}
+          placeholder="Start"
+          onSelect={startStop => this.props.handleStartEndSelect(startStop, null)}
+        />
+        <AutoCompleteSearch
+          source={busStops}
+          placeholder="End"
+          onSelect={endStop => this.props.handleStartEndSelect(null, endStop)}
+        />
+      </div>
+    );
+  }
 }
 
 function mapStateToProps(state) {
@@ -34,21 +35,21 @@ function mapStateToProps(state) {
 
   return {
     bus_stops: busStops,
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch, ownProps, stateProps) {
   return {
     loadAllBusStops: () => {
-        dispatch(loadAllBusStops(busStops));
+      dispatch(loadAllBusStops(busStops));
     },
-    handleStartEndSelect: (start_stop, end_stop) => {
-        dispatch(selectStartEndStop(start_stop, end_stop));
-    }
+    handleStartEndSelect: (startStop, endStop) => {
+      dispatch(selectStartEndStop(startStop, endStop));
+    },
   };
 }
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Sidebar)
+  mapStateToProps,
+  mapDispatchToProps,
+)(Sidebar);

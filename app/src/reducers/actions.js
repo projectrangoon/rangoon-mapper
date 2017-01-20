@@ -1,15 +1,15 @@
 const initialState = {
-  type: null
-}
+  type: null,
+};
 
 const actions = (state = initialState, action) => {
   if (action.type) {
     return {
-      type: action.type
-    }
+      type: action.type,
+    };
   }
 
-  return state
-}
+  return state;
+};
 
-export default actions
+export default actions;

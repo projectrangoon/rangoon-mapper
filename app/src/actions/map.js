@@ -1,31 +1,25 @@
-import types  from '../constants/ActionTypes';
 import { Queue } from 'es-collections';
+import types from '../constants/ActionTypes';
 
-export const handlePlacesChanged = (places) => {
-  return {
-    type: types.PLACES_CHANGED,
-    places
-  }
-}
+export const handlePlacesChanged = places => ({
+  type: types.PLACES_CHANGED,
+  places,
+});
 
-export const updateMapCenter = (center) => {
-  return {
-    type: types.UPDATE_MAP_CENTER,
-    center
-  }
-}
+export const updateMapCenter = center => ({
+  type: types.UPDATE_MAP_CENTER,
+  center,
+});
 
-export const adjacencyListLoaded = (graph) => {
-  return {
-    type: types.AJACENCY_LIST_LOADED,
-    graph
-  }
-}
+export const adjacencyListLoaded = graph => ({
+  type: types.AJACENCY_LIST_LOADED,
+  graph,
+});
 
 export const calculateRoute = (graph, startStop, endStop) => {
   const routeMarkers = [];
-  routeMarkers.push({ lat: parseFloat(startStop.lat), lng: parseFloat(startStop.lng) })
-  routeMarkers.push({ lat: parseFloat(endStop.lat), lng: parseFloat(endStop.lng) })
+  routeMarkers.push({ lat: parseFloat(startStop.lat), lng: parseFloat(startStop.lng) });
+  routeMarkers.push({ lat: parseFloat(endStop.lat), lng: parseFloat(endStop.lng) });
 
   // var heap = require('heap');
   // let seen = set();
@@ -35,8 +29,8 @@ export const calculateRoute = (graph, startStop, endStop) => {
 
   console.log(endStop['bus_stop_id']);
 
-  let queue = new Queue();
-  let seen = new Set();
+  const queue = new Queue();
+  const seen = new Set();
 
   queue.enqueue([startStop]);
 
@@ -108,7 +102,7 @@ export const calculateRoute = (graph, startStop, endStop) => {
 
   return {
     type: types.CALCULATE_ROUTE,
-    routeMarkers
-  }
-}
+    routeMarkers,
+  };
+};
 

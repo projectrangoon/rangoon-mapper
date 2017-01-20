@@ -1,4 +1,4 @@
-import { createConstants } from '../utils'
+import { createConstants } from '../utils';
 
 export default createConstants(
   // General
@@ -19,4 +19,4 @@ export default createConstants(
 
   'LOAD_ALL_BUS_SERVICES',
 
-)
+);

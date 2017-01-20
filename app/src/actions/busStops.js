@@ -1,45 +1,42 @@
-import types  from '../constants/ActionTypes';
+import types from '../constants/ActionTypes';
 import { updateMapCenter, calculateRoute } from './map';
 
-export const loadAllBusStops = (bus_stops) => {
-  return {
-    type: types.LOAD_ALL_BUS_STOPS,
-    bus_stops
-  }
-}
+export const loadAllBusStops = busStops => ({
+  type: types.LOAD_ALL_BUS_STOPS,
+  busStops,
+});
 
-export const selectStartStop = (start_stop) => {
-  return {
-    type: types.SELECT_START_STOP,
-    start_stop
-  }
-}
+export const selectStartStop = startStops => ({
+  type: types.SELECT_START_STOP,
+  startStops,
+});
 
-export const selectEndStop = (end_stop) => {
-  return {
-    type: types.SELECT_END_STOP,
-    end_stop
-  }
-}
+export const selectEndStop = endStops => ({
+  type: types.SELECT_END_STOP,
+  endStops,
+});
 
-export const selectStartEndStop = (start_stop, end_stop) => {
-  return function(dispatch, getState) {
+export const selectStartEndStop = (startStop, endStop) => {
+  return (dispatch, getState) => {
     const { busStops, map } = getState();
-    if (start_stop) {
-      dispatch(selectStartStop(start_stop));
-      if (busStops.end_stop) {
-        dispatch(calculateRoute(map.graph, start_stop, busStops.end_stop));
-        const center = {lat: parseFloat(start_stop.lat), lng: parseFloat(start_stop.lng)}
+    if (startStop) {
+      dispatch(selectStartStop(startStop));
+      if (busStops.endStop) {
+        dispatch(calculateRoute(map.graph, startStop, busStops.endStop));
+        const center = { lat: parseFloat(startStop.lat), lng: parseFloat(startStop.lng) }
         dispatch(updateMapCenter(center));
       }
     }
-    if (end_stop) {
-      dispatch(selectEndStop(end_stop));
-      if (busStops.start_stop) {
-        dispatch(calculateRoute(map.graph, busStops.start_stop, end_stop));
-        const center = {lat: parseFloat(busStops.start_stop.lat), lng: parseFloat(busStops.start_stop.lng)};
+    if (endStop) {
+      dispatch(selectEndStop(endStop));
+      if (busStops.startStop) {
+        dispatch(calculateRoute(map.graph, busStops.startStop, endStop));
+        const center = {
+          lat: parseFloat(busStops.startStop.lat),
+          lng: parseFloat(busStops.startStop.lng),
+        };
         dispatch(updateMapCenter(center));
       }
     }
-  }
-}
+  };
+};

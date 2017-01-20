@@ -6,16 +6,9 @@ import Map from './containers/map';
 import PageNotFound from './components/PageNotFound';
 import Sidebar from './containers/sidebar';
 
-
 module.exports = (
-    <Route
-        path="/"
-        component={App}
-    >
-        <IndexRoute components={{main: Map, sidebar: Sidebar}} />
-        <Route
-            path="*"
-            component={PageNotFound}
-        />
-    </Route>
-)
+  <Route path="/" component={App} >
+    <IndexRoute components={{ main: Map, sidebar: Sidebar }} />
+    <Route path="*" component={PageNotFound} />
+  </Route>
+);

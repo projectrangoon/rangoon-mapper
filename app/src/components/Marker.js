@@ -17,15 +17,15 @@ const markerStyle = {
   color: '#3f51b5',
   fontSize: 16,
   fontWeight: 'bold',
-  padding: 4
+  padding: 4,
 };
 
 export default class Marker extends Component {
   render() {
     return (
-       <div style={markerStyle}>
-          {this.props.text}
-       </div>
+      <div style={markerStyle}>
+        {this.props.text}
+      </div>
     );
   }
 }

@@ -1,8 +1,7 @@
-import types  from '../constants/ActionTypes';
+import types from '../constants/ActionTypes';
 
-export const loadAllBusServices = (bus_services) => {
-  return {
+export default const loadAllBusServices = (busServices) =>
+  {
     type: types.LOAD_ALL_BUS_SERVICES,
-    bus_services
+    busServices
   }
-}

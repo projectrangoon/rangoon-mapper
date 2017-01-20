@@ -14,69 +14,53 @@ const GoogleMapWrapper = withGoogleMap(props => (
       styles: customMapStyles,
       zoomControl: false,
       streetViewControl: false,
-      mapTypeControl: false
+      mapTypeControl: false,
     }}
   >
-        {props.markers ? (
-            props.markers.map((marker, index) => {
-                return (
-                    <Marker
-                        position={marker}
-                        key={index}
-                    />
-                )
-            })
-        ) : (
-            null
-        )}
-        {props.markers ? (
-            <Polyline
-                path={props.markers}
-            />
-        ) : (
-            null
-        )}
+    {props.markers ? (props.markers.map((marker, index) =>
+      (<Marker position={marker} key={index} />))) : (null)}
+    {props.markers ? (<Polyline path={props.markers} />) : null}
   </GoogleMap>
 ));
 
 class Map extends Component {
     render() {
-        const { center, zoom, route_markers, route_path } = this.props.map
-        return (
-            <GoogleMapWrapper
-                containerElement={
-                    <div style={{ height: `100%` }} />
-                }
-                mapElement={
-                    <div style={{ height: `100%` }} />
-                }
-                zoom={zoom}
-                center={center}
-                markers={route_markers}
-                path={route_path}
-             />
-        )
+      const { center, zoom, routeMarkers, routePath } = this.props.map;
+      return (
+        <GoogleMapWrapper
+          containerElement={
+            <div style={{ height: '100%' }} />
+          }
+          mapElement={
+            <div style={{ height: '100%' }} />
+          }
+          zoom={zoom}
+          center={center}
+          markers={routeMarkers}
+          path={routePath}
+          />
+      );
     }
 }
 
 function mapStateToProps(state) {
-  const { map, busStops } = state
+  const { map, busStops } = state;
 
   return {
     map,
-    busStops
-  }
+    busStops,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     handlePlacesChanged: (places) => {
-        dispatch(handlePlacesChanged(places));
+      dispatch(handlePlacesChanged(places));
     },
   };
 }
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(Map);

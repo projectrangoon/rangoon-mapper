@@ -1,27 +1,27 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import _ from 'lodash';
+
 import allBusServices from '../../experiment/all_bus_stops.json';
 import { adjacencyListLoaded } from './actions/map';
-import { connect } from 'react-redux';
-// import { distance } from './utils';
-import _ from 'lodash';
 import './App.css';
+// import { distance } from './utils';
 
 class App extends Component {
   componentWillMount() {
-
     const stops = _.chain(allBusServices)
       .sortBy(['service_name', 'sequence'])
       .groupBy('service_name')
       .value();
 
-    let adjacencyList = {};
+    const adjacencyList = {};
 
     _.forIn(stops, (busStops, routeNo) => {
-      const busStopsTillLast = busStops.filter((el, i, a) => (i+1) !== a.length);
-      busStopsTillLast.forEach(stop => {
+      const busStopsTillLast = busStops.filter((el, i, a) => (i + 1) !== a.length);
+      busStopsTillLast.forEach((stop) => {
         const key = stop['bus_stop_id'];
         if (!(key in adjacencyList)) {
-          adjacencyList[key] = []
+          adjacencyList[key] = [];
         }
         let currentIndex = busStops.indexOf(stop);
         const nextStop = busStops[++currentIndex];
@@ -39,12 +39,12 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-          <section id="Map">
-            {this.props.main}
-          </section>
-          <aside id="Sidebar">
-            {this.props.sidebar}
-          </aside>
+        <section id="Map">
+          {this.props.main}
+        </section>
+        <aside id="Sidebar">
+          {this.props.sidebar}
+        </aside>
       </div>
     );
   }
@@ -54,18 +54,18 @@ class App extends Component {
 function mapDispatchToProps(dispatch) {
   return {
     prepareAdjacencyList: (graph) => {
-        dispatch(adjacencyListLoaded(graph));
+      dispatch(adjacencyListLoaded(graph));
     }
   };
 }
 
 function mapStateToProps(state) {
   return {
-  }
+  };
 }
 
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(App);

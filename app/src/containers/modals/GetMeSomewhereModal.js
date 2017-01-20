@@ -5,41 +5,38 @@ import { connect } from 'react-redux';
 import { hideModal } from '../../actions/modals';
 import ModalNames from '../../constants/ModalNames';
 
-const GetMeSomewhereModal = (props) => (
-    <Modal 
-        title="Get Me Somewhere" 
-        visible={props.modals.name === ModalNames.GET_ME_SOMEWHERE}
-        onOk={props.handleOk} 
-        onCancel={props.handleCancel}
-        footer={null}
-    >
-          <h1>Working on the algorithm</h1>
-    </Modal>
+const GetMeSomewhereModal = props => (
+  <Modal
+    title="Get Me Somewhere"
+    visible={props.modals.name === ModalNames.GET_ME_SOMEWHERE}
+    onOk={props.handleOk}
+    onCancel={props.handleCancel}
+    footer={null}
+  >
+    <h1>Working on the algorithm</h1>
+  </Modal>
 );
 
 const mapStateToProps = (state) => {
-  const { modals } = state
-
+  const { modals } = state;
   return {
     modals,
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    handleOk: () => {
-        dispatch(hideModal());
-    },
-    handleCancel: () => {
-        dispatch(hideModal());
-    },
-    showGetMeSomewhereModal: () => {
-        dispatch(hideModal());
-    }
   };
-}
+};
+
+const mapDispatchToProps = dispatch => ({
+  handleOk: () => {
+    dispatch(hideModal());
+  },
+  handleCancel: () => {
+    dispatch(hideModal());
+  },
+  showGetMeSomewhereModal: () => {
+    dispatch(hideModal());
+  },
+});
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(GetMeSomewhereModal);

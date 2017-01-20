@@ -1,5 +1,5 @@
-import { createConstants } from '../utils'
+import { createConstants } from '../utils';
 
 export default createConstants(
-    'GET_ME_SOMEWHERE'
-)
+  'GET_ME_SOMEWHERE',
+);
