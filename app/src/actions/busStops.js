@@ -1,19 +1,21 @@
 import types from '../constants/ActionTypes';
 import { updateMapCenter, calculateRoute } from './map';
 
-export const loadAllBusStops = busStops => ({
-  type: types.LOAD_ALL_BUS_STOPS,
-  busStops,
-});
+export const loadAllBusStops = (busStops) => {
+  return {
+    type: types.LOAD_ALL_BUS_STOPS,
+    busStops,
+  };
+};
 
-export const selectStartStop = startStops => ({
+export const selectStartStop = startStop => ({
   type: types.SELECT_START_STOP,
-  startStops,
+  startStop,
 });
 
-export const selectEndStop = endStops => ({
+export const selectEndStop = endStop => ({
   type: types.SELECT_END_STOP,
-  endStops,
+  endStop,
 });
 
 export const selectStartEndStop = (startStop, endStop) => {
@@ -23,7 +25,7 @@ export const selectStartEndStop = (startStop, endStop) => {
       dispatch(selectStartStop(startStop));
       if (busStops.endStop) {
         dispatch(calculateRoute(map.graph, startStop, busStops.endStop));
-        const center = { lat: parseFloat(startStop.lat), lng: parseFloat(startStop.lng) }
+        const center = { lat: parseFloat(startStop.lat), lng: parseFloat(startStop.lng) };
         dispatch(updateMapCenter(center));
       }
     }

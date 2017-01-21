@@ -3,8 +3,8 @@ import types from '../constants/ActionTypes';
 const initialState = {
   center: { lat: 16.7943528, lng: 96.1518985 },
   zoom: 14,
-  route_markers: null,
-  route_path: null,
+  routeMarkers: null,
+  routePath: null,
   graph: null,
 };
 
@@ -24,12 +24,12 @@ const map = (state = initialState, action) => {
     }
     case types.DRAW_ROUTE: {
       return Object.assign({}, state, {
-        route_markers: action.route_markers,
+        routeMarkers: action.routeMarkers,
       });
     }
     case types.CALCULATE_ROUTE: {
       return Object.assign({}, state, {
-        route_markers: action.route_markers,
+        routeMarkers: action.routeMarkers,
       });
     }
     case types.AJACENCY_LIST_LOADED: {

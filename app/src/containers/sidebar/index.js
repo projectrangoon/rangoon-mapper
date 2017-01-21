@@ -34,7 +34,7 @@ function mapStateToProps(state) {
   const { busStops } = state;
 
   return {
-    bus_stops: busStops,
+    busStops,
   };
 }
 

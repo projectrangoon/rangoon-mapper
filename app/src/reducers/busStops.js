@@ -2,8 +2,8 @@ import types from '../constants/ActionTypes';
 
 const INITIAL_STATE = {
   data: null,
-  start_stop: null,
-  end_stop: null,
+  startStop: null,
+  endStop: null,
 };
 
 export default function modal(state = INITIAL_STATE, action) {

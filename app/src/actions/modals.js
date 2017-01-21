@@ -1,4 +1,4 @@
-import types from '../constants/ActionTypes'
+import types from '../constants/ActionTypes';
 
 export const showModal = (name, data) => ({
   type: types.MODAL_SHOW,
