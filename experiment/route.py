@@ -71,8 +71,8 @@ for no, stops in groups:
         graph[key].append(next_stop)
         # graph[key][(next_stop['bus_stop_id'], next_stop['service_name'])] = distance
 
-for key, value in graph.iteritems():
-    graph[key] = dict((v['bus_stop_id'], v) for v in value).values()
+# for key, value in graph.iteritems():
+#     graph[key] = dict((v['bus_stop_id'], v) for v in value).values()
 
 
 with open('adjancencyList.json', 'wb') as f:
