@@ -1,12 +1,10 @@
 import types from '../constants/ActionTypes';
 import { updateMapCenter, calculateRoute } from './map';
 
-export const loadAllBusStops = (busStops) => {
-  return {
-    type: types.LOAD_ALL_BUS_STOPS,
-    busStops,
-  };
-};
+export const loadAllBusStops = busStops => ({
+  type: types.LOAD_ALL_BUS_STOPS,
+  busStops,
+});
 
 export const selectStartStop = startStop => ({
   type: types.SELECT_START_STOP,
@@ -18,27 +16,36 @@ export const selectEndStop = endStop => ({
   endStop,
 });
 
-export const selectStartEndStop = (startStop, endStop) => {
+export const selectStartEndStop = (start, end) => {
   return (dispatch, getState) => {
-    const { busStops, map } = getState();
-    if (startStop) {
-      dispatch(selectStartStop(startStop));
-      if (busStops.endStop) {
-        dispatch(calculateRoute(map.graph, startStop, busStops.endStop));
-        const center = { lat: parseFloat(startStop.lat), lng: parseFloat(startStop.lng) };
-        dispatch(updateMapCenter(center));
-      }
+    const {
+      map,
+      busStops,
+    } = getState();
+
+
+    const {
+      startStop,
+      endStop,
+    } = busStops;
+
+    if (!startStop && start) {
+      dispatch(selectStartStop(start));
     }
-    if (endStop) {
-      dispatch(selectEndStop(endStop));
-      if (busStops.startStop) {
-        dispatch(calculateRoute(map.graph, busStops.startStop, endStop));
-        const center = {
-          lat: parseFloat(busStops.startStop.lat),
-          lng: parseFloat(busStops.startStop.lng),
-        };
-        dispatch(updateMapCenter(center));
-      }
+
+    if (!endStop && end) {
+      dispatch(selectEndStop(end));
+    }
+
+    if ((startStop && end) || (start && endStop)) {
+      const origin = start || startStop;
+      const destination = end || endStop;
+      dispatch(calculateRoute(map.graph, origin, destination));
+      const center = {
+        lat: parseFloat(origin.lat),
+        lng: parseFloat(destination.lng),
+      };
+      dispatch(updateMapCenter(center));
     }
   };
 };

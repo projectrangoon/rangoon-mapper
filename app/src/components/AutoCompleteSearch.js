@@ -16,7 +16,11 @@ class AutoCompleteSearch extends Component {
     this.setState({ source });
   }
 
-  resetComponent = () => this.setState({ isLoading: false, results: [], value: '' })
+  resetComponent = () => this.setState({
+    isLoading: false,
+    results: [],
+    value: '',
+  })
 
   handleResultSelect = (payload) => {
     this.setState({
@@ -29,7 +33,10 @@ class AutoCompleteSearch extends Component {
   }
 
   handleSearchChange = (e) => {
-    this.setState({ isLoading: true, value: e.target.value });
+    this.setState({
+      isLoading: true,
+      value: e.target.value,
+    });
 
     setTimeout(() => {
       if (this.state.value.length < 1) return this.resetComponent();
@@ -54,7 +61,7 @@ class AutoCompleteSearch extends Component {
           onChange={this.handleSearchChange}
           value={value}
           placeholder={this.props.placeholder}
-          />
+        />
         <ul className="bus-menu">
           {results.map(r =>
             <li key={r.bus_stop_id}>
@@ -73,6 +80,8 @@ class AutoCompleteSearch extends Component {
 
 AutoCompleteSearch.propTypes = {
   source: React.PropTypes.array.isRequired,
+  placeholder: React.PropTypes.string.isRequired,
+  onSelect: React.PropTypes.func.isRequired,
 };
 
 export default AutoCompleteSearch;

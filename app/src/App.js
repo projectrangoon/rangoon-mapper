@@ -19,7 +19,7 @@ class App extends Component {
     _.forIn(stops, (busStops, routeNo) => {
       const busStopsTillLast = busStops.filter((el, i, a) => (i + 1) !== a.length);
       busStopsTillLast.forEach((stop) => {
-        const key = stop['bus_stop_id'];
+        const key = stop.bus_stop_id;
         if (!(key in adjacencyList)) {
           adjacencyList[key] = [];
         }
@@ -51,18 +51,13 @@ class App extends Component {
 }
 
 
-function mapDispatchToProps(dispatch) {
-  return {
-    prepareAdjacencyList: (graph) => {
-      dispatch(adjacencyListLoaded(graph));
-    }
-  };
-}
+const mapDispatchToProps = dispatch => ({
+  prepareAdjacencyList: graph => dispatch(adjacencyListLoaded(graph)),
+});
 
-function mapStateToProps(state) {
-  return {
-  };
-}
+const mapStateToProps = state => ({
+
+});
 
 
 export default connect(
