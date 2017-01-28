@@ -1,4 +1,3 @@
-import { Queue } from 'es-collections';
 import types from '../constants/ActionTypes';
 
 export const handlePlacesChanged = places => ({
@@ -17,9 +16,11 @@ export const adjacencyListLoaded = graph => ({
 });
 
 export const calculateRoute = (graph, startStop, endStop) => {
-  const routeMarkers = [];
-  routeMarkers.push({ lat: parseFloat(startStop.lat), lng: parseFloat(startStop.lng) });
-  routeMarkers.push({ lat: parseFloat(endStop.lat), lng: parseFloat(endStop.lng) });
+  // routeMarkers.push({ lat: parseFloat(startStop.lat), lng: parseFloat(startStop.lng) });
+  // routeMarkers.push({ lat: parseFloat(endStop.lat), lng: parseFloat(endStop.lng) });
+
+  console.log('startStop', startStop);
+  console.log('endStop', endStop);
 
   // var heap = require('heap');
   // let seen = set();
@@ -27,43 +28,43 @@ export const calculateRoute = (graph, startStop, endStop) => {
 
   // heap.push(queue)
 
-  console.log(endStop['bus_stop_id']);
+  // console.log(endStop['bus_stop_id']);
 
-  const queue = new Queue();
-  const seen = new Set();
+  // const queue = new Queue();
+  // const seen = new Set();
 
-  queue.enqueue([startStop]);
+  // queue.enqueue([startStop]);
 
-  while (queue.size) {
-    console.log('Queue');
-    queue.forEach(x => console.log(x));
-    let path = queue.dequeue();
-    console.log("path", path);
-    let node = path.slice(-1)[0];
-    console.log('node', node, node['bus_stop_id'], endStop['bus_stop_id']);
-    if (node['bus_stop_id'] === endStop['bus_stop_id']) {
-      console.log('Done', path);
-      debugger;
-      break;
-    }
+  // while (queue.size) {
+  //   console.log('Queue');
+  //   queue.forEach(x => console.log(x));
+  //   let path = queue.dequeue();
+  //   console.log("path", path);
+  //   let node = path.slice(-1)[0];
+  //   console.log('node', node, node['bus_stop_id'], endStop['bus_stop_id']);
+  //   if (node['bus_stop_id'] === endStop['bus_stop_id']) {
+  //     console.log('Done', path);
+  //     debugger;
+  //     break;
+  //   }
 
-    if (seen.has(node)) {
-      continue;
-    }
-    seen.add(node);
+  //   if (seen.has(node)) {
+  //     continue;
+  //   }
+  //   seen.add(node);
 
-    const adjacents = graph[node['bus_stop_id']];
-    console.log('adjacents', adjacents);
-    if (adjacents) {
-      adjacents.forEach(stop => {
-        var newPath = path.concat(stop);
-        queue.enqueue(newPath);
-      });
-    }
+  //   const adjacents = graph[node['bus_stop_id']];
+  //   console.log('adjacents', adjacents);
+  //   if (adjacents) {
+  //     adjacents.forEach(stop => {
+  //       var newPath = path.concat(stop);
+  //       queue.enqueue(newPath);
+  //     });
+  //   }
 
-    // debugger;
+  //   // debugger;
 
-  }
+  // }
 
 
 
@@ -102,7 +103,9 @@ export const calculateRoute = (graph, startStop, endStop) => {
 
   return {
     type: types.CALCULATE_ROUTE,
-    routeMarkers,
+    graph,
+    startStop,
+    endStop,
   };
 };
 

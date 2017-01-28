@@ -1,13 +1,11 @@
-export function createConstants(...constants) {
-  return constants.reduce((acc, constant) => {
-    return Object.assign({}, acc, {
+export const createConstants = (...constants) =>
+  constants.reduce((acc, constant) => (
+    Object.assign({}, acc, {
       [constant]: constant,
-    });
-  }, {});
-}
+    })
+  ), {});
 
 export const isEnglish = /^[A-Za-z0-9]*$/;
-
 
 export const distance = (λ1, φ1, λ2, φ2) => {
   // lon1, lat1, lon2, lat2
@@ -20,3 +18,16 @@ export const distance = (λ1, φ1, λ2, φ2) => {
   const d = Math.sqrt((x * x) + (y * y));
   return R * d;
 };
+
+export const calculateRoute = (graph, startPoint, endPoint) => (
+  [
+    {
+      lat: parseFloat(startPoint.lat),
+      lng: parseFloat(startPoint.lng),
+    },
+    {
+      lat: parseFloat(endPoint.lat),
+      lng: parseFloat(endPoint.lng),
+    },
+  ]
+);
