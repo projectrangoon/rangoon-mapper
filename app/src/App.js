@@ -1,40 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
-
-import allBusServices from '../../experiment/all_bus_stops.json';
+import graph from '../../experiment/adjancencyList.json';
 import { adjacencyListLoaded } from './actions/map';
 import './App.css';
 // import { distance } from './utils';
 
 class App extends Component {
   componentWillMount() {
-    const stops = _.chain(allBusServices)
-      .sortBy(['service_name', 'sequence'])
-      .groupBy('service_name')
-      .value();
-
-    const adjacencyList = {};
-
-    _.forIn(stops, (busStops, routeNo) => {
-      const busStopsTillLast = busStops.filter((el, i, a) => (i + 1) !== a.length);
-      busStopsTillLast.forEach((stop) => {
-        const key = stop.bus_stop_id;
-        if (!(key in adjacencyList)) {
-          adjacencyList[key] = [];
-        }
-        let currentIndex = busStops.indexOf(stop);
-        const nextStop = busStops[++currentIndex];
-        // let d = distance(stop['lng'], stop['lat'], nextStop['lng'], nextStop['lat']);
-
-        //const ns = {};
-       // ns['stop'] = nextStop;
-       // ns['distance'] = d;
-
-        adjacencyList[key].push(nextStop);
-      });
-    });
-    this.props.prepareAdjacencyList(adjacencyList);
+    this.props.loadGraph();
   }
   render() {
     return (
@@ -50,12 +23,16 @@ class App extends Component {
   }
 }
 
+App.propTypes = {
+  loadGraph: React.PropTypes.func.isRequired,
+};
+
 
 const mapDispatchToProps = dispatch => ({
-  prepareAdjacencyList: graph => dispatch(adjacencyListLoaded(graph)),
+  loadGraph: () => dispatch(adjacencyListLoaded(graph)),
 });
 
-const mapStateToProps = state => ({
+const mapStateToProps = () => ({
 
 });
 

@@ -16,8 +16,8 @@ export const selectEndStop = endStop => ({
   endStop,
 });
 
-export const selectStartEndStop = (start, end) => {
-  return (dispatch, getState) => {
+export const selectStartEndStop = (start, end) =>
+  (dispatch, getState) => {
     const {
       map,
       busStops,
@@ -48,4 +48,3 @@ export const selectStartEndStop = (start, end) => {
       dispatch(updateMapCenter(center));
     }
   };
-};

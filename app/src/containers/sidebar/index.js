@@ -5,7 +5,7 @@ import './index.css';
 import { loadAllBusStops, selectStartEndStop } from '../../actions/busStops';
 import AutoCompleteSearch from '../../components/AutoCompleteSearch';
 
-const allBusStops = require('../../../../experiment/all_bus_stops.json');
+import allBusStops from '../../../../experiment/all_bus_stops.json';
 
 class Sidebar extends Component {
   componentWillMount() {
@@ -43,20 +43,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-// const mapDispatchToProps = (dispatch, ownProps) => ({
-//   loadAllBusStops: () => dispatch(loadAllBusStops(allBusStops)),
-//   handleStartEndSelect: (startStop, endStop) => dispatch(selectStartEndStop(startStop, endStop)),
-// });
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    loadAllBusStops: () => dispatch(loadAllBusStops(allBusStops)),
-    handleStartEndSelect: (startStop, endStop) => {
-      console.log(startStop, endStop);
-      return dispatch(selectStartEndStop(startStop, endStop));
-    },
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  loadAllBusStops: () => dispatch(loadAllBusStops(allBusStops)),
+  handleStartEndSelect: (startStop, endStop) => dispatch(selectStartEndStop(startStop, endStop)),
+});
 
 export default connect(
   mapStateToProps,
