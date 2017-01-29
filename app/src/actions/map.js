@@ -15,97 +15,10 @@ export const adjacencyListLoaded = graph => ({
   graph,
 });
 
-export const calculateRoute = (graph, startStop, endStop) => {
-  // routeMarkers.push({ lat: parseFloat(startStop.lat), lng: parseFloat(startStop.lng) });
-  // routeMarkers.push({ lat: parseFloat(endStop.lat), lng: parseFloat(endStop.lng) });
-
-  console.log('startStop', startStop);
-  console.log('endStop', endStop);
-
-  // var heap = require('heap');
-  // let seen = set();
-  // let queue = []
-
-  // heap.push(queue)
-
-  // console.log(endStop['bus_stop_id']);
-
-  // const queue = new Queue();
-  // const seen = new Set();
-
-  // queue.enqueue([startStop]);
-
-  // while (queue.size) {
-  //   console.log('Queue');
-  //   queue.forEach(x => console.log(x));
-  //   let path = queue.dequeue();
-  //   console.log("path", path);
-  //   let node = path.slice(-1)[0];
-  //   console.log('node', node, node['bus_stop_id'], endStop['bus_stop_id']);
-  //   if (node['bus_stop_id'] === endStop['bus_stop_id']) {
-  //     console.log('Done', path);
-  //     debugger;
-  //     break;
-  //   }
-
-  //   if (seen.has(node)) {
-  //     continue;
-  //   }
-  //   seen.add(node);
-
-  //   const adjacents = graph[node['bus_stop_id']];
-  //   console.log('adjacents', adjacents);
-  //   if (adjacents) {
-  //     adjacents.forEach(stop => {
-  //       var newPath = path.concat(stop);
-  //       queue.enqueue(newPath);
-  //     });
-  //   }
-
-  //   // debugger;
-
-  // }
-
-
-
-  // queue.enqueue({ currDistance: 0, path: [startStop] });
-
-
-  // while (queue) {
-  //   console.log(queue.size);
-
-  //   let x = queue.dequeue();
-  //   console.log('from queue', x);
-  //   let node = x.path.slice(-1)[0];
-  //   if (node['bus_stop_id'] === endStop['bus_stop_id']) {
-  //     console.log('Done', x.path);
-  //   }
-
-  //   if (seen.has(node)) {
-  //     continue;
-  //   }
-  //   seen.add(node);
-
-  //   const adjacents = graph[node['bus_stop_id']];
-  //   if (adjacents) {
-  //     adjacents.forEach((stop) => {
-  //       var new_path = [node];
-  //       new_path.push(stop.stop);
-  //       console.log("new_path", new_path);
-  //       queue.enqueue({ currDistance: stop.distance, path: new_path})
-  //     });
-  //   }
-  // }
-
-
-
-
-
-  return {
-    type: types.CALCULATE_ROUTE,
-    graph,
-    startStop,
-    endStop,
-  };
-};
+export const calculateRoute = (graph, startStop, endStop) => ({
+  type: types.CALCULATE_ROUTE,
+  graph,
+  startStop,
+  endStop,
+});
 
