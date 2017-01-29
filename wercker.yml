@@ -1,14 +1,15 @@
 box: nodesource/trusty
 build:
   steps:
-    - npm-install
+    - npm-install:
       cwd: app/
-    - npm-test
+    - npm-test:
       cwd: app/
     # A custom script step, name value is used in the UI
     # and the code value contains the command that get executed
     - script:
         name: build production
         code: |
+          cd app
           npm run build
           echo "Generated production build"
