@@ -12,7 +12,7 @@ plan.remote(function (remote) {
     remote.exec('git pull');
     remote.with('cd app', function () {
       remote.exec('npm install');
-      remote.exec('npm build');
+      remote.exec('npm run build');
     });
   });
 });
