@@ -13,3 +13,12 @@ build:
           cd app
           npm run build
           echo "Generated production build"
+deploy:
+  steps:
+    - add-to-known_hosts:
+      hostname: 188.166.226.121
+    - mktemp:
+      envvar: ./conf.d/ssh/deploy.pub
+    - create-file:
+      name: write key
+      filename: ./conf.d/ssh/deploy.pub
