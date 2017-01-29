@@ -71,7 +71,12 @@ for no, stops in groups:
         graph[key].append(next_stop)
         # graph[key][(next_stop['bus_stop_id'], next_stop['service_name'])] = distance
 
-# for key, value in graph.iteritems():
+for key, value in graph.iteritems():
+    for v in value:
+        v['lat'] = float(v['lat'])
+        v['lng'] = float(v['lng'])
+
+
 #     graph[key] = dict((v['bus_stop_id'], v) for v in value).values()
 
 
