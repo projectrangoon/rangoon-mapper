@@ -1,4 +1,4 @@
-box: nodesource/LTS
+box: nodesource/trusty:7.2.1
 build:
   steps:
     - script:
