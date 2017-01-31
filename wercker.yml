@@ -1,4 +1,4 @@
-box: nodesource/trusty:7.2.1
+box: nodesource/trusty:latest
 build:
   steps:
     - script:
