@@ -19,5 +19,6 @@ deploy:
       code: |
         cd app
         ls -la
+        ls ./node_modules/.bin/fly
         ./node_modules/.bin/fly production
         echo "Deployed to production"
