@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+// import ReactDOM from 'react-dom';
 import Input from 'antd/lib/input';
 
 export default class AutoCompleteSearch extends React.Component {
@@ -7,11 +7,16 @@ export default class AutoCompleteSearch extends React.Component {
     name: React.PropTypes.string.isRequired,
     placeholder: React.PropTypes.string,
     className: React.PropTypes.string,
-    onPlacesChanged: React.PropTypes.func,
+    onPlacesChanged: React.PropTypes.func.isRequired,
+  }
+  static defaultProps = {
+    placeholder: 'Search',
+    className: null,
   }
   componentDidMount() {
     const { name } = this.props;
-    const searchInput = ReactDOM.findDOMNode(this.refs[name]);
+    // const searchInput = ReactDOM.findDOMNode(this.refs[name]);
+    const searchInput = this.node(name);
     this.searchBox = new window.google.maps.places.SearchBox(searchInput);
     this.searchBox.addListener('places_changed', this.onPlacesChanged);
   }

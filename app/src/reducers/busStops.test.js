@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { calculateRoute } from '../utils';
 import graph from '../../../experiment/adjancencyList.json';
 import allBusStops from '../../../experiment/all_bus_stops.json';

@@ -29,6 +29,8 @@ class App extends Component {
 }
 
 App.propTypes = {
+  main: React.PropTypes.element.isRequired,
+  sidebar: React.PropTypes.element.isRequired,
   loadGraph: React.PropTypes.func.isRequired,
 };
 

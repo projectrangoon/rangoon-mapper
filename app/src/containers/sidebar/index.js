@@ -30,6 +30,11 @@ class Sidebar extends Component {
   }
 }
 
+Sidebar.propTypes = {
+  loadAllBusStops: React.PropTypes.func.isRequired,
+  handleStartEndSelect: React.PropTypes.func.isRequired,
+};
+
 const mapStateToProps = (state) => {
   const {
     busStops,

@@ -6,6 +6,11 @@ import Icon from 'antd/lib/icon';
 import { isEnglish } from '../utils';
 
 class AutoCompleteSearch extends Component {
+  constructor(props) {
+    super(props);
+    this.handleResultSelect = this.handleResultSelect.bind(this);
+  }
+
   componentWillMount() {
     const source = [];
     this.props.source.forEach((obj) => {
@@ -22,7 +27,8 @@ class AutoCompleteSearch extends Component {
     value: '',
   })
 
-  handleResultSelect = (payload) => {
+  handleResultSelect = (e, payload) => {
+    e.preventDefault();
     this.setState({
       value: isEnglish.test(this.state.value) ? `(${payload.name_en}) (${payload.road_en})` : `(${payload.name_mm}) (${payload.road_mm})`,
       results: [],
@@ -44,7 +50,7 @@ class AutoCompleteSearch extends Component {
       const re = new RegExp(_.escapeRegExp(this.state.value), 'i');
       const isMatch = result => re.test(result.name_en) || re.test(result.name_mm);
 
-      this.setState({
+      return this.setState({
         isLoading: false,
         results: _.filter(this.state.source, isMatch),
       });
@@ -65,12 +71,12 @@ class AutoCompleteSearch extends Component {
         <ul className="bus-menu">
           {results.map(r =>
             <li key={r.bus_stop_id}>
-              <a onClick={() => this.handleResultSelect(r)}>
+              <a href="" onClick={e => this.handleResultSelect(e, r)}>
                 <Icon type="environment-o" />
                 <strong>{isEnglish.test(value) ? r.name_en : r.name_mm}</strong>
                 <small>{isEnglish.test(value) ? r.road_en : r.road_mm}</small>
               </a>
-            </li>
+            </li>,
           )}
         </ul>
       </div>
@@ -79,7 +85,7 @@ class AutoCompleteSearch extends Component {
 }
 
 AutoCompleteSearch.propTypes = {
-  source: React.PropTypes.array.isRequired,
+  source: React.PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
   placeholder: React.PropTypes.string.isRequired,
   onSelect: React.PropTypes.func.isRequired,
 };

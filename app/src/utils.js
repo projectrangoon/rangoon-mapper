@@ -66,4 +66,5 @@ export const calculateRoute = (graph, startPoint, endPoint) => {
       });
     });
   }
+  return queue;
 };

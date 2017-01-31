@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 const K_WIDTH = 10;
 const K_HEIGHT = 10;
@@ -20,12 +20,18 @@ const markerStyle = {
   padding: 4,
 };
 
-export default class Marker extends Component {
-  render() {
-    return (
-      <div style={markerStyle}>
-        {this.props.text}
-      </div>
-    );
-  }
-}
+const Marker = props => (
+  <div style={markerStyle}>
+    {props.text}
+  </div>
+  );
+
+Marker.defaultProps = {
+  text: null,
+};
+
+Marker.propTypes = {
+  text: React.PropTypes.string,
+};
+
+export default Marker;
