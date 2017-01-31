@@ -17,6 +17,12 @@ const GetMeSomewhereModal = props => (
   </Modal>
 );
 
+GetMeSomewhereModal.propTypes = {
+  modals: React.PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+  handleOk: React.PropTypes.func.isRequired,
+  handleCancel: React.PropTypes.func.isRequired,
+};
+
 const mapStateToProps = (state) => {
   const { modals } = state;
   return {

@@ -18,5 +18,4 @@ export default createConstants(
   'SELECT_END_STOP',
 
   'LOAD_ALL_BUS_SERVICES',
-
-);
+  );
