@@ -3,22 +3,22 @@ build:
   steps:
     - npm-install:
       cwd: app/
-    - npm-test:
-      cwd: app/
-    # A custom script step, name value is used in the UI
-    # and the code value contains the command that get executed
     - script:
-        name: build production
+      name: running tests
+      code: |
+        cd app
+        npm run test
+    - script:
+        name: running linter
         code: |
           cd app
-          npm run build
-          echo "Generated production build"
+          npm run lint
 deploy:
   steps:
-    - add-to-known_hosts:
-      hostname: 188.166.226.121
-    - mktemp:
-      envvar: ./conf.d/ssh/deploy.pub
-    - create-file:
-      name: write key
-      filename: ./conf.d/ssh/deploy.pub
+    - npm-install:
+      cwd: app/
+    - script:
+      name: deploy to production
+      code: |
+        cd app
+        ./node_modules/.bin/fly production
