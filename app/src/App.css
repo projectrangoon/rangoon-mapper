@@ -1,7 +1,7 @@
 @import '~antd/dist/antd.css';
 
-.App {
-  text-align: center;
+.app {
+  display: flex;
 }
 
 .clearfix:before,
@@ -26,7 +26,7 @@
   border-radius: 2px;
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
-  
+
   /* == */
   width: 100%;
   /* == */
@@ -46,7 +46,7 @@
   color: #777;
   /*text-align: center;
   border-right: 1px solid #E7E7E7;*/
-  
+
   /* == */
   text-align: left;
   position: relative;
@@ -57,13 +57,13 @@
   /*display: block;
   font-size: 30px;
   margin-bottom: 10px;*/
-  
+
   /* == */
   float: left;
   font-size: 20px;
   margin: 0 10px 0 0;
   /* == */
-  
+
 }
 /* == */
 .bus-menu li a p {
@@ -83,7 +83,7 @@
 
 .bus-menu li a i, .bus-menu li a strong, .bus-menu li a small {
   position: relative;
-  
+
   transition: all 300ms linear;
   -o-transition: all 300ms linear;
   -ms-transition: all 300ms linear;
@@ -137,7 +137,7 @@
   -webkit-transition: all 300ms linear;
   /*top: 130px;*/
   z-index: 1000;
-  
+
   /* == */
   left:280px;
   top: 0px;
@@ -152,7 +152,7 @@
   border-bottom: 5px solid #e67e22;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;*/
-  
+
   /* == */
   top: 25px;
   left: -9px;
@@ -167,7 +167,7 @@
   opacity: 1;
   visibility: visible;
   /*top: 100px;*/
-  
+
   /* == */
   left:250px;
   /* == */
@@ -180,7 +180,7 @@
   text-align: left;
   border: 0;
   border-bottom: 1px solid #EEE;
-  
+
   /* == */
   height: auto;
   /* == */
@@ -195,7 +195,7 @@
   top: 0;
   border: 0;
   border-left: 4px solid #e67e22;
-}  
+}
 .bus-menu li ul li ul:before {
   content: "";
   position: absolute;
@@ -234,7 +234,7 @@
   background: #FFF;
   outline: none;
   color: #777;
-  
+
   /* == */
   width:170px;
   float:left;
@@ -247,7 +247,7 @@
   outline: none;
   color: #FFF;
   margin-left: -4px;
-  
+
   /* == */
   float:left;
   padding: 10px 10px 11px 10px;
@@ -258,13 +258,13 @@
 }
 
 
-.search-mobile { 
+.search-mobile {
 	display:none !important;
 	background:#e67e22;
 	border-left:1px solid #e67e22;
 	border-radius:0 3px 3px 0;
 }
-.search-mobile i { 
-	color:#FFF; 
+.search-mobile i {
+	color:#FFF;
 	margin:0 !important;
 }

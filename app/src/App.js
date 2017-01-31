@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Row, Col } from 'antd';
 import { connect } from 'react-redux';
 import graph from '../../experiment/adjancencyList.json';
 import { adjacencyListLoaded } from './actions/map';
@@ -11,14 +12,18 @@ class App extends Component {
   }
   render() {
     return (
-      <div className="App">
-        <section id="Map">
-          {this.props.main}
-        </section>
-        <aside id="Sidebar">
-          {this.props.sidebar}
-        </aside>
-      </div>
+      <Row type="flex" className="app">
+        <Col xs={24} md={18}>
+          <main className="map">
+            {this.props.main}
+          </main>
+        </Col>
+        <Col xs={24} md={6}>
+          <aside className="sidebar">
+            {this.props.sidebar}
+          </aside>
+        </Col>
+      </Row>
     );
   }
 }

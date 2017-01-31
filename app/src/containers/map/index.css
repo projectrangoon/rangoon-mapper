@@ -1,14 +1,16 @@
-#Map {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 25vw;
-    background-color: #E5E3DF;
+.map {
+    height: 100vh;
 }
+
+@media (max-width: 970px) {
+    .map {
+        height: 65vh;
+    }
+}
+
 .MapBtn {
-    position: absolute;
+    /*position: absolute;
     top: 2em;
     right: 2em;
-    max-width: 25em;
+    max-width: 25em;*/
 }
