@@ -15,7 +15,7 @@ class Sidebar extends Component {
   render() {
     return (
       <div>
-       <AutoCompleteSearch
+        <AutoCompleteSearch
           source={allBusStops}
           placeholder="Start"
           onSelect={startStop => this.props.handleStartEndSelect(startStop, null)}
