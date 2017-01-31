@@ -12,6 +12,7 @@ export default createConstants(
   'DRAW_ROUTE',
   'CALCULATE_ROUTE',
   'AJACENCY_LIST_LOADED',
+  'ON_MAP_LOAD',
 
   'LOAD_ALL_BUS_STOPS',
   'SELECT_START_STOP',

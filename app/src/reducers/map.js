@@ -3,10 +3,11 @@ import { calculateRoute, getLatLng } from '../utils';
 
 const initialState = {
   center: { lat: 16.7943528, lng: 96.1518985 },
-  zoom: 14,
+  zoom: 15,
   routeMarkers: null,
   routePath: null,
   graph: null,
+  google: null,
 };
 
 const map = (state = initialState, action) => {
@@ -38,6 +39,11 @@ const map = (state = initialState, action) => {
     case types.AJACENCY_LIST_LOADED: {
       return Object.assign({}, state, {
         graph: action.graph,
+      });
+    }
+    case types.ON_MAP_LOAD: {
+      return Object.assign({}, state, {
+        google: window.google,
       });
     }
     default: {
