@@ -18,4 +18,5 @@ deploy:
       name: deploy to production
       code: |
         cd app
-        ./node_modules/.bin/fly production
+        npm run deploy
+        echo "Deployed to production"
