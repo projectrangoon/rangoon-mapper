@@ -1,21 +1,26 @@
-box: nodesource/trusty:latest
+box: node:boron
 build:
   steps:
     - script:
-        name: installing dependencies
-        code: |
-          cd app
-          npm install
+      name: node and npm versions
+      code: |
+        node --version
+        npm --version
     - script:
-        name: running tests
-        code: |
-          cd app
-          npm run test
+      name: installing dependencies
+      code: |
+        cd app
+        npm install
     - script:
-        name: running linter
-        code: |
-          cd app
-          npm run lint
+      name: running tests
+      code: |
+        cd app
+        npm run test
+    - script:
+      name: running linter
+      code: |
+        cd app
+        npm run lint
 deploy:
   steps:
     - npm-install:
