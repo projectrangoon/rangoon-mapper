@@ -1,13 +1,16 @@
 box: nodesource/trusty
 build:
   steps:
-    - npm-install:
-      cwd: app/
     - script:
-      name: running tests
-      code: |
-        cd app
-        npm run test
+        name: installing dependencies
+        code: |
+          cd app
+          npm install
+    - script:
+        name: running tests
+        code: |
+          cd app
+          npm run test
     - script:
         name: running linter
         code: |
