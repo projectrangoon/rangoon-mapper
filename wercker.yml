@@ -19,5 +19,4 @@ deploy:
       code: |
         cd app
         ls -la
-        ls ./node_modules/.bin/fly
         ./node_modules/.bin/fly production && echo "ran and exited successfully" || echo "$?"
