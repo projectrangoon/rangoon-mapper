@@ -1,21 +1,10 @@
 box: node:boron
 build:
   steps:
-    - script:
-      name: node and npm versions
-      code: |
-        node --version
-        npm --version
-    - script:
-      name: installing dependencies
-      code: |
-        cd app
-        npm install
-    - script:
-      name: running tests
-      code: |
-        cd app
-        npm run test
+    - npm-install:
+      cwd: app/
+    - npm-test:
+      cwd: app/
     - script:
       name: running linter
       code: |
