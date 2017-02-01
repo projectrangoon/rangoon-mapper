@@ -15,8 +15,13 @@ deploy:
     - npm-install:
       cwd: app/
     - script:
+      name: global install flightplan
+      code: |
+        npm i -g flightplan
+    - script:
       name: deploy to production
       code: |
         cd app
         ls -la
-        ./node_modules/.bin/fly production && echo "ran and exited successfully" || echo "$?"
+        which fly || echo "?"
+        fly production && echo "ran and exited successfully" || echo "$?"
