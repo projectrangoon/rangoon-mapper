@@ -1,4 +1,4 @@
-box: node:boron
+box: node:latest
 build:
   steps:
     - npm-install:
