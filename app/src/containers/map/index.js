@@ -40,7 +40,7 @@ const GoogleMapWrapper = _.flowRight(withScriptjs, withGoogleMap)(props => (
           strokeOpacity: '0.7',
           strokeWeight: '3',
         }}
-        />)
+      />)
       : null}
   </GoogleMap>
 ));
@@ -60,7 +60,7 @@ const Map = (props) => {
               margin: '150px auto',
               animation: 'fa-spin 2s infinite linear',
             }}
-            />
+          />
         </div>
       }
       containerElement={
@@ -73,7 +73,7 @@ const Map = (props) => {
       center={center}
       markers={routeMarkers}
       path={routePath}
-      />
+    />
   );
 };
 

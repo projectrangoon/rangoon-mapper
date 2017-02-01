@@ -8,7 +8,10 @@ export const createConstants = (...constants) =>
     })
   ), {});
 
-export const isEnglish = /^[A-Za-z0-9]*$/;
+export const isEnglish = (text) => {
+  const engRegex = /^[A-Za-z0-9 ]*$/;
+  return engRegex.test(text);
+};
 
 // export const distance = (λ1, φ1, λ2, φ2) => {
 //   // lon1, lat1, lon2, lat2

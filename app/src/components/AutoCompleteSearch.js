@@ -6,11 +6,6 @@ import Icon from 'antd/lib/icon';
 import { isEnglish } from '../utils';
 
 class AutoCompleteSearch extends Component {
-  constructor(props) {
-    super(props);
-    this.handleResultSelect = this.handleResultSelect.bind(this);
-  }
-
   componentWillMount() {
     const source = [];
     this.props.source.forEach((obj) => {
@@ -27,34 +22,50 @@ class AutoCompleteSearch extends Component {
     value: '',
   })
 
+  handleChange = (e) => {
+    this.setState({
+      isLoading: true,
+      value: e.target.value,
+    });
+  }
+
+  handleKeyUp = () => {
+    setTimeout(this.searchBusStops, 500);
+  }
+
+  searchBusStops = () => {
+    if (this.state.value.length < 1) return this.resetComponent();
+    const mmPattern = new RegExp(_.escapeRegExp(this.state.value), 'i');
+    const engPattern = new RegExp(this.state.value.replace(/(\S+)/g, s => `\\b(${s})(.*)`).replace(/\s+/g, ''), 'gi');
+
+    const isMatch = (result) => {
+      if (isEnglish(this.state.value)) {
+        return engPattern.test(result.name_en);
+      }
+      return mmPattern.test(result.name_mm);
+    };
+    const sorted = (result) => {
+      if (isEnglish(this.state.value)) {
+        return result.name_en.toLowerCase().startsWith(this.state.value.toLowerCase());
+      }
+      return result.name_mm.toLowerCase().startsWith(this.state.value.toLowerCase());
+    };
+
+    return this.setState({
+      isLoading: false,
+      results: _.sortBy(_.filter(this.state.source, isMatch), sorted),
+    });
+  }
+
   handleResultSelect = (e, payload) => {
     e.preventDefault();
     this.setState({
-      value: isEnglish.test(this.state.value) ? `(${payload.name_en}) (${payload.road_en})` : `(${payload.name_mm}) (${payload.road_mm})`,
+      value: `(${payload.name_en} - ${payload.name_mm}) (${payload.road_en} - ${payload.road_mm})`,
       results: [],
     });
     if (this.props.onSelect) {
       this.props.onSelect(payload);
     }
-  }
-
-  handleSearchChange = (e) => {
-    this.setState({
-      isLoading: true,
-      value: e.target.value,
-    });
-
-    setTimeout(() => {
-      if (this.state.value.length < 1) return this.resetComponent();
-
-      const re = new RegExp(_.escapeRegExp(this.state.value), 'i');
-      const isMatch = result => re.test(result.name_en) || re.test(result.name_mm);
-
-      return this.setState({
-        isLoading: false,
-        results: _.filter(this.state.source, isMatch),
-      });
-    }, 100);
   }
 
   render() {
@@ -64,17 +75,18 @@ class AutoCompleteSearch extends Component {
       <div>
         <Input
           style={{ borderRadius: 0, height: '3.5em' }}
-          onChange={this.handleSearchChange}
+          onChange={this.handleChange}
+          onKeyUp={this.handleKeyUp}
           value={value}
           placeholder={this.props.placeholder}
         />
         <ul className="bus-menu">
-          {results.map(r =>
+          {results.reverse().map(r =>
             <li key={r.bus_stop_id}>
               <a href="" onClick={e => this.handleResultSelect(e, r)}>
                 <Icon type="environment-o" />
-                <strong>{isEnglish.test(value) ? r.name_en : r.name_mm}</strong>
-                <small>{isEnglish.test(value) ? r.road_en : r.road_mm}</small>
+                <strong>{`${r.name_en} - ${r.name_mm}`}</strong>
+                <small>{`${r.road_en} - ${r.road_mm}`}</small>
               </a>
             </li>,
           )}
