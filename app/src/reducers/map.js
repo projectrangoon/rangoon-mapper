@@ -42,8 +42,9 @@ const map = (state = initialState, action) => {
       });
     }
     case types.ON_MAP_LOAD: {
+      const { google } = action;
       return Object.assign({}, state, {
-        google: window.google,
+        google,
       });
     }
     default: {
