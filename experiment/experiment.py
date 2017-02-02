@@ -45,8 +45,8 @@ for bus in bus_stops:
             'road_mm': bus['road_mm'],
             'township_en': bus['township_en'],
             'township_mm': bus['township_mm'],
-            'lat': bus['lat'],
-            'lng': bus['lng'],
+            'lat': float(bus['lat']),
+            'lng': float(bus['lng']),
             'services': [
                 {
                     'service_name': int(bus['service_name']),
@@ -59,9 +59,14 @@ for bus in bus_stops:
             'service_name': int(bus['service_name']),
             'sequence': int(bus['sequence'])
         })
+stops = []
+for id, value in unique_stops.iteritems():
+    value['bus_stop_id'] = id
+    stops.append(value)
+    
 
 with open('unique_stops.json', 'wb') as f:
-    f.write(json.dumps(unique_stops))
+    f.write(json.dumps(stops))
 
 bus_stops = sorted(bus_stops, key=lambda x: (x['service_name'], x['sequence']))
 bus_stops = itertools.groupby(bus_stops, key=itemgetter('service_name'))
