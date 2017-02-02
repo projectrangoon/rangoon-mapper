@@ -16,9 +16,11 @@ export const isEnglish = (text) => {
 export const searchBusStops = (allStops, searchString) =>
 _.filter(allStops, (stop) => {
   const pattern = new RegExp(`(?:^|\\s+|/|,s)${searchString}`, 'i');
-  return pattern.test(stop.name_en);
+  if (isEnglish(searchString)) {
+    return pattern.test(stop.name_en);
+  }
+  return pattern.test(stop.name_mm);
 });
-
 
 export const stripDistance = busStops => busStops.map(x => _.omit(x, 'distance'));
 
