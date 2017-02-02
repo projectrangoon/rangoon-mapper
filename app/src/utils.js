@@ -20,8 +20,6 @@ _.filter(allStops, (stop) => {
 });
 
 
-export const getLatLng = busStops => busStops.map(x => ({ lat: x.lat, lng: x.lng }));
-
 export const stripDistance = busStops => busStops.map(x => _.omit(x, 'distance'));
 
 export const getUniqueId = (busStop) => {

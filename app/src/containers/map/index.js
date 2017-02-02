@@ -21,8 +21,7 @@ const Map = (props) => {
       options={mapOptions}
     >
       {routeMarkers ?
-        routeMarkers.map((marker, index) =>
-          <BusStop lat={marker.lat} lng={marker.lng} text={index + 1} />)
+        routeMarkers.map(marker => <BusStop key={marker.bus_stop_id} {...marker} />)
         : null}
     </GoogleMap>
   );
