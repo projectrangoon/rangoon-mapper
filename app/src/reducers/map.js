@@ -1,5 +1,5 @@
 import types from '../constants/ActionTypes';
-import { calculateRoute, getLatLng } from '../utils';
+import { calculateRoute } from '../utils';
 
 const initialState = {
   center: { lat: 16.7943528, lng: 96.1518985 },
@@ -33,7 +33,7 @@ const map = (state = initialState, action) => {
       const { graph, startStop, endStop } = action;
       const route = calculateRoute(graph, startStop, endStop);
       return Object.assign({}, state, {
-        routeMarkers: getLatLng(route),
+        routeMarkers: route,
       });
     }
     case types.AJACENCY_LIST_LOADED: {
