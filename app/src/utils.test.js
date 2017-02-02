@@ -5,7 +5,7 @@ import allBusStops from '../../experiment/unique_stops.json';
 describe('Searching of Bus Stops', () => {
   it('Regex test of word boundary with / inside', () => {
     const searchString = 'kone';
-    const pattern = new RegExp(`(?:^|\\s+|/|,)${searchString}`, 'i');
+    const pattern = new RegExp(`(?:^|\\s+|/|.*,)${searchString}`, 'i');
     const strings = [
       'kone zay tan/lanmadaw',
       'KoNe zay tan',
@@ -29,6 +29,7 @@ describe('Searching of Bus Stops', () => {
       'theingyi zay/KONE zay tan',
       'theingyi zay/ KONE zay tan',
       'theingyi zay/    KONE zay tan',
+      'withcomma,konezay',
       'withcomma,kone zay',
       'withcomma, kone zay',
       'abc kone xyz',

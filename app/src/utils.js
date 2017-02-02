@@ -15,7 +15,7 @@ export const isEnglish = (text) => {
 
 export const searchBusStops = (allStops, searchString) =>
 _.filter(allStops, (stop) => {
-  const pattern = new RegExp(`(?:^|\\|/|,s)${searchString}`, 'gi');
+  const pattern = new RegExp(`(?:^|\\s+|/|,s)${searchString}`, 'i');
   return pattern.test(stop.name_en);
 });
 
@@ -30,8 +30,7 @@ export const getUniqueId = (busStop) => {
 
 export const getEngNames = busStops => busStops.map(x => _.pick(x, 'name_en'));
 
-export const getNames = busStops => busStops.map(x =>
-  ({ name_en: x.name_en, sequence: x.sequence, route: x.route }));
+export const getNames = busStops => busStops.map(x => _.pick(x, 'name_en', 'sequence', 'route'));
 
 export const calculateRoute = (graph, startPoint, endPoint) => {
   const seen = new Set();
@@ -51,12 +50,13 @@ export const calculateRoute = (graph, startPoint, endPoint) => {
       return stripDistance(top.path);
     }
 
-    if (seen.has(getUniqueId(lastKnownStop))) {
+    const lastStopId = getUniqueId(lastKnownStop);
+    if (seen.has(lastStopId)) {
       continue;
     }
-    seen.add(getUniqueId(lastKnownStop));
+    seen.add(lastStopId);
 
-    const neighbours = graph[lastKnownStop.bus_stop_id.toString()] || [];
+    const neighbours = graph[lastKnownStop.bus_stop_id] || [];
     neighbours.forEach((x) => {
       queue.push({
         currDistance: x.distance,
