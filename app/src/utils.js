@@ -64,5 +64,5 @@ export const calculateRoute = (graph, startPoint, endPoint) => {
       });
     });
   }
-  return queue;
+  return queue.toArray();
 };

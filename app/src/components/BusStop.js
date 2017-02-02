@@ -8,14 +8,13 @@ const Bus = props => (
     className="marker"
     style={{
       position: 'absolute',
-      left: -PIN_SIZE,
+      left: -PIN_SIZE / 2,
       top: -PIN_SIZE,
       cursor: 'pointer',
       color: 'white',
     }}
   >
     <img src={pin} alt={props.name_en} title={props.name_en} style={{ height: '30px' }} />
-    {props.name_en}
   </div>
 );
 

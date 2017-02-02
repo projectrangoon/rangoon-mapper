@@ -9,16 +9,29 @@ import BusStop from '../../components/BusStop';
 
 
 const Map = (props) => {
-  const { center, zoom, routeMarkers } = props.map;
+  const { center, zoom, routeMarkers, google } = props.map;
   const mapOptions = {
     styles: customMapStyles,
   };
+  if (routeMarkers) {
+    const path = new google.maps.Polyline({
+      path: routeMarkers,
+      strokeColor: '#f00',
+      geodesic: true,
+      strokeOpacity: 0.7,
+      strokeWeight: 3,
+      clickable: false,
+    });
+    path.setMap(google.map);
+  }
   return (
     <GoogleMap
-      apiKey="AIzaSyBePNN11JZSltU-e8ht5z176ZWDKpx5Jg0"
+      bootstrapURLKeys={{ key: 'AIzaSyBePNN11JZSltU-e8ht5z176ZWDKpx5Jg0' }}
       center={center}
       zoom={zoom}
       options={mapOptions}
+      yesIWantToUseGoogleMapApiInternals
+      onGoogleApiLoaded={props.onMapLoad}
     >
       {routeMarkers ?
         routeMarkers.map(marker => <BusStop key={marker.bus_stop_id} {...marker} />)
@@ -28,7 +41,8 @@ const Map = (props) => {
 };
 
 Map.propTypes = {
-  map: React.PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+  map: React.PropTypes.object.isRequired,
+  onMapLoad: React.PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -45,8 +59,8 @@ function mapDispatchToProps(dispatch) {
     handlePlacesChanged: (places) => {
       dispatch(handlePlacesChanged(places));
     },
-    onMapLoad: () => {
-      dispatch(onMapLoad());
+    onMapLoad: (google) => {
+      dispatch(onMapLoad(google));
     },
   };
 }

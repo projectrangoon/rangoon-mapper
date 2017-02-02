@@ -10,8 +10,9 @@ export const updateMapCenter = center => ({
   center,
 });
 
-export const onMapLoad = () => ({
+export const onMapLoad = google => ({
   type: types.ON_MAP_LOAD,
+  google,
 });
 
 export const adjacencyListLoaded = graph => ({
