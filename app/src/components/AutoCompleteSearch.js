@@ -3,7 +3,7 @@ import _ from 'lodash';
 import Input from 'antd/lib/input';
 import Icon from 'antd/lib/icon';
 
-import { isEnglish } from '../utils';
+import { searchBusStops } from '../utils';
 
 class AutoCompleteSearch extends Component {
   componentWillMount() {
@@ -13,7 +13,11 @@ class AutoCompleteSearch extends Component {
       if (!found) { source.push(obj); }
     });
     this.resetComponent();
-    this.setState({ source });
+    this.setState({
+      source,
+      typingTimer: 0,
+      doneTypingInterval: 300,
+    });
   }
 
   resetComponent = () => this.setState({
@@ -30,30 +34,28 @@ class AutoCompleteSearch extends Component {
   }
 
   handleKeyUp = () => {
-    setTimeout(this.searchBusStops, 500);
+    clearTimeout(this.state.typingTimer);
+    if (this.state.value) {
+      this.setState({
+        typingTimer: setTimeout(this.searchBusStops, this.state.doneTypingInterval),
+      });
+    } else {
+      this.resetComponent();
+    }
+  }
+
+  handleKeyDown = () => {
+    clearTimeout(this.state.typingTimer);
   }
 
   searchBusStops = () => {
-    if (this.state.value.length < 1) return this.resetComponent();
-    const mmPattern = new RegExp(_.escapeRegExp(this.state.value), 'i');
-    const engPattern = new RegExp(this.state.value.replace(/(\S+)/g, s => `\\b(${s})(.*)`).replace(/\s+/g, ''), 'gi');
-
-    const isMatch = (result) => {
-      if (isEnglish(this.state.value)) {
-        return engPattern.test(result.name_en);
-      }
-      return mmPattern.test(result.name_mm);
-    };
-    const sorted = (result) => {
-      if (isEnglish(this.state.value)) {
-        return result.name_en.toLowerCase().startsWith(this.state.value.toLowerCase());
-      }
-      return result.name_mm.toLowerCase().startsWith(this.state.value.toLowerCase());
-    };
+    const sortByEngName =
+      result => result.name_en.toLowerCase().startsWith(this.state.value.toLowerCase());
 
     return this.setState({
       isLoading: false,
-      results: _.sortBy(_.filter(this.state.source, isMatch), sorted),
+      results:
+      (_.sortBy(searchBusStops(this.state.source, this.state.value), sortByEngName)).reverse(),
     });
   }
 
@@ -77,11 +79,12 @@ class AutoCompleteSearch extends Component {
           style={{ borderRadius: 0, height: '3.5em' }}
           onChange={this.handleChange}
           onKeyUp={this.handleKeyUp}
+          onKeyDown={this.handleKeyDown}
           value={value}
           placeholder={this.props.placeholder}
         />
         <ul className="bus-menu">
-          {results.reverse().map(r =>
+          {results.map(r =>
             <li key={r.bus_stop_id}>
               <a href="" onClick={e => this.handleResultSelect(e, r)}>
                 <Icon type="environment-o" />
