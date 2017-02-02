@@ -13,17 +13,12 @@ export const isEnglish = (text) => {
   return engRegex.test(text);
 };
 
-// export const distance = (λ1, φ1, λ2, φ2) => {
-//   // lon1, lat1, lon2, lat2
-//   const R = 6371000;
-//   const Δλ = ((λ2 - λ1) * Math.PI) / 180;
-//   φ1 = (φ1 * Math.PI) / 180;
-//   φ2 = (φ2 * Math.PI) / 180;
-//   const x = Δλ * Math.cos((φ1 + φ2) / 2);
-//   const y = (φ2 - φ1);
-//   const d = Math.sqrt((x * x) + (y * y));
-//   return R * d;
-// };
+export const searchBusStops = (allStops, searchString) =>
+_.filter(allStops, (stop) => {
+  const pattern = new RegExp(`(?:^|\\|/|,s)${searchString}`, 'gi');
+  return pattern.test(stop.name_en);
+});
+
 
 export const getLatLng = busStops => busStops.map(x => ({ lat: x.lat, lng: x.lng }));
 
@@ -34,6 +29,8 @@ export const getUniqueId = (busStop) => {
   const seq = _.padStart(busStop.sequence.toString(), 2, '0');
   return `${route}${seq}${busStop.bus_stop_id}`;
 };
+
+export const getEngNames = busStops => busStops.map(x => _.pick(x, 'name_en'));
 
 export const getNames = busStops => busStops.map(x =>
   ({ name_en: x.name_en, sequence: x.sequence, route: x.route }));
