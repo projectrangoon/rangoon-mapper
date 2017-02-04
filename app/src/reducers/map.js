@@ -4,6 +4,8 @@ import { calculateRoute } from '../utils';
 const initialState = {
   center: { lat: 16.7943528, lng: 96.1518985 },
   zoom: 15,
+  startStop: null,
+  endStop: null,
   routeMarkers: null,
   routePath: null,
   graph: null,
@@ -45,6 +47,16 @@ const map = (state = initialState, action) => {
       const { google } = action;
       return Object.assign({}, state, {
         google,
+      });
+    }
+    case types.SELECT_START_STOP: {
+      return Object.assign({}, state, {
+        startStop: action.startStop,
+      });
+    }
+    case types.SELECT_END_STOP: {
+      return Object.assign({}, state, {
+        endStop: action.endStop,
       });
     }
     default: {

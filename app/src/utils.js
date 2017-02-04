@@ -25,11 +25,7 @@ _.filter(allStops, (stop) => {
 
 export const stripDistance = busStops => busStops.map(x => _.omit(x, 'distance'));
 
-export const getUniqueId = (busStop) => {
-  const route = _.padStart(busStop.service_name.toString(), 2, '0');
-  const seq = _.padStart(busStop.sequence.toString(), 2, '0');
-  return `${route}${seq}${busStop.bus_stop_id}`;
-};
+export const getUniqueId = busStop => `${busStop.bus_stop_id}`;
 
 export const getEngNames = busStops => busStops.map(x => _.pick(x, 'name_en'));
 
@@ -71,7 +67,7 @@ export const calculateRoute = (graph, startPoint, endPoint) => {
         currDistance: top.currDistance + x.distance,
         path: [...top.path, x],
       };
-      if (lastKnownStop.service_name === x.service_name) {
+      if (lastKnownStop.ervice_name === x.service_name) {
         y.currTransfers = ++top.currTransfers;
         y.currCost = top.curCost + COST_PER_TRANSFER;
       }
