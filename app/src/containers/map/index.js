@@ -13,6 +13,7 @@ const Map = (props) => {
   const mapOptions = {
     styles: customMapStyles,
   };
+
   if (routeMarkers) {
     const path = new google.maps.Polyline({
       path: routeMarkers,
@@ -24,6 +25,7 @@ const Map = (props) => {
     });
     path.setMap(google.map);
   }
+
   return (
     <GoogleMap
       bootstrapURLKeys={{ key: 'AIzaSyBePNN11JZSltU-e8ht5z176ZWDKpx5Jg0' }}
