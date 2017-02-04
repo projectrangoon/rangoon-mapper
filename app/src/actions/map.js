@@ -15,14 +15,16 @@ export const onMapLoad = google => ({
   google,
 });
 
-export const adjacencyListLoaded = graph => ({
+export const adjacencyListLoaded = (graph, busStopsMap) => ({
   type: types.AJACENCY_LIST_LOADED,
   graph,
+  busStopsMap,
 });
 
-export const calculateRoute = (graph, startStop, endStop) => ({
+export const calculateRoute = (graph, busStopsMap, startStop, endStop) => ({
   type: types.CALCULATE_ROUTE,
   graph,
+  busStopsMap,
   startStop,
   endStop,
 });
@@ -46,9 +48,11 @@ export const selectStartEndStop = (start, end) =>
 
 
     const {
+      busStopsMap,
       startStop,
       endStop,
     } = map;
+
 
     if (!startStop && start) {
       dispatch(selectStartStop(start));
@@ -61,11 +65,11 @@ export const selectStartEndStop = (start, end) =>
     if ((startStop && end) || (start && endStop)) {
       const origin = start || startStop;
       const destination = end || endStop;
-      dispatch(calculateRoute(map.graph, origin, destination));
-      const center = {
-        lat: parseFloat(origin.lat),
-        lng: parseFloat(destination.lng),
-      };
-      dispatch(updateMapCenter(center));
+      dispatch(calculateRoute(map.graph, busStopsMap, origin, destination));
+      // const center = {
+      //   lat: parseFloat(origin.lat),
+      //   lng: parseFloat(origin.lng),
+      // };
+      // dispatch(updateMapCenter(center));
     }
   };

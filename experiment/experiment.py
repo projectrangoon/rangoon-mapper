@@ -59,11 +59,17 @@ for bus in bus_stops:
             'service_name': int(bus['service_name']),
             'sequence': int(bus['sequence'])
         })
+
+
 stops = []
 for id, value in unique_stops.iteritems():
     value['bus_stop_id'] = id
+    unique_stops[id]['bus_stop_id'] = id
     stops.append(value)
-    
+
+with open('stops_map.json', 'wb') as f:
+    f.write(json.dumps(unique_stops))
+
 
 with open('unique_stops.json', 'wb') as f:
     f.write(json.dumps(stops))
