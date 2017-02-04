@@ -13,7 +13,6 @@ const Map = (props) => {
   const {
     center,
     zoom,
-    routeMarkers,
     routePath,
     google } = props.map;
 

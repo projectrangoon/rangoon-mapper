@@ -1,16 +1,22 @@
 import { calculateRoute } from '../utils';
 import graph from '../../../experiment/adjancencyList.json';
-import allBusStops from '../../../experiment/all_bus_stops.json';
+import busStopsMap from '../../../experiment/stops_map.json';
+import busStops from '../../../experiment/unique_stops.json';
 
 
 describe('Calculating Route', () => {
   it('Short straightline path', () => {
-    const startStop = allBusStops[4524];
-    const endStop = allBusStops[4527];
-    expect(calculateRoute(graph, startStop, endStop)).toEqual([
+    const startStop = busStopsMap[152];
+    const endStop = busStopsMap[136];
+
+    const result = calculateRoute(graph, busStopsMap, startStop, endStop);
+    console.log(result.serviceNames);
+    expect(result.path).toEqual([
       startStop,
-      allBusStops[4525],
-      allBusStops[4526],
+      busStopsMap[132],
+      busStopsMap[133],
+      busStopsMap[134],
+      busStopsMap[135],
       endStop,
     ]);
   });

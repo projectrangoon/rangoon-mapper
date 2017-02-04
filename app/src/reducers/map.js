@@ -10,6 +10,7 @@ const initialState = {
   routePath: null,
   graph: null,
   google: null,
+  busStopsMap: null,
 };
 
 const map = (state = initialState, action) => {
@@ -32,8 +33,8 @@ const map = (state = initialState, action) => {
       });
     }
     case types.CALCULATE_ROUTE: {
-      const { graph, startStop, endStop } = action;
-      const route = calculateRoute(graph, startStop, endStop);
+      const { graph, busStopsMap, startStop, endStop } = action;
+      const route = calculateRoute(graph, busStopsMap, startStop, endStop);
       return Object.assign({}, state, {
         routeMarkers: route.path,
         routePath: route,
@@ -42,6 +43,7 @@ const map = (state = initialState, action) => {
     case types.AJACENCY_LIST_LOADED: {
       return Object.assign({}, state, {
         graph: action.graph,
+        busStopsMap: action.busStopsMap,
       });
     }
     case types.ON_MAP_LOAD: {

@@ -1,8 +1,7 @@
-import { React, Component } from 'react';
+import { Component } from 'react';
 
 export default class Polyline extends Component {
-  constructor(props) {
-    super(props);
+  componentWillMount() {
     if (this.props.google) {
       const polyline = new this.props.google.maps.Polyline({
         map: this.props.google.map,
