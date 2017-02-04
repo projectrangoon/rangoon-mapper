@@ -36,6 +36,7 @@ const map = (state = initialState, action) => {
       const route = calculateRoute(graph, startStop, endStop);
       return Object.assign({}, state, {
         routeMarkers: route.path,
+        routePath: route,
       });
     }
     case types.AJACENCY_LIST_LOADED: {

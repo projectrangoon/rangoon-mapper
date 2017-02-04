@@ -6,37 +6,34 @@ import './index.css';
 import { handlePlacesChanged, onMapLoad } from '../../actions/map';
 import customMapStyles from '../../constants/CustomMapStyles.json';
 import BusStop from '../../components/BusStop';
+import Polyline from '../../components/Polyline';
 
 
 const Map = (props) => {
-  const { center, zoom, routeMarkers, google } = props.map;
-  const mapOptions = {
-    styles: customMapStyles,
-  };
+  const {
+    center,
+    zoom,
+    routeMarkers,
+    routePath,
+    google } = props.map;
 
-  if (routeMarkers) {
-    const path = new google.maps.Polyline({
-      path: routeMarkers,
-      strokeColor: '#f00',
-      geodesic: true,
-      strokeOpacity: 0.7,
-      strokeWeight: 3,
-      clickable: false,
-    });
-    path.setMap(google.map);
-  }
 
   return (
     <GoogleMap
       bootstrapURLKeys={{ key: 'AIzaSyBePNN11JZSltU-e8ht5z176ZWDKpx5Jg0' }}
       center={center}
       zoom={zoom}
-      options={mapOptions}
+      options={{ styles: customMapStyles }}
       yesIWantToUseGoogleMapApiInternals
       onGoogleApiLoaded={props.onMapLoad}
     >
-      {routeMarkers ?
-        routeMarkers.map(marker => <BusStop key={marker.bus_stop_id} {...marker} />)
+
+      {routePath && routePath.path ?
+        <Polyline google={google} routePath={routePath} />
+      : null}
+
+      {routePath && routePath.path ?
+        routePath.path.map(marker => <BusStop key={marker.bus_stop_id} {...marker} />)
         : null}
     </GoogleMap>
   );
