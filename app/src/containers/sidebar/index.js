@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './index.css';
 
-import { loadAllBusStops, selectStartEndStop } from '../../actions/busStops';
+import loadAllBusStops from '../../actions/busStops';
+import { selectStartEndStop } from '../../actions/map';
 import AutoCompleteSearch from '../../components/AutoCompleteSearch';
 
-import allBusStops from '../../../../experiment/all_bus_stops.json';
+import allBusStops from '../../../../experiment/unique_stops.json';
 
 class Sidebar extends Component {
   componentWillMount() {
