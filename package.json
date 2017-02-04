@@ -2,16 +2,5 @@
   "dependencies": {
     "global": "^4.3.1",
     "lodash": "^4.17.4"
-  },
-  "devDependencies": {
-    "pre-commit": "^1.2.2"
-  },
-  "scripts": {
-    "lint": "echo \"Running Lint\" && cd app && npm run lint",
-    "test": "echo \"Running Tests\" && cd app && CI=true npm run test"
-  },
-  "pre-commit": [
-    "lint",
-    "test"
-  ]
+  }
 }
