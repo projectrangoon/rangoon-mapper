@@ -26,8 +26,8 @@ _.filter(allStops, (stop) => {
 export const stripDistance = busStops => busStops.map(x => _.omit(x, 'distance'));
 
 export const getUniqueId = (busStop, serviceName) => {
-  const sn = _.padStart(serviceName.toString(), 2, '0');
   const busStopId = _.padStart(busStop.bus_stop_id.toString(), 5, 'Z');
+  const sn = _.padStart(serviceName.toString(), 2, 'B');
   return `${busStopId}${sn}`;
 };
 
@@ -45,8 +45,10 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop) => {
     currCost: 0,
     currDistance: 0,
     currTransfers: 0,
-    path: [startStop],
-    serviceNames: [0],
+    path: [{
+      bus_stop_id: startStop.bus_stop_id,
+      service_name: 0,
+    }],
   });
 
   while (queue.size()) {
@@ -54,7 +56,7 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop) => {
     // console.log(top.path[top.path.length - 1]);
 
     const lastKnownStop = top.path[top.path.length - 1];
-    const lastKnownServiceName = top.serviceNames[top.serviceNames.length - 1];
+    const lastKnownServiceName = lastKnownStop.service_name;
     if (lastKnownStop.bus_stop_id === endStop.bus_stop_id) {
       return top;
     }
@@ -68,20 +70,17 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop) => {
     const neighbours = graph[lastKnownStop.bus_stop_id] || [];
     // console.log('neighbour from graph', neighbours);
     neighbours.forEach((x) => {
-      if (x) {
-        const y = {
-          ...top,
-          currDistance: top.currDistance + x.distance,
-          path: [...top.path, busStopsMap[x.bus_stop_id]],
-          serviceNames: [...top.serviceNames, x.service_name],
-        };
-        if (lastKnownServiceName !== x.service_name) {
-          y.currTransfers = ++top.currTransfers;
-          y.currCost = top.curCost + COST_PER_TRANSFER;
-        }
-        y.currCost += COST_PER_STOP;
-        queue.push(y);
+      const y = {
+        ...top,
+        currDistance: top.currDistance + x.distance,
+        path: [...top.path, { bus_stop_id: x.bus_stop_id, service_name: x.service_name }],
+      };
+      if (lastKnownServiceName !== x.service_name) {
+        y.currTransfers = top.currTransfers + 1;
+        y.currCost = top.currCost + COST_PER_TRANSFER;
       }
+      y.currCost += COST_PER_STOP;
+      queue.push(y);
     });
   }
   return queue.toArray();

@@ -34,10 +34,16 @@ const map = (state = initialState, action) => {
     }
     case types.CALCULATE_ROUTE: {
       const { graph, busStopsMap, startStop, endStop } = action;
-      const route = calculateRoute(graph, busStopsMap, startStop, endStop);
+      const routePath = calculateRoute(graph, busStopsMap, startStop, endStop);
+      let payload = {};
+      if (routePath && routePath.path) {
+        payload = { ...routePath, path: [] };
+        routePath.path.forEach((busStop) => {
+          payload.path.push(busStopsMap[busStop.bus_stop_id]);
+        });
+      }
       return Object.assign({}, state, {
-        routeMarkers: route.path,
-        routePath: route,
+        routePath: payload,
       });
     }
     case types.AJACENCY_LIST_LOADED: {
