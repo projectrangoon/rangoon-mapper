@@ -1,6 +1,6 @@
-import { Component } from 'react';
+import { Component, PropTypes } from 'react';
 
-export default class Polyline extends Component {
+class Polyline extends Component {
   componentWillMount() {
     if (this.props.google) {
       const polyline = new this.props.google.maps.Polyline({
@@ -20,14 +20,21 @@ export default class Polyline extends Component {
       this.state.polyline.setMap(null);
     }
   }
-  resetComponent() {
-    this.state.path.setMap(this.props.google.map);
-  }
   render() {
     return false;
   }
 }
+
 Polyline.defaultProps = {
   google: null,
   routePath: null,
+  color: '',
 };
+
+Polyline.propTypes = {
+  google: PropTypes.any,
+  routePath: PropTypes.any,
+  color: PropTypes.string,
+};
+
+export default Polyline;

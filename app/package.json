@@ -19,6 +19,7 @@
     "es-collections": "0.0.2",
     "google-map-react": "^0.22.3",
     "heap": "^0.2.6",
+    "immutable": "^3.8.1",
     "lodash": "^4.17.4",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
