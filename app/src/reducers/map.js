@@ -39,7 +39,9 @@ const map = (state = initialState, action) => {
       if (routePath && routePath.path) {
         payload = { ...routePath, path: [] };
         routePath.path.forEach((busStop) => {
-          payload.path.push(busStopsMap[busStop.bus_stop_id]);
+          const stop = busStopsMap[busStop.bus_stop_id];
+          stop.service_name = busStop.service_name;
+          payload.path.push(stop);
         });
       }
       return Object.assign({}, state, {
