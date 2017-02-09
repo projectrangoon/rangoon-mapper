@@ -53,7 +53,6 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop) => {
 
   while (queue.size()) {
     const top = queue.pop();
-    // console.log(top.path[top.path.length - 1]);
 
     const lastKnownStop = top.path[top.path.length - 1];
     const lastKnownServiceName = lastKnownStop.service_name;
@@ -68,7 +67,6 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop) => {
     seen.add(lastStopId);
 
     const neighbours = graph[lastKnownStop.bus_stop_id] || [];
-    // console.log('neighbour from graph', neighbours);
     neighbours.forEach((x) => {
       const y = {
         ...top,
