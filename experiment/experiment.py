@@ -9,17 +9,17 @@ with open('bus_stops_by_service_000115.tsv') as f:
     bus_stops = []
     for row in raw_data:
         stop = {
-            'service_name': row[0],
-            'sequence': row[1],
-            'bus_stop_id': row[2],
+            'service_name': int(row[0]),
+            'sequence': int(row[1]),
+            'bus_stop_id': int(row[2]),
             'name_en': row[3],
             'name_mm': row[4],
             'road_en': row[5],
             'road_mm': row[6],
             'township_en': row[7],
             'township_mm': row[8],
-            'lat': row[9],
-            'lng': row[10]
+            'lat': float(row[9]),
+            'lng': float(row[10])
         }
         bus_stops.append(stop)
     bus_stops = bus_stops[1:]
@@ -27,7 +27,6 @@ with open('bus_stops_by_service_000115.tsv') as f:
         b['service_name'] = int(b['service_name'])
         b['sequence'] = int(b['sequence'])
         b['bus_stop_id'] = int(b['bus_stop_id'])
-
 
 
 

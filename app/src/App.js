@@ -3,6 +3,7 @@ import { Row, Col } from 'antd';
 import { connect } from 'react-redux';
 import graph from '../../experiment/adjancencyList.json';
 import busStopsMap from '../../experiment/stops_map.json';
+import busServices from '../../experiment/bus_services.json';
 import { adjacencyListLoaded } from './actions/map';
 import './App.css';
 // import { distance } from './utils';
@@ -37,7 +38,7 @@ App.propTypes = {
 
 
 const mapDispatchToProps = dispatch => ({
-  loadGraph: () => dispatch(adjacencyListLoaded(graph, busStopsMap)),
+  loadGraph: () => dispatch(adjacencyListLoaded(graph, busStopsMap, busServices)),
 });
 
 const mapStateToProps = () => ({

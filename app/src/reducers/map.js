@@ -6,11 +6,11 @@ const initialState = {
   zoom: 15,
   startStop: null,
   endStop: null,
-  routeMarkers: null,
   routePath: null,
   graph: null,
   google: null,
   busStopsMap: null,
+  busServices: null,
 };
 
 const map = (state = initialState, action) => {
@@ -52,6 +52,7 @@ const map = (state = initialState, action) => {
       return Object.assign({}, state, {
         graph: action.graph,
         busStopsMap: action.busStopsMap,
+        busServices: action.busServices,
       });
     }
     case types.ON_MAP_LOAD: {
