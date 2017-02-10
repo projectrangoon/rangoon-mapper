@@ -7,6 +7,7 @@ import { handlePlacesChanged, onMapLoad } from '../../actions/map';
 import customMapStyles from '../../constants/CustomMapStyles.json';
 import BusStop from '../../components/BusStop';
 import Polyline from '../../components/Polyline';
+import allBusStops from '../../../../experiment/unique_stops.json';
 
 
 const Map = (props) => {
@@ -43,12 +44,19 @@ Map.propTypes = {
   onMapLoad: React.PropTypes.func.isRequired,
 };
 
-function mapStateToProps(state) {
-  const { map, busStops } = state;
+function mapStateToProps(state, ownProps) {
+  let { map } = state;
+
+  if (ownProps.routeParams) {
+    map = {
+      ...map,
+      startStop: allBusStops[ownProps.routeParams.startStop],
+      endStop: allBusStops[ownProps.routeParams.endStop],
+    };
+  }
 
   return {
     map,
-    busStops,
   };
 }
 
