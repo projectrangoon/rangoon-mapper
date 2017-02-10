@@ -15,10 +15,11 @@ export const onMapLoad = google => ({
   google,
 });
 
-export const adjacencyListLoaded = (graph, busStopsMap) => ({
+export const adjacencyListLoaded = (graph, busStopsMap, busServices) => ({
   type: types.AJACENCY_LIST_LOADED,
   graph,
   busStopsMap,
+  busServices,
 });
 
 export const calculateRoute = (graph, busStopsMap, startStop, endStop) => ({

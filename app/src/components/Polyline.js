@@ -10,7 +10,7 @@ class Polyline extends Component {
         strokeOpacity: 0.7,
         strokeWeight: 3,
         clickable: false,
-        path: this.props.routePath.path,
+        path: this.props.routePath,
       });
       this.setState({ polyline });
     }

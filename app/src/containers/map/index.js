@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import GoogleMap from 'google-map-react';
+import _ from 'lodash';
 
 import './index.css';
 import { handlePlacesChanged, onMapLoad } from '../../actions/map';
@@ -13,8 +14,16 @@ const Map = (props) => {
   const {
     center,
     zoom,
+    busServices,
     routePath,
     google } = props.map;
+
+
+  let polylines = null;
+
+  if (routePath && routePath.path) {
+    polylines = _.groupBy(routePath.path || [], 'service_name');
+  }
 
 
   return (
@@ -27,9 +36,11 @@ const Map = (props) => {
       onGoogleApiLoaded={props.onMapLoad}
     >
 
-      {routePath && routePath.path ?
-        <Polyline google={google} routePath={routePath} />
+
+      {polylines ?
+        _.map(polylines, (value, key) => <Polyline key={key} google={google} color={key === '0' ? '#000' : busServices[key].color} routePath={value} />)
       : null}
+
 
       {routePath && routePath.path ?
         routePath.path.map(marker => <BusStop key={marker.bus_stop_id} {...marker} />)

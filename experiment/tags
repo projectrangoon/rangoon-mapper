@@ -4,41 +4,75 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
-all_bus_stops	experiment.py	/^all_bus_stops = {}$/;"	kind:variable	line:74
+BLUE	cleanup.py	/^BLUE = '#405CAA'$/;"	kind:variable	line:7
+BROWN	cleanup.py	/^BROWN = '#86603E'$/;"	kind:variable	line:11
+GREEN	cleanup.py	/^GREEN = '#2C8A6C'$/;"	kind:variable	line:12
+ORANGE	cleanup.py	/^ORANGE = '#E47B27'$/;"	kind:variable	line:10
+PURPLE	cleanup.py	/^PURPLE = '#96509F'$/;"	kind:variable	line:9
+RED	cleanup.py	/^RED = '#DF504E'$/;"	kind:variable	line:8
+all_bus_stops	cleanup.py	/^all_bus_stops = json.loads(open('all_bus_stops.json', 'rb').read())$/;"	kind:variable	line:92
+all_bus_stops	cleanup.py	/^all_bus_stops = sorted(all_bus_stops, key=itemgetter('service_name'))$/;"	kind:variable	line:93
+all_bus_stops	experiment.py	/^all_bus_stops = {}$/;"	kind:variable	line:79
+asin	cleanup.py	/^    from math import radians, cos, sin, asin, sqrt$/;"	kind:namespace	line:101
 asin	route.py	/^    from math import radians, cos, sin, asin, sqrt$/;"	kind:namespace	line:32
+bus_stops	cleanup.py	/^    bus_stops = []$/;"	kind:variable	line:26
+bus_stops	cleanup.py	/^bus_stops = json.loads(open('unique_stops.json', 'rb').read())$/;"	kind:variable	line:89
+bus_stops	cleanup.py	/^bus_stops = sorted(bus_stops, key=itemgetter('bus_stop_id'))$/;"	kind:variable	line:90
 bus_stops	experiment.py	/^    bus_stops = []$/;"	kind:variable	line:9
 bus_stops	experiment.py	/^    bus_stops = bus_stops[1:]$/;"	kind:variable	line:25
-bus_stops	experiment.py	/^bus_stops = itertools.groupby(bus_stops, key=itemgetter('service_name'))$/;"	kind:variable	line:72
-bus_stops	experiment.py	/^bus_stops = sorted(bus_stops, key=lambda x: (x['service_name'], x['sequence']))$/;"	kind:variable	line:71
-bus_stops	route.py	/^bus_stops = json.loads(open('all_bus_stops.json', 'rb').read())$/;"	kind:variable	line:12
+bus_stops	experiment.py	/^bus_stops = itertools.groupby(bus_stops, key=itemgetter('service_name'))$/;"	kind:variable	line:77
+bus_stops	experiment.py	/^bus_stops = sorted(bus_stops, key=lambda x: (x['service_name'], x['sequence']))$/;"	kind:variable	line:76
+bus_stops	route.py	/^bus_stops = json.loads(open('unique_stops.json', 'rb').read())$/;"	kind:variable	line:12
 bus_stops	route.py	/^bus_stops = sorted(bus_stops, key=lambda x: (int(x['service_name']), int(x['sequence'])))$/;"	kind:variable	line:14
+cleanup.py	cleanup.py	1;"	kind:file	line:1
+colors	cleanup.py	/^colors = {}$/;"	kind:variable	line:14
+compose	cleanup.py	/^def compose(f, g):$/;"	kind:function	line:96
+cos	cleanup.py	/^    from math import radians, cos, sin, asin, sqrt$/;"	kind:namespace	line:101
 cos	route.py	/^    from math import radians, cos, sin, asin, sqrt$/;"	kind:namespace	line:32
 cost_per_stop	route.py	/^cost_per_stop = float(sys.argv[3]) # 0.5$/;"	kind:variable	line:8
 cost_per_transfer	route.py	/^cost_per_transfer = float(sys.argv[4]) # 5$/;"	kind:variable	line:9
+csv	cleanup.py	/^import csv$/;"	kind:namespace	line:1
 csv	experiment.py	/^import csv$/;"	kind:namespace	line:3
+distance	cleanup.py	/^        distance = get_distance(stop['lng'], stop['lat'],$/;"	kind:variable	line:124
 end	route.py	/^end = sys.argv[2]$/;"	kind:variable	line:7
 experiment.py	experiment.py	1;"	kind:file	line:1
+get_distance	cleanup.py	/^def get_distance(lon1, lat1, lon2, lat2):$/;"	kind:function	line:100
 get_distance	route.py	/^def get_distance(lon1, lat1, lon2, lat2):$/;"	kind:function	line:31
 get_id	route.py	/^def get_id(name):$/;"	kind:function	line:50
 get_name	route.py	/^def get_name(bus_stop_id):$/;"	kind:function	line:17
 get_route_no_and_seq	route.py	/^def get_route_no_and_seq(bus_stop_id):$/;"	kind:function	line:24
+graph	cleanup.py	/^graph = {}$/;"	kind:variable	line:114
 graph	route.py	/^graph = {}$/;"	kind:variable	line:55
-groups	route.py	/^groups = itertools.groupby(bus_stops, key=itemgetter('service_name'))$/;"	kind:variable	line:56
+groupby	cleanup.py	/^from itertools import groupby$/;"	kind:namespace	line:3
+itemgetter	cleanup.py	/^from operator import itemgetter$/;"	kind:namespace	line:5
 itemgetter	experiment.py	/^from operator import itemgetter$/;"	kind:namespace	line:2
 itemgetter	route.py	/^from operator import itemgetter$/;"	kind:namespace	line:1
 itertools	experiment.py	/^import itertools$/;"	kind:namespace	line:5
 itertools	route.py	/^import itertools$/;"	kind:namespace	line:5
+json	cleanup.py	/^import json$/;"	kind:namespace	line:2
 json	experiment.py	/^import json$/;"	kind:namespace	line:4
 json	route.py	/^import json$/;"	kind:namespace	line:3
+key	cleanup.py	/^        key = stop['bus_stop_id']$/;"	kind:variable	line:119
+next_stop	cleanup.py	/^        next_stop = stops[stops.index(stop) + 1]$/;"	kind:variable	line:123
+pprint	cleanup.py	/^from pprint import pprint$/;"	kind:namespace	line:4
 pprint	experiment.py	/^from pprint import pprint$/;"	kind:namespace	line:1
 pprint	route.py	/^from pprint import pprint$/;"	kind:namespace	line:2
+radians	cleanup.py	/^    from math import radians, cos, sin, asin, sqrt$/;"	kind:namespace	line:101
 radians	route.py	/^    from math import radians, cos, sin, asin, sqrt$/;"	kind:namespace	line:32
 raw_data	experiment.py	/^    raw_data = csv.reader(f, delimiter='\\t')$/;"	kind:variable	line:8
+reader	cleanup.py	/^    reader = csv.reader(f, delimiter='\\t')$/;"	kind:variable	line:25
 route.py	route.py	1;"	kind:file	line:1
+services	cleanup.py	/^services = groupby(all_bus_stops, key=itemgetter('service_name'))$/;"	kind:variable	line:115
+sin	cleanup.py	/^    from math import radians, cos, sin, asin, sqrt$/;"	kind:namespace	line:101
 sin	route.py	/^    from math import radians, cos, sin, asin, sqrt$/;"	kind:namespace	line:32
+sqrt	cleanup.py	/^    from math import radians, cos, sin, asin, sqrt$/;"	kind:namespace	line:101
 sqrt	route.py	/^    from math import radians, cos, sin, asin, sqrt$/;"	kind:namespace	line:32
 start	route.py	/^start = sys.argv[1]$/;"	kind:variable	line:6
+stop	cleanup.py	/^        stop = {$/;"	kind:variable	line:28
 stop	experiment.py	/^        stop = {$/;"	kind:variable	line:11
-stops	experiment.py	/^stops = []$/;"	kind:variable	line:62
+stops	cleanup.py	/^    stops = list(stops)$/;"	kind:variable	line:117
+stops	experiment.py	/^stops = []$/;"	kind:variable	line:63
 sys	route.py	/^import sys$/;"	kind:namespace	line:4
-unique_stops	experiment.py	/^unique_stops = {}$/;"	kind:variable	line:38
+unique_stops	cleanup.py	/^unique_stops = {}$/;"	kind:variable	line:48
+unique_stops	experiment.py	/^unique_stops = {}$/;"	kind:variable	line:37
+unique_stops_list	cleanup.py	/^unique_stops_list = []$/;"	kind:variable	line:76
