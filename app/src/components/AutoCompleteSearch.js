@@ -15,6 +15,7 @@ class AutoCompleteSearch extends Component {
     this.resetComponent();
     this.setState({
       source,
+      value: this.props.defaultStop ? `(${this.props.defaultStop.name_en} - ${this.props.defaultStop.name_mm}) (${this.props.defaultStop.road_en} - ${this.props.defaultStop.road_mm})` : null,
       typingTimer: 0,
       doneTypingInterval: 300,
     });
@@ -99,10 +100,15 @@ class AutoCompleteSearch extends Component {
   }
 }
 
+AutoCompleteSearch.defaultProps = {
+  defaultStop: null,
+};
+
 AutoCompleteSearch.propTypes = {
   source: React.PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
   placeholder: React.PropTypes.string.isRequired,
   onSelect: React.PropTypes.func.isRequired,
+  defaultStop: React.PropTypes.object,
 };
 
 export default AutoCompleteSearch;

@@ -1,3 +1,4 @@
+import { push } from 'react-router-redux';
 import types from '../constants/ActionTypes';
 
 export const handlePlacesChanged = places => ({
@@ -47,7 +48,6 @@ export const selectStartEndStop = (start, end) =>
       map,
     } = getState();
 
-
     const {
       busStopsMap,
       startStop,
@@ -55,17 +55,18 @@ export const selectStartEndStop = (start, end) =>
     } = map;
 
 
-    if (!startStop && start) {
+    if (start) {
       dispatch(selectStartStop(start));
     }
 
-    if (!endStop && end) {
+    if (end) {
       dispatch(selectEndStop(end));
     }
 
-    if ((startStop && end) || (start && endStop)) {
+    if ((startStop && end) || (start && endStop) || (start && end)) {
       const origin = start || startStop;
       const destination = end || endStop;
+      dispatch(push(`/directions?startStop=${origin.bus_stop_id}&endStop=${destination.bus_stop_id}`));
       dispatch(calculateRoute(map.graph, busStopsMap, origin, destination));
       // const center = {
       //   lat: parseFloat(origin.lat),

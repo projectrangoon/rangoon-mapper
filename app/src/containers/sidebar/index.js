@@ -1,56 +1,61 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import './index.css';
 
-import loadAllBusStops from '../../actions/busStops';
 import { selectStartEndStop } from '../../actions/map';
 import AutoCompleteSearch from '../../components/AutoCompleteSearch';
 
 import allBusStops from '../../../../experiment/unique_stops.json';
 
-class Sidebar extends Component {
-  componentWillMount() {
-    this.props.loadAllBusStops();
-  }
-
-  render() {
-    return (
-      <div>
-        <AutoCompleteSearch
-          source={allBusStops}
-          placeholder="Start"
-          onSelect={startStop => this.props.handleStartEndSelect(startStop, null)}
-        />
-        <AutoCompleteSearch
-          source={allBusStops}
-          placeholder="End"
-          onSelect={endStop => this.props.handleStartEndSelect(null, endStop)}
-        />
-      </div>
-    );
-  }
-}
-
-Sidebar.propTypes = {
-  loadAllBusStops: React.PropTypes.func.isRequired,
-  handleStartEndSelect: React.PropTypes.func.isRequired,
+const Sidebar = (props) => {
+  const { handleStartEndSelect, map, query } = props;
+  const { busStopsMap } = map;
+  return (
+    <div>
+      <AutoCompleteSearch
+        source={allBusStops}
+        placeholder="Start"
+        onSelect={startStop => handleStartEndSelect(startStop, null)}
+        defaultStop={busStopsMap[query.startStop] || null}
+      />
+      <AutoCompleteSearch
+        source={allBusStops}
+        placeholder="End"
+        onSelect={endStop => handleStartEndSelect(null, endStop)}
+        defaultStop={busStopsMap[query.endStop] || null}
+      />
+    </div>
+  );
 };
 
-const mapStateToProps = (state) => {
+Sidebar.defaultProps = {
+  query: {
+    startStop: null,
+    endStop: null,
+  },
+};
+
+Sidebar.propTypes = {
+  handleStartEndSelect: React.PropTypes.func.isRequired,
+  query: React.PropTypes.object,
+  map: React.PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state, ownProps) => {
   const {
     busStops,
-    startStop,
-    endStop,
+    map,
   } = state;
+  const { query } = ownProps.location;
+
   return {
     busStops,
-    startStop,
-    endStop,
+    map,
+    query,
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  loadAllBusStops: () => dispatch(loadAllBusStops(allBusStops)),
   handleStartEndSelect: (startStop, endStop) => dispatch(selectStartEndStop(startStop, endStop)),
 });
 

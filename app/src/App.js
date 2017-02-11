@@ -30,9 +30,13 @@ class App extends Component {
   }
 }
 
+App.defaultProps = {
+  sidebar: null,
+};
+
 App.propTypes = {
   main: React.PropTypes.element.isRequired,
-  sidebar: React.PropTypes.element.isRequired,
+  sidebar: React.PropTypes.element,
   loadGraph: React.PropTypes.func.isRequired,
 };
 
