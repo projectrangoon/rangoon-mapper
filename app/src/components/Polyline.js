@@ -16,7 +16,7 @@ class Polyline extends Component {
     }
   }
   componentWillUnmount() {
-    if (this.state.polyline) {
+    if (this.state && this.state.polyline) {
       this.state.polyline.setMap(null);
     }
   }
