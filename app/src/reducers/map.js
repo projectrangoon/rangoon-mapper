@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import types from '../constants/ActionTypes';
 import { calculateRoute } from '../utils';
 
@@ -11,6 +12,7 @@ const initialState = {
   google: null,
   busStopsMap: null,
   busServices: null,
+  polylines: null,
 };
 
 const map = (state = initialState, action) => {
@@ -27,15 +29,11 @@ const map = (state = initialState, action) => {
         center: action.center,
       });
     }
-    case types.DRAW_ROUTE: {
-      return Object.assign({}, state, {
-        routeMarkers: action.routeMarkers,
-      });
-    }
     case types.CALCULATE_ROUTE: {
       const { graph, busStopsMap, startStop, endStop } = action;
       const routePath = calculateRoute(graph, busStopsMap, startStop, endStop);
       let payload = {};
+      let polylines = {};
       if (routePath && routePath.path) {
         payload = { ...routePath, path: [] };
         routePath.path.forEach((busStop) => {
@@ -43,9 +41,12 @@ const map = (state = initialState, action) => {
           stop.service_name = busStop.service_name;
           payload.path.push(stop);
         });
+
+        polylines = _.groupBy(payload.path || [], 'service_name');
       }
       return Object.assign({}, state, {
         routePath: payload,
+        polylines,
       });
     }
     case types.AJACENCY_LIST_LOADED: {
