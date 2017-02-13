@@ -21,14 +21,15 @@ class Polyline extends Component {
     }
   }
   render() {
-    return false;
+    this.state.polyline.setMap(this.props.google.map);
+    return null;
   }
 }
 
 Polyline.defaultProps = {
   google: null,
   routePath: null,
-  color: '',
+  color: '#000',
 };
 
 Polyline.propTypes = {

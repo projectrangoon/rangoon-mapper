@@ -23,14 +23,10 @@ class Map extends Component {
       zoom,
       busServices,
       routePath,
+      polylines,
       google } = this.props.map;
 
 
-    let polylines = null;
-
-    if (routePath && routePath.path) {
-      polylines = _.groupBy(routePath.path || [], 'service_name');
-    }
     return (
       <GoogleMap
         bootstrapURLKeys={{ key: 'AIzaSyBePNN11JZSltU-e8ht5z176ZWDKpx5Jg0' }}
@@ -41,15 +37,14 @@ class Map extends Component {
         onGoogleApiLoaded={this.props.onMapLoad}
       >
 
-
-        {polylines ?
-          _.map(polylines, (value, key) => <Polyline key={key} google={google} color={key === '0' ? '#000' : busServices[key].color} routePath={value} />)
-        : null}
-
-
         {routePath && routePath.path ?
           routePath.path.map(marker => <BusStop key={marker.bus_stop_id} {...marker} />)
           : null}
+
+        {polylines && google ?
+         _.map(polylines, (value, key) => <Polyline key={key} google={google} color={key === '0' ? '#000' : busServices[key].color} routePath={value} />)
+        : null}
+
       </GoogleMap>
     );
   }

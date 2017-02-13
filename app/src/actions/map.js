@@ -44,9 +44,7 @@ export const selectEndStop = endStop => ({
 
 export const selectStartEndStop = (start, end) =>
   (dispatch, getState) => {
-    const {
-      map,
-    } = getState();
+    const { map } = getState();
 
     const {
       busStopsMap,
@@ -68,10 +66,6 @@ export const selectStartEndStop = (start, end) =>
       const destination = end || endStop;
       dispatch(push(`/directions?startStop=${origin.bus_stop_id}&endStop=${destination.bus_stop_id}`));
       dispatch(calculateRoute(map.graph, busStopsMap, origin, destination));
-      // const center = {
-      //   lat: parseFloat(origin.lat),
-      //   lng: parseFloat(origin.lng),
-      // };
-      // dispatch(updateMapCenter(center));
+      dispatch(updateMapCenter({ lat: origin.lat, lng: origin.lng }));
     }
   };
