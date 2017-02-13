@@ -1,20 +1,9 @@
 import React from 'react';
-import pin from '../assets/pin.png';
+import './BusStop.css';
 
-const PIN_SIZE = 30;
-
-const Bus = props => (
-  <div
-    className="marker"
-    style={{
-      position: 'absolute',
-      left: -PIN_SIZE / 2,
-      top: -PIN_SIZE,
-      cursor: 'pointer',
-      color: 'white',
-    }}
-  >
-    <img src={pin} alt={props.name_en} title={props.name_en} style={{ height: '30px' }} />
+const Bus = () => (
+  <div className="marker">
+    <div className="pulse" />
   </div>
 );
 
