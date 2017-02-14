@@ -12,7 +12,7 @@
         "import"
     ],
     "rules": {
-        "react/jsx-filename-extension": [1, {"extensions": [".js", ".jsx"]}],
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "no-continue": 0,
         "no-plusplus": 0,
         "react/forbid-prop-types": 0,
