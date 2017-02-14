@@ -6,6 +6,7 @@ import busStopsMap from '../../experiment/stops_map.json';
 import busServices from '../../experiment/bus_services.json';
 import { adjacencyListLoaded } from './actions/map';
 import './App.css';
+import './styles/main.scss';
 // import { distance } from './utils';
 
 class App extends Component {
