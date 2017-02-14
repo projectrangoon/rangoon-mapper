@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'antd';
 import { connect } from 'react-redux';
 import graph from '../../experiment/adjancencyList.json';
 import busStopsMap from '../../experiment/stops_map.json';
 import busServices from '../../experiment/bus_services.json';
 import { adjacencyListLoaded } from './actions/map';
-import './App.css';
 import './styles/main.scss';
 // import { distance } from './utils';
 
@@ -15,18 +13,16 @@ class App extends Component {
   }
   render() {
     return (
-      <Row type="flex" className="app">
-        <Col xs={24} md={6} className="sidebar">
-          <aside>
+      <div className="container-fluid">
+        <div className="row">
+          <aside className="col-sm-12 col-md-3 sidebar">
             {this.props.sidebar}
           </aside>
-        </Col>
-        <Col xs={24} md={18}>
-          <main className="map">
+          <main className="col-sm-12 col-md-9 map">
             {this.props.main}
           </main>
-        </Col>
-      </Row>
+        </div>
+      </div>
     );
   }
 }

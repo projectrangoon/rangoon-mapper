@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import Input from 'antd/lib/input';
-import Icon from 'antd/lib/icon';
 
 import { searchBusStops } from '../utils';
 
 class AutoCompleteSearch extends Component {
   componentWillMount() {
+    const id = _.uniqueId();
     const source = [];
     this.props.source.forEach((obj) => {
       const found = source.some(el => el.bus_stop_id === obj.bus_stop_id);
@@ -15,9 +14,10 @@ class AutoCompleteSearch extends Component {
     this.resetComponent();
     this.setState({
       source,
-      value: this.props.defaultStop ? `(${this.props.defaultStop.name_en} - ${this.props.defaultStop.name_mm}) (${this.props.defaultStop.road_en} - ${this.props.defaultStop.road_mm})` : null,
+      value: this.props.defaultStop ? `(${this.props.defaultStop.name_en} - ${this.props.defaultStop.name_mm}) (${this.props.defaultStop.road_en} - ${this.props.defaultStop.road_mm})` : '',
       typingTimer: 0,
       doneTypingInterval: 300,
+      id,
     });
   }
 
@@ -72,30 +72,33 @@ class AutoCompleteSearch extends Component {
   }
 
   render() {
-    const { value, results } = this.state;
+    const { value, results, id } = this.state;
 
     return (
-      <div>
-        <Input
-          style={{ borderRadius: 0, height: '3.5em' }}
-          onChange={this.handleChange}
-          onKeyUp={this.handleKeyUp}
-          onKeyDown={this.handleKeyDown}
-          value={value}
-          placeholder={this.props.placeholder}
-        />
-        <ul className="bus-menu">
-          {results.map(r =>
-            <li key={r.bus_stop_id}>
-              <a href="" onClick={e => this.handleResultSelect(e, r)}>
-                <Icon type="environment-o" />
-                <strong>{`${r.name_en} - ${r.name_mm}`}</strong>
-                <small>{`${r.road_en} - ${r.road_mm}`}</small>
-              </a>
-            </li>,
-          )}
-        </ul>
-      </div>
+      <form>
+        <div className="form-group">
+          <label className="sr-only" htmlFor={id}>From</label>
+          <input
+            value={value}
+            type="text"
+            id={id}
+            className="form-control"
+            onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}
+            placeholder={this.props.placeholder}
+          />
+          <ul className="bus-menu">
+            {results.map(r =>
+              <li key={r.bus_stop_id}>
+                <a href="" onClick={e => this.handleResultSelect(e, r)}>
+                  <strong>{`${r.name_en} - ${r.name_mm}`}</strong>
+                  <small>{`${r.road_en} - ${r.road_mm}`}</small>
+                </a>
+              </li>,
+            )}
+          </ul>
+        </div>
+      </form>
     );
   }
 }

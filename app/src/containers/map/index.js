@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import GoogleMap from 'google-map-react';
 import _ from 'lodash';
 
-import './index.css';
 import { handlePlacesChanged, onMapLoad, selectStartEndStop } from '../../actions/map';
 import customMapStyles from '../../constants/CustomMapStyles.json';
 import BusStop from '../../components/BusStop';

@@ -1,2 +1,7 @@
-body {
-}
+@import 'bootstrap/bootstrap';
+
+// Layout
+@import 'layout/site';
+
+// Containers
+@import 'containers/map';
