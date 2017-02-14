@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import './index.css';
 
 import { selectStartEndStop } from '../../actions/map';
 import AutoCompleteSearch from '../../components/AutoCompleteSearch';
