@@ -15,15 +15,15 @@ class App extends Component {
   render() {
     return (
       <Row type="flex" className="app">
+        <Col xs={24} md={6} className="sidebar">
+          <aside>
+            {this.props.sidebar}
+          </aside>
+        </Col>
         <Col xs={24} md={18}>
           <main className="map">
             {this.props.main}
           </main>
-        </Col>
-        <Col xs={24} md={6}>
-          <aside className="sidebar">
-            {this.props.sidebar}
-          </aside>
         </Col>
       </Row>
     );
