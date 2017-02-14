@@ -14,7 +14,7 @@ class AutoCompleteSearch extends Component {
     this.resetComponent();
     this.setState({
       source,
-      value: this.props.defaultStop ? `(${this.props.defaultStop.name_en} - ${this.props.defaultStop.name_mm}) (${this.props.defaultStop.road_en} - ${this.props.defaultStop.road_mm})` : '',
+      value: this.props.defaultStop ? `${this.props.defaultStop.name_en} (${this.props.defaultStop.name_mm})` : '',
       typingTimer: 0,
       doneTypingInterval: 300,
       id,
@@ -63,7 +63,7 @@ class AutoCompleteSearch extends Component {
   handleResultSelect = (e, payload) => {
     e.preventDefault();
     this.setState({
-      value: `(${payload.name_en} - ${payload.name_mm}) (${payload.road_en} - ${payload.road_mm})`,
+      value: `${payload.name_en} (${payload.name_mm})`,
       results: [],
     });
     if (this.props.onSelect) {
@@ -75,30 +75,28 @@ class AutoCompleteSearch extends Component {
     const { value, results, id } = this.state;
 
     return (
-      <form>
-        <div className="form-group">
-          <label className="sr-only" htmlFor={id}>From</label>
-          <input
-            value={value}
-            type="text"
-            id={id}
-            className="form-control"
-            onChange={this.handleChange}
-            onKeyDown={this.handleKeyDown}
-            placeholder={this.props.placeholder}
-          />
-          <ul className="bus-menu">
-            {results.map(r =>
-              <li key={r.bus_stop_id}>
-                <a href="" onClick={e => this.handleResultSelect(e, r)}>
-                  <strong>{`${r.name_en} - ${r.name_mm}`}</strong>
-                  <small>{`${r.road_en} - ${r.road_mm}`}</small>
-                </a>
-              </li>,
-            )}
-          </ul>
-        </div>
-      </form>
+      <div className="form-group">
+        <label className="sr-only" htmlFor={id}>From</label>
+        <input
+          value={value}
+          type="text"
+          id={id}
+          className="form-control"
+          onChange={this.handleChange}
+          onKeyDown={this.handleKeyDown}
+          placeholder={this.props.placeholder}
+        />
+        <ul className="bus-menu">
+          {results.map(r =>
+            <li key={r.bus_stop_id}>
+              <a href="" onClick={e => this.handleResultSelect(e, r)}>
+                <strong>{`${r.name_en} - ${r.name_mm}`}</strong>
+                <small>{`${r.road_en} - ${r.road_mm}`}</small>
+              </a>
+            </li>,
+          )}
+        </ul>
+      </div>
     );
   }
 }

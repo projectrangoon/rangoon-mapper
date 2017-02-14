@@ -10,19 +10,26 @@ const Sidebar = (props) => {
   const { handleStartEndSelect, map, query } = props;
   const { busStopsMap } = map;
   return (
-    <div>
-      <AutoCompleteSearch
-        source={allBusStops}
-        placeholder="Start"
-        onSelect={startStop => handleStartEndSelect(startStop, null)}
-        defaultStop={busStopsMap[query.startStop] || null}
-      />
-      <AutoCompleteSearch
-        source={allBusStops}
-        placeholder="End"
-        onSelect={endStop => handleStartEndSelect(null, endStop)}
-        defaultStop={busStopsMap[query.endStop] || null}
-      />
+    <div className="container">
+      <div className="row">
+        <form className="col-sm">
+          <AutoCompleteSearch
+            source={allBusStops}
+            placeholder="Start"
+            onSelect={startStop => handleStartEndSelect(startStop, null)}
+            defaultStop={busStopsMap[query.startStop] || null}
+          />
+          <AutoCompleteSearch
+            source={allBusStops}
+            placeholder="End"
+            onSelect={endStop => handleStartEndSelect(null, endStop)}
+            defaultStop={busStopsMap[query.endStop] || null}
+          />
+        </form>
+      </div>
+      <div className="row">
+        <h1>Results</h1>
+      </div>
     </div>
   );
 };

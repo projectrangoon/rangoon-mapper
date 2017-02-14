@@ -4,13 +4,16 @@
     "elementType":"labels.text.fill",
     "stylers":[
       {
+        "visibility": "simplified"
+      },
+      {
         "saturation":36
       },
       {
         "color":"#000000"
       },
       {
-        "lightness":40
+        "lightness":45
       }
     ]
   },
@@ -19,7 +22,7 @@
     "elementType":"labels.text.stroke",
     "stylers":[
       {
-        "visibility":"on"
+        "visibility":"simplified"
       },
       {
         "color":"#000000"
@@ -46,7 +49,7 @@
         "color":"#000000"
       },
       {
-        "lightness":20
+        "lightness":30
       }
     ]
   },
@@ -62,6 +65,14 @@
       },
       {
         "weight":1.2
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.neighborhood",
+    "stylers": [
+      {
+        "visibility": "off"
       }
     ]
   },
@@ -82,10 +93,7 @@
     "elementType":"geometry",
     "stylers":[
       {
-        "color":"#000000"
-      },
-      {
-        "lightness":21
+        "visibility": "off"
       }
     ]
   },
@@ -106,13 +114,16 @@
     "elementType":"geometry.stroke",
     "stylers":[
       {
+        "visibility": "simplified"
+      },
+      {
         "color":"#000000"
       },
       {
-        "lightness":29
+        "lightness":16
       },
       {
-        "weight":0.2
+        "weight":1
       }
     ]
   },
@@ -124,7 +135,7 @@
         "color":"#000000"
       },
       {
-        "lightness":18
+        "lightness": 18
       }
     ]
   },
@@ -136,7 +147,7 @@
         "color":"#000000"
       },
       {
-        "lightness":16
+        "lightness": 16
       }
     ]
   },
@@ -161,6 +172,18 @@
       },
       {
         "lightness":17
+      }
+    ]
+  },
+  {
+    "featureType":"water",
+    "elementType":"labels.text.fill",
+    "stylers":[
+      {
+        "color":"#000000"
+      },
+      {
+        "visibility":"off"
       }
     ]
   }
