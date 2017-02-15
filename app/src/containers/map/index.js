@@ -37,7 +37,11 @@ class Map extends Component {
       >
 
         {routePath && routePath.path ?
-          routePath.path.map(marker => <BusStop key={marker.bus_stop_id} {...marker} />)
+         routePath.path.map(marker =>
+           <BusStop
+             key={marker.bus_stop_id}
+             color={busServices[marker.service_name].color} {...marker}
+           />)
           : null}
 
         {polylines && google ?

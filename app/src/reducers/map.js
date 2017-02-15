@@ -42,6 +42,10 @@ const map = (state = initialState, action) => {
           payload.path.push(stop);
         });
 
+        if (payload.path.length >= 1) {
+          payload.path[0].service_name = payload.path[1].service_name;
+        }
+
         polylines = _.groupBy(payload.path || [], 'service_name');
       }
       return Object.assign({}, state, {

@@ -31,6 +31,7 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop) => ({
   endStop,
 });
 
+
 // Bus stop actions
 export const selectStartStop = startStop => ({
   type: types.SELECT_START_STOP,

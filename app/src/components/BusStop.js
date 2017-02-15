@@ -1,18 +1,18 @@
 import React from 'react';
 import './BusStop.css';
 
-const Bus = () => (
-  <div className="marker">
+const Bus = ({ color }) => (
+  <div className="marker" style={{ background: color }}>
     <div className="pulse" />
   </div>
 );
 
 Bus.defaultProps = {
-  name_en: null,
+  color: '#E54D42',
 };
 
 Bus.propTypes = {
-  name_en: React.PropTypes.string,
+  color: React.PropTypes.string,
 };
 
 export default Bus;
