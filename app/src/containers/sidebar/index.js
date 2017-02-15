@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 
 import { selectStartEndStop } from '../../actions/map';
 import AutoCompleteSearch from '../../components/AutoCompleteSearch';
+import Journey from '../../components/Journey';
 
 import allBusStops from '../../../../experiment/unique_stops.json';
 
 const Sidebar = (props) => {
   const { handleStartEndSelect, map, query } = props;
-  const { busStopsMap } = map;
+  const { busStopsMap, routePath, busServices } = map;
   return (
     <div className="container">
       <div className="row">
@@ -27,9 +28,8 @@ const Sidebar = (props) => {
           />
         </form>
       </div>
-      <div className="row">
-        <h1>Results</h1>
-      </div>
+
+      { routePath ? <Journey path={routePath} busServices={busServices} /> : null }
     </div>
   );
 };
