@@ -1,3 +1,11 @@
+.midpoint-marker {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  position: absolute;
+  left: -5px;
+  top: -5px;
+}
 .marker {
   position: absolute;
   width: 20px;
