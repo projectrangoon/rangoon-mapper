@@ -8,7 +8,7 @@ import Journey from '../../components/Journey';
 import allBusStops from '../../../../experiment/unique_stops.json';
 
 const Sidebar = (props) => {
-  const { handleStartEndSelect, map, query } = props;
+  const { handleStartEndSelect, map, params } = props;
   const { busStopsMap, routePath, busServices } = map;
   return (
     <div className="container-fluid">
@@ -18,13 +18,13 @@ const Sidebar = (props) => {
             source={allBusStops}
             placeholder="Start"
             onSelect={startStop => handleStartEndSelect(startStop, null)}
-            defaultStop={busStopsMap[query.startStop] || null}
+            defaultStop={busStopsMap[params.startStop] || null}
           />
           <AutoCompleteSearch
             source={allBusStops}
             placeholder="End"
             onSelect={endStop => handleStartEndSelect(null, endStop)}
-            defaultStop={busStopsMap[query.endStop] || null}
+            defaultStop={busStopsMap[params.endStop] || null}
           />
         </form>
       </div>
@@ -36,7 +36,7 @@ const Sidebar = (props) => {
 };
 
 Sidebar.defaultProps = {
-  query: {
+  params: {
     startStop: null,
     endStop: null,
   },
@@ -44,21 +44,19 @@ Sidebar.defaultProps = {
 
 Sidebar.propTypes = {
   handleStartEndSelect: React.PropTypes.func.isRequired,
-  query: React.PropTypes.object,
+  params: React.PropTypes.object,
   map: React.PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   const {
     busStops,
     map,
   } = state;
-  const { query } = ownProps.location;
 
   return {
     busStops,
     map,
-    query,
   };
 };
 

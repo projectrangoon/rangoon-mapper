@@ -9,7 +9,7 @@ import Sidebar from './containers/sidebar';
 module.exports = (
   <Route path="/" component={App} >
     <IndexRoute components={{ main: Map, sidebar: Sidebar }} />
-    <Route path="directions" components={{ main: Map, sidebar: Sidebar }} />
+    <Route path="directions/:startStop/:endStop" components={{ main: Map, sidebar: Sidebar }} />
     <Route path="*" components={{ main: PageNotFound, sidebar: null }} />
   </Route>
 );
