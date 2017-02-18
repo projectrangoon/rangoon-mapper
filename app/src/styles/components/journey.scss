@@ -8,13 +8,13 @@
 }
 
 .logo {
-  $size: 35px;
   color: $white;
   display: inline-block;
-  height: $size;
-  line-height: $size;
+  height: $service-name-logo-size;
+  line-height: $service-name-logo-size;
   margin-right: .5rem;
   text-align: center;
   vertical-align: middle;
-  width: $size;
+  width: $service-name-logo-size;
+  font-size: .675rem;
 }
