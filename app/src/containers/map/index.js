@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import { handlePlacesChanged, onMapLoad, selectStartEndStop } from '../../actions/map';
 import customMapStyles from '../../constants/CustomMapStyles.json';
-import BusStop from '../../components/BusStop';
+import Marker from '../../components/Marker';
 import Polyline from '../../components/Polyline';
 
 class Map extends Component {
@@ -38,7 +38,7 @@ class Map extends Component {
 
         {routePath && routePath.path ?
          routePath.path.map((marker, index) =>
-           <BusStop
+           <Marker
              key={marker.bus_stop_id}
              color={busServices[marker.service_name].color} {...marker}
              midpoint={!(index === 0 || index === (routePath.path.length - 1))}
