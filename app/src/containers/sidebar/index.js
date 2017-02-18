@@ -11,7 +11,7 @@ const Sidebar = (props) => {
   const { handleStartEndSelect, map, query } = props;
   const { busStopsMap, routePath, busServices } = map;
   return (
-    <div className="container">
+    <div className="container-fluid">
       <div className="row">
         <form className="col-sm">
           <AutoCompleteSearch
@@ -28,8 +28,9 @@ const Sidebar = (props) => {
           />
         </form>
       </div>
-
-      { routePath ? <Journey path={routePath} busServices={busServices} /> : null }
+      <div className="row">
+        { routePath ? <Journey path={routePath} busServices={busServices} /> : null }
+      </div>
     </div>
   );
 };

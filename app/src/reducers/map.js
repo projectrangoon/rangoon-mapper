@@ -42,7 +42,7 @@ const map = (state = initialState, action) => {
           payload.path.push(stop);
         });
 
-        if (payload.path.length >= 1) {
+        if (payload.path.length >= 2) {
           payload.path[0].service_name = payload.path[1].service_name;
         }
 

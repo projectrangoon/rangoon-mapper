@@ -45,7 +45,13 @@ class Map extends Component {
           : null}
 
         {polylines && google ?
-         _.map(polylines, (value, key) => <Polyline key={key} google={google} color={key === '0' ? '#000' : busServices[key].color} routePath={value} />)
+         _.map(polylines, (value, key) =>
+           <Polyline
+             key={key}
+             google={google}
+             color={busServices[key].color}
+             routePath={value}
+           />)
         : null}
 
       </GoogleMap>

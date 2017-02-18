@@ -1,13 +1,14 @@
 .sidebar {
-    background: $alabaster;
-    height: 100vh;
-    overflow-y: scroll;
-    padding-top: 2rem;
+  background: $alabaster;
+  height: 100vh;
+  overflow-y: scroll;
+  padding-top: 2rem;
 }
 
 form {
-    padding: 0;
-    input[type=text] {
-        line-height: 2rem;
-    }
+  padding: 0;
+
+  [type=text] {
+    line-height: 2rem;
+  }
 }

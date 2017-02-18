@@ -1,0 +1,67 @@
+.busline {
+  padding-left: 0;
+
+  li {
+    list-style: none;
+    list-style-type: none;
+  }
+
+  input {
+    display: none;
+  }
+
+  li,
+  label {
+    cursor: pointer;
+  }
+}
+
+.middle {
+  min-height: 1.5rem;
+  position: relative;
+
+  .line {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    width: 3px;
+  }
+
+  label {
+    font-size: .875rem;
+    margin: .5rem 1.5rem;
+  }
+}
+
+.midstops {
+  max-height: 0;
+  overflow-y: scroll;
+  padding-left: 0;
+  position: relative;
+  transition: max-height .3s ease-in;
+
+  .midstop {
+    font-size: .75rem;
+    line-height: 1.35rem;
+    padding-left: 1.5rem;
+    position: relative;
+
+    &:last-child {
+      margin-bottom: .75rem;
+    }
+  }
+
+  .notch {
+    border-radius: 5px;
+    display: inline-block;
+    height: 4px;
+    left: 0;
+    position: absolute;
+    top: 50%;
+    width: 8px;
+  }
+}
+
+[type="checkbox"]:checked ~ .midstops {
+  max-height: 500rem;
+}

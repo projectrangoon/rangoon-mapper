@@ -53,11 +53,18 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop) => {
 
   while (queue.size()) {
     const top = queue.pop();
-
     const lastKnownStop = top.path[top.path.length - 1];
     const lastKnownServiceName = lastKnownStop.service_name;
     if (lastKnownStop.bus_stop_id === endStop.bus_stop_id) {
-      return top;
+      const result = {
+        ...top,
+        currTransfers: top.currTransfers - 1,
+      };
+
+      if (result.path.length >= 2) {
+        result.path[0].service_name = result.path[1].service_name;
+      }
+      return result;
     }
 
     const lastStopId = getUniqueId(lastKnownStop, lastKnownServiceName);
@@ -82,4 +89,18 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop) => {
     });
   }
   return queue.toArray();
+};
+
+export const groupBy = (xs, key) => {
+  const groups = xs.reduce((acc, x) => {
+    const v = key instanceof Function ? key(x) : x[key];
+    const el = acc.find(r => r && r.key === v);
+    if (el) {
+      el.values.push(x);
+    } else {
+      acc.push({ key: v, values: [x] });
+    }
+    return acc;
+  }, []);
+  return groups.map(obj => obj.values);
 };
