@@ -25,10 +25,13 @@
 }
 
 .middle {
-  min-height: 1.0rem;
+  margin: .5rem 0;
+  margin-left: $service-name-logo-size / 2;
+  min-height: 1rem;
   position: relative;
 
   .line {
+    border-radius: 5px;
     height: 100%;
     left: 0;
     position: absolute;
@@ -49,7 +52,7 @@
   .midstop {
     font-size: .75rem;
     line-height: 1.35rem;
-    padding-left: 1.5rem;
+    padding-left: 1rem;
     position: relative;
 
     &:last-child {
