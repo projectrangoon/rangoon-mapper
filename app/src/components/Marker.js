@@ -1,10 +1,26 @@
 import React from 'react';
-import pin from '../assets/pin.png';
 
-const Marker = () =>
-  <div
-    className="marker"
-    style={{ backgroundImage: pin }}
-  />;
+const Bus = ({ color, midpoint }) => {
+  if (midpoint) {
+    return (
+      <div className="midpoint-marker" style={{ background: color }} />
+    );
+  }
+  return (
+    <div className="marker" style={{ background: color }}>
+      <div className="pulse" />
+    </div>
+  );
+};
 
-export default Marker;
+Bus.defaultProps = {
+  color: '#E54D42',
+  midpoint: false,
+};
+
+Bus.propTypes = {
+  color: React.PropTypes.string,
+  midpoint: React.PropTypes.bool,
+};
+
+export default Bus;
