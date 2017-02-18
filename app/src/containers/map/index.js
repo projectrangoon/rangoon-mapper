@@ -37,10 +37,11 @@ class Map extends Component {
       >
 
         {routePath && routePath.path ?
-         routePath.path.map(marker =>
+         routePath.path.map((marker, index) =>
            <BusStop
              key={marker.bus_stop_id}
              color={busServices[marker.service_name].color} {...marker}
+             midpoint={!(index === 0 || index === (routePath.path.length - 1))}
            />)
           : null}
 
