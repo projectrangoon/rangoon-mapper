@@ -65,7 +65,7 @@ export const selectStartEndStop = (start, end) =>
     if ((startStop && end) || (start && endStop) || (start && end)) {
       const origin = start || startStop;
       const destination = end || endStop;
-      dispatch(push(`/directions?startStop=${origin.bus_stop_id}&endStop=${destination.bus_stop_id}`));
+      dispatch(push(`/directions/${origin.bus_stop_id}/${destination.bus_stop_id}`));
       dispatch(calculateRoute(map.graph, busStopsMap, origin, destination));
       dispatch(updateMapCenter({ lat: origin.lat, lng: origin.lng }));
     }

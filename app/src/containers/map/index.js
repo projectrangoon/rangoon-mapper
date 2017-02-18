@@ -10,7 +10,7 @@ import Polyline from '../../components/Polyline';
 
 class Map extends Component {
   componentDidMount() {
-    const { startStop, endStop } = this.props.query;
+    const { startStop, endStop } = this.props.params;
     const { busStopsMap } = this.props.map;
     if (startStop || endStop) {
       this.props.selectStartEndStop(busStopsMap[startStop], busStopsMap[endStop]);
@@ -60,7 +60,7 @@ class Map extends Component {
 }
 
 Map.defaultProps = {
-  query: {
+  params: {
     startStop: null,
     endStop: null,
   },
@@ -70,17 +70,15 @@ Map.propTypes = {
   map: React.PropTypes.object.isRequired,
   onMapLoad: React.PropTypes.func.isRequired,
   selectStartEndStop: React.PropTypes.func.isRequired,
-  query: React.PropTypes.object,
+  params: React.PropTypes.object,
 };
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   const { map, busStops } = state;
-  const { query } = ownProps.location;
 
   return {
     map,
     busStops,
-    query,
   };
 }
 
