@@ -1,6 +1,5 @@
-import _ from 'lodash';
 import types from '../constants/ActionTypes';
-import { calculateRoute } from '../utils';
+import { calculateRoute, groupBy } from '../utils';
 
 const initialState = {
   center: { lat: 16.7943528, lng: 96.1518985 },
@@ -46,7 +45,8 @@ const map = (state = initialState, action) => {
           payload.path[0].service_name = payload.path[1].service_name;
         }
 
-        polylines = _.groupBy(payload.path || [], 'service_name');
+        // polylines = _.groupBy(payload.path || [], 'service_name');
+        polylines = groupBy(payload.path || [], 'service_name', 'reducer');
       }
       return Object.assign({}, state, {
         routePath: payload,

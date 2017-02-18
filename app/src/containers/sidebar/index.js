@@ -9,7 +9,7 @@ import allBusStops from '../../../../experiment/unique_stops.json';
 
 const Sidebar = (props) => {
   const { handleStartEndSelect, map, params } = props;
-  const { busStopsMap, routePath, busServices } = map;
+  const { busStopsMap, polylines, busServices } = map;
   return (
     <div className="container-fluid">
       <div className="row">
@@ -29,7 +29,7 @@ const Sidebar = (props) => {
         </form>
       </div>
       <div className="row">
-        { routePath ? <Journey path={routePath} busServices={busServices} /> : null }
+        { polylines && <Journey path={polylines} busServices={busServices} /> }
       </div>
     </div>
   );
