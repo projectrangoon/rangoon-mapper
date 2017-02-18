@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import GoogleMap from 'google-map-react';
-import _ from 'lodash';
-
 import { handlePlacesChanged, onMapLoad, selectStartEndStop } from '../../actions/map';
 import customMapStyles from '../../constants/CustomMapStyles.json';
 import Marker from '../../components/Marker';
@@ -46,11 +44,11 @@ class Map extends Component {
           : null}
 
         {polylines && google ?
-         _.map(polylines, (value, key) =>
+         polylines.map(value =>
            <Polyline
-             key={key}
+             key={value[0].service_name}
              google={google}
-             color={busServices[key].color}
+             color={busServices[value[0].service_name].color}
              routePath={value}
            />)
         : null}
