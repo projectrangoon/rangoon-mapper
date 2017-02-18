@@ -10,14 +10,22 @@
     display: none;
   }
 
+  button {
+    -webkit-appearance: none;
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+  }
+
   li,
-  label {
+  button {
     cursor: pointer;
   }
 }
 
 .middle {
-  min-height: 1.5rem;
+  min-height: 1.0rem;
   position: relative;
 
   .line {
@@ -27,18 +35,16 @@
     width: 3px;
   }
 
-  label {
+  button {
     font-size: .875rem;
     margin: .5rem 1.5rem;
   }
 }
 
 .midstops {
-  max-height: 0;
   overflow-y: scroll;
   padding-left: 0;
   position: relative;
-  transition: max-height .3s ease-in;
 
   .midstop {
     font-size: .75rem;
@@ -62,6 +68,24 @@
   }
 }
 
-[type="checkbox"]:checked ~ .midstops {
-  max-height: 500rem;
+.collapse-enter,
+.collapse-leave {
+  transition: all .5s ease-in-out;
+}
+
+.collapse-enter,
+.collapse-leave.collapse-leave-active {
+  opacity: 0;
+  transform: scale(.5, 0);
+  transform-origin: top left;
+  max-height: 0;
+}
+
+.collapse-leave,
+.collapse-enter.collapse-enter-active {
+  opacity: 1;
+  height: auto;
+  transform: scale(1, 1);
+  transform-origin: top left;
+  max-height: 5000px;
 }

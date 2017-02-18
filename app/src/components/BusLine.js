@@ -1,16 +1,19 @@
 import React, { Component, PropTypes } from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import _ from 'lodash';
 
 
 class BusLine extends Component {
   constructor(props) {
     super(props);
+    this.uniqueId = _.uniqueId('busline');
     this.state = {
       isOpened: false,
     };
   }
 
-  toggleList = () => {
+  toggleList = (e) => {
+    e.preventDefault();
     this.setState({
       isOpened: !this.state.isOpened,
     });
@@ -21,7 +24,6 @@ class BusLine extends Component {
     const start = stops[0];
     const end = stops[stops.length - 1];
     const middle = stops.slice(1, -1);
-    const uniqueId = _.uniqueId('busline');
     const color = busServices[start.service_name].color;
 
     return (
@@ -35,18 +37,23 @@ class BusLine extends Component {
 
         <li className="middle">
           <span className="line" style={{ backgroundColor: color }} />
-          <input id={uniqueId} type="checkbox" onChange={this.toggleList} />
-          { middle.length ?
-            <label htmlFor={uniqueId}>{middle.length} stops</label>
-          : null }
-          <ul className="midstops">
-            {middle.map(stop => (
-              <li key={stop.bus_stop_id} className="midstop">
-                <span className="notch" style={{ backgroundColor: color }} />
-                {stop.name_mm}
-              </li>
-            ))}
-          </ul>
+          {(middle.length > 0) &&
+            <button type="button" onClick={this.toggleList}>
+              {middle.length} stops
+            </button>
+          }
+          <ReactCSSTransitionGroup transitionName="collapse" >
+            {this.state.isOpened &&
+              <ul className="midstops">
+                {middle.map(stop => (
+                  <li key={stop.bus_stop_id} className="midstop">
+                    <span className="notch" style={{ backgroundColor: color }} />
+                    {stop.name_mm}
+                  </li>
+                ))}
+              </ul>
+            }
+          </ReactCSSTransitionGroup>
         </li>
 
         <li className="end">
