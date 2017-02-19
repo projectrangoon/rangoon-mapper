@@ -35,7 +35,6 @@ class BusLine extends Component {
           {start.name_mm}
         </li>
 
-        {(start !== end) &&
         <li className="middle">
           <span className="line" style={{ backgroundColor: color }} />
           {(middle.length > 0) &&
@@ -43,11 +42,7 @@ class BusLine extends Component {
               {middle.length} stops
             </button>
           }
-          <ReactCSSTransitionGroup
-            transitionName="collapse"
-            transitionEnterTimeout={500}
-            transitionLeaveTimeout={500}
-          >
+          <ReactCSSTransitionGroup transitionName="collapse" >
             {this.state.isOpened &&
               <ul className="midstops">
                 {middle.map(stop => (
@@ -60,16 +55,13 @@ class BusLine extends Component {
             }
           </ReactCSSTransitionGroup>
         </li>
-        }
 
-        {(start !== end) &&
         <li className="end">
           <span className="logo" style={{ backgroundColor: color }} >
             {end.service_name}
           </span>
           {end.name_mm}
         </li>
-        }
       </ul>
     );
   }
