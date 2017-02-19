@@ -115,7 +115,7 @@ services = groupby(all_bus_stops, key=itemgetter('service_name'))
 for service_no, stops in services:
     bus_services[service_no] = {
         'color': colors[service_no],
-        'stops': sorted(list(stops), key=itemgetter('sequence'))
+        'stops': list(stops)
     }
 with open('bus_services.json', 'wb') as f:
     f.write(json.dumps(bus_services))

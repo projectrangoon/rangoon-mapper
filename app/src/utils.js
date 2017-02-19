@@ -28,8 +28,7 @@ export const stripDistance = busStops => busStops.map(x => _.omit(x, 'distance')
 export const getUniqueId = (busStop, serviceName) => {
   const busStopId = _.padStart(busStop.bus_stop_id.toString(), 5, 'Z');
   const sn = _.padStart(serviceName.toString(), 2, 'B');
-  const uniqueId = _.uniqueId('xyz');
-  return `${busStopId}${sn}${uniqueId}`;
+  return `${busStopId}${sn}`;
 };
 
 export const getEngNames = busStops => busStops.map(x => _.pick(x, 'name_en'));
@@ -84,16 +83,8 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop) => {
       if (lastKnownServiceName !== x.service_name) {
         y.currTransfers = top.currTransfers + 1;
         y.currCost = top.currCost + COST_PER_TRANSFER;
-        // y.path = [...top.path, {
-        //   bus_stop_id: lastKnownStop.bus_stop_id,
-        //   service_name: x.service_name,
-        // }];
       }
       y.currCost += COST_PER_STOP;
-      // y.path = [...top.path, {
-      //   bus_stop_id: x.bus_stop_id,
-      //   service_name: x.service_name,
-      // }];
       queue.push(y);
     });
   }
@@ -111,13 +102,5 @@ export const groupBy = (xs, key) => {
     }
     return acc;
   }, []);
-  const y = groups.map(obj => obj.values);
-  if (y.length >= 1) {
-    for (let i = 1; i < y.length; i++) {
-      const lastFromPrevious = y[i - 1][y[i - 1].length - 1];
-      const z = Object.assign({}, lastFromPrevious, { service_name: y[i][0].service_name });
-      y[i].unshift(z);
-    }
-  }
-  return y;
+  return groups.map(obj => obj.values);
 };

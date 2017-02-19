@@ -211,7 +211,6 @@ module.exports = {
     new webpack.optimize.DedupePlugin(),
     // Minify the code.
     new webpack.optimize.UglifyJsPlugin({
-      minimize: true,
       compress: {
         screw_ie8: true, // React doesn't support IE8
         warnings: false
@@ -224,7 +223,6 @@ module.exports = {
         screw_ie8: true
       }
     }),
-    new webpack.optimize.AggressiveMergingPlugin(),
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin('static/css/[name].[contenthash:8].css'),
     // Generate a manifest file which contains a mapping of all asset filenames
