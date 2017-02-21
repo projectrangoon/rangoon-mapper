@@ -42,7 +42,11 @@ class BusLine extends Component {
               {middle.length} stops
             </button>
           }
-          <ReactCSSTransitionGroup transitionName="collapse" >
+          <ReactCSSTransitionGroup
+            transitionName="collapse"
+            transitionEnterTimeout={500}
+            transitionLeaveTimeout={300}
+          >
             {this.state.isOpened &&
               <ul className="midstops">
                 {middle.map(stop => (

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import graph from '../../experiment/adjancencyList.json';
 import busStopsMap from '../../experiment/stops_map.json';
 import busServices from '../../experiment/bus_services.json';
@@ -7,22 +9,29 @@ import { adjacencyListLoaded } from './actions/map';
 import './styles/main.scss';
 // import { distance } from './utils';
 
+
+// Needed for onTouchTap
+// http://stackoverflow.com/a/34015469/988941
+injectTapEventPlugin();
+
 class App extends Component {
   componentWillMount() {
     this.props.loadGraph();
   }
   render() {
     return (
-      <div className="container-fluid">
-        <div className="row">
-          <aside className="col-sm-12 col-md-3 sidebar">
-            {this.props.sidebar}
-          </aside>
-          <main className="col-sm-12 col-md-9 map">
-            {this.props.main}
-          </main>
+      <MuiThemeProvider>
+        <div className="container-fluid">
+          <div className="row">
+            <aside className="col-sm-12 col-md-3 sidebar">
+              {this.props.sidebar}
+            </aside>
+            <main className="col-sm-12 col-md-9 map">
+              {this.props.main}
+            </main>
+          </div>
         </div>
-      </div>
+      </MuiThemeProvider>
     );
   }
 }
