@@ -1,6 +1,5 @@
 import Heap from 'heap';
 import _ from 'lodash';
-import { COST_PER_TRANSFER, COST_PER_STOP } from './constants/Weights';
 
 export const createConstants = (...constants) =>
   constants.reduce((acc, constant) => (
@@ -35,11 +34,15 @@ export const getEngNames = busStops => busStops.map(x => _.pick(x, 'name_en'));
 
 export const getNames = busStops => busStops.map(x => _.pick(x, 'name_en', 'sequence', 'route'));
 
-export const calculateRoute = (graph, busStopsMap, startStop, endStop) => {
+export const calculateRoute = (graph, busStopsMap, startStop, endStop, walkingDistance=0.5, perStopCost=0.35, perTransferCost=10) => {
+  /*
+   * walkingDistance is in Kilometers
+   */
+
   const seen = new Set();
-  const queue = new Heap((a, b) => a.currCost - b.currCost
-    || a.currDistance - b.currDistance
-    || a.currTransfers - b.currTransfers);
+  const queue = new Heap((a, b) => (a.currCost - b.currCost)
+                         || (a.currTransfers - b.currTransfers)
+                         || (a.currDistance - b.currDistance));
 
   queue.push({
     currCost: 0,
@@ -82,9 +85,9 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop) => {
       };
       if (lastKnownServiceName !== x.service_name) {
         y.currTransfers = top.currTransfers + 1;
-        y.currCost = top.currCost + COST_PER_TRANSFER;
+        y.currCost = top.currCost + perTransferCost;
       }
-      y.currCost += COST_PER_STOP;
+      y.currCost += perStopCost;
       queue.push(y);
     });
   }
