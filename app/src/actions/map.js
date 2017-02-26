@@ -12,10 +12,37 @@ export const updateMapCenter = center => ({
   center,
 });
 
-export const onMapLoad = google => ({
-  type: types.ON_MAP_LOAD,
-  google,
-});
+export const calculateRoute = (graph, busStopsMap, startStop, endStop) =>
+  dispatch =>
+  calculateRouteAction(graph, busStopsMap, startStop, endStop).then(
+    (response) => {
+      dispatch({
+        type: types.CALCULATE_ROUTE,
+        busStopsMap,
+        routePath: response,
+      });
+      dispatch(push(`/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}`));
+      dispatch(updateMapCenter({ lat: startStop.lat, lng: endStop.lng }));
+    },
+    (error) => {
+      dispatch({
+        type: types.CALCULATE_ROUTE_ERROR,
+      });
+      throw error;
+    },
+  );
+
+export const onMapLoad = google =>
+  (dispatch, getState) => {
+    const { map } = getState();
+    const { busStopsMap, startStop, endStop } = map;
+
+    dispatch({ type: types.ON_MAP_LOAD, google });
+
+    if (startStop && endStop) {
+      dispatch(calculateRoute(map.graph, busStopsMap, startStop, endStop));
+    }
+  };
 
 export const adjacencyListLoaded = (graph, busStopsMap, busServices) => ({
   type: types.AJACENCY_LIST_LOADED,
@@ -24,25 +51,7 @@ export const adjacencyListLoaded = (graph, busStopsMap, busServices) => ({
   busServices,
 });
 
-export const calculateRoute = (graph, busStopsMap, startStop, endStop) =>
-  dispatch =>
-    calculateRouteAction(graph, busStopsMap, startStop, endStop).then(
-      (response) => {
-        dispatch({
-          type: types.CALCULATE_ROUTE,
-          busStopsMap,
-          routePath: response,
-        });
-        dispatch(push(`/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}`));
-        dispatch(updateMapCenter({ lat: startStop.lat, lng: endStop.lng }));
-      },
-      (error) => {
-        dispatch({
-          type: types.CALCULATE_ROUTE_ERROR,
-        });
-        throw error;
-      },
-    );
+// export const drawPolylines = (graph, busStopsMap, startStop, endStop) => {};
 
 
 // Bus stop actions
@@ -59,7 +68,7 @@ export const selectEndStop = endStop => ({
 export const selectStartEndStop = (start, end) =>
   (dispatch, getState) => {
     const { map } = getState();
-    const { busStopsMap, startStop, endStop } = map;
+    const { busStopsMap, startStop, endStop, google } = map;
 
     if (start) {
       dispatch(selectStartStop(start));
@@ -69,7 +78,7 @@ export const selectStartEndStop = (start, end) =>
       dispatch(selectEndStop(end));
     }
 
-    if ((startStop && end) || (start && endStop) || (start && end)) {
+    if (google && ((startStop && end) || (start && endStop) || (start && end))) {
       dispatch(calculateRoute(map.graph, busStopsMap, start || startStop, end || endStop));
     }
   };
