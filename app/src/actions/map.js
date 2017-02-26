@@ -19,9 +19,8 @@ export const updateMapCenter = (google, routePath) => {
 };
 
 
-export const drawPolylines = (google, routePath) => {
+export const drawPolylines = (google, routePath, startStop, endStop) => {
   const services = _.groupBy(routePath.path || [], 'service_name');
-  // console.log('services', services);
   _.map(services, (service) => {
     const polyline = new google.maps.Polyline({
       strokeColor: service[0].color,
@@ -32,6 +31,44 @@ export const drawPolylines = (google, routePath) => {
     });
     polyline.setMap(google.map);
   });
+
+  const lineSymbol = {
+    path: 'M 0,-1 0,1',
+    strokeOpacity: 0.5,
+    scale: 4,
+  };
+
+  if (startStop.bus_stop_id !== routePath.path[0].bus_stop_id) {
+    const polyline = new google.maps.Polyline({
+      strokeColor: '#ffffff',
+      strokeOpacity: 0,
+      strokeWeight: 2,
+      clickable: false,
+      icons: [{
+        icon: lineSymbol,
+        offset: '0',
+        repeat: '20px',
+      }],
+      path: [startStop, routePath.path[0]],
+    });
+    polyline.setMap(google.map);
+  }
+
+  if (endStop.bus_stop_id !== routePath.path[routePath.path.length - 1].bus_stop_id) {
+    const polyline = new google.maps.Polyline({
+      strokeColor: '#ffffff',
+      strokeOpacity: 0,
+      strokeWeight: 2,
+      clickable: false,
+      icons: [{
+        icon: lineSymbol,
+        offset: '0',
+        repeat: '20px',
+      }],
+      path: [endStop, routePath.path[routePath.path.length - 1]],
+    });
+    polyline.setMap(google.map);
+  }
 };
 
 export const calculateRoute = (graph, busStopsMap, startStop, endStop, google) =>
@@ -40,7 +77,7 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop, google) =
       (routePath) => {
         if (google) {
           updateMapCenter(google, routePath);
-          drawPolylines(google, routePath);
+          drawPolylines(google, routePath, startStop, endStop);
           dispatch({ type: types.PLACE_MARKERS, routePath });
           dispatch(push(`/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}`));
         }

@@ -21,6 +21,8 @@ class Map extends Component {
       zoom,
       busServices,
       routePath,
+      startStop,
+      endStop,
       } = this.props.map;
 
 
@@ -33,24 +35,23 @@ class Map extends Component {
         yesIWantToUseGoogleMapApiInternals
         onGoogleApiLoaded={this.props.onMapLoad}
       >
+        {routePath && routePath.path && startStop.bus_stop_id !== routePath.path[0].bus_stop_id &&
+          <Marker color="#ffffff" midpoint={false} {...startStop} />
+        }
 
-        {routePath && routePath.path.map((marker, index) =>
+        {routePath && routePath.path && routePath.path.map((marker, index) =>
           <Marker
             key={_.uniqueId('marker')}
-            color={busServices[marker.service_name].color} {...marker}
-            midpoint={!(index === 0 || index === (routePath.path.length - 1))}
+            color={busServices[marker.service_name].color}
+            midpoint={marker.walk || !(index === 0 || index === routePath.path.length - 1)}
+            {...marker}
           />)
         }
 
-        {/* {polylines && google ?
-            _.map(polylines, (value, key) =>
-            <Polyline
-            key={key}
-            google={google}
-            color={busServices[key].color}
-            routePath={value}
-            />)
-            : null} */}
+        {routePath && routePath.path &&
+         endStop.bus_stop_id !== routePath.path[routePath.path.length - 1].bus_stop_id &&
+         <Marker color="#ffffff" midpoint={false} {...endStop} />
+        }
 
       </GoogleMap>
     );

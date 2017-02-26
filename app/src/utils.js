@@ -129,20 +129,21 @@ export const getStopsObjects = (busStopsMap, routePath) => {
   };
 
   if (z.currTransfers > 0) {
-    const path = [z.path[0]];
-    for (let i = 1; i < z.path.length - 1; i++) {
+    const finalPath = [z.path[0]];
+    for (let i = 1; i < z.path.length; i++) {
       if (z.path[i].service_name !== z.path[i - 1].service_name) {
         const last = {
           ...z.path[i],
           service_name: z.path[i - 1].service_name,
           color: z.path[i - 1].color,
         };
-        path.push(last);
+        finalPath.push(last);
       }
-      path.push(z.path[i]);
+      finalPath.push(z.path[i]);
     }
-    return { ...z, path };
+    return { ...z, path: finalPath };
   }
+
   return z;
 };
 
