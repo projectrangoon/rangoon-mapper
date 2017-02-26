@@ -6,7 +6,6 @@ import _ from 'lodash';
 import { handlePlacesChanged, onMapLoad, selectStartEndStop } from '../../actions/map';
 import customMapStyles from '../../constants/CustomMapStyles.json';
 import Marker from '../../components/Marker';
-import Polyline from '../../components/Polyline';
 
 class Map extends Component {
   componentDidMount() {
@@ -22,8 +21,7 @@ class Map extends Component {
       zoom,
       busServices,
       routePath,
-      polylines,
-      google } = this.props.map;
+      } = this.props.map;
 
 
     return (
@@ -36,24 +34,23 @@ class Map extends Component {
         onGoogleApiLoaded={this.props.onMapLoad}
       >
 
-        {routePath && routePath.path ?
-         routePath.path.map((marker, index) =>
-           <Marker
-             key={marker.bus_stop_id}
-             color={busServices[marker.service_name].color} {...marker}
-             midpoint={!(index === 0 || index === (routePath.path.length - 1))}
-           />)
-          : null}
+        {routePath && routePath.path.map((marker, index) =>
+          <Marker
+            key={_.uniqueId('marker')}
+            color={busServices[marker.service_name].color} {...marker}
+            midpoint={!(index === 0 || index === (routePath.path.length - 1))}
+          />)
+        }
 
-        {polylines && google ?
-         _.map(polylines, (value, key) =>
-           <Polyline
-             key={key}
-             google={google}
-             color={busServices[key].color}
-             routePath={value}
-           />)
-        : null}
+        {/* {polylines && google ?
+            _.map(polylines, (value, key) =>
+            <Polyline
+            key={key}
+            google={google}
+            color={busServices[key].color}
+            routePath={value}
+            />)
+            : null} */}
 
       </GoogleMap>
     );
