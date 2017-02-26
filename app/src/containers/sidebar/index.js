@@ -29,7 +29,7 @@ const Sidebar = (props) => {
         </form>
       </div>
       <div className="row">
-        { routePath ? <Journey path={routePath} busServices={busServices} /> : null }
+        { routePath ? <Journey routePath={routePath} busServices={busServices} /> : null }
       </div>
     </div>
   );
