@@ -1,4 +1,5 @@
 import { push } from 'react-router-redux';
+import _ from 'lodash';
 import types from '../constants/ActionTypes';
 import { calculateRoute as calculateRouteAction } from '../utils';
 
@@ -7,30 +8,44 @@ export const handlePlacesChanged = places => ({
   places,
 });
 
-export const updateMapCenter = center => ({
-  type: types.UPDATE_MAP_CENTER,
-  center,
-});
+export const updateMapCenter = (google, routePath) => {
+  const bounds = new google.maps.LatLngBounds();
+  routePath.path.forEach(stop => bounds.extend(stop));
+  google.map.fitBounds(bounds);
+};
 
-export const calculateRoute = (graph, busStopsMap, startStop, endStop) =>
+export const calculateRoute = (graph, busStopsMap, startStop, endStop, google) =>
   dispatch =>
-  calculateRouteAction(graph, busStopsMap, startStop, endStop).then(
-    (response) => {
-      dispatch({
-        type: types.CALCULATE_ROUTE,
-        busStopsMap,
-        routePath: response,
-      });
-      dispatch(push(`/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}`));
-      dispatch(updateMapCenter({ lat: startStop.lat, lng: endStop.lng }));
-    },
-    (error) => {
-      dispatch({
-        type: types.CALCULATE_ROUTE_ERROR,
-      });
-      throw error;
-    },
-  );
+    calculateRouteAction(graph, busStopsMap, startStop, endStop).then(
+      (routePath) => {
+        let payload = {};
+        let polylines = {};
+        if (routePath && routePath.path) {
+          payload = { ...routePath, path: [] };
+          routePath.path.forEach((busStop) => {
+            const stop = busStopsMap[busStop.bus_stop_id];
+            stop.service_name = busStop.service_name;
+            if (busStop.walk) {
+              stop.walk = true;
+            }
+            payload.path.push(stop);
+          });
+          polylines = _.groupBy(payload.path || [], 'service_name');
+
+          if (google) {
+            updateMapCenter(google, payload);
+          }
+        }
+        dispatch(push(`/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}`));
+        dispatch({ type: types.DRAW_POLYLINES, polylines, payload });
+      },
+      (error) => {
+        dispatch({
+          type: types.CALCULATE_ROUTE_ERROR,
+        });
+        throw error;
+      },
+    );
 
 export const onMapLoad = google =>
   (dispatch, getState) => {
@@ -40,7 +55,7 @@ export const onMapLoad = google =>
     dispatch({ type: types.ON_MAP_LOAD, google });
 
     if (startStop && endStop) {
-      dispatch(calculateRoute(map.graph, busStopsMap, startStop, endStop));
+      dispatch(calculateRoute(map.graph, busStopsMap, startStop, endStop, google));
     }
   };
 
