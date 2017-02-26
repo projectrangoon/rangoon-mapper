@@ -26,6 +26,7 @@ class BusLine extends Component {
     const middle = stops.slice(1, -1);
     const color = busServices[start.service_name].color;
 
+
     return (
       <ul className="busline">
         <li className="start">
