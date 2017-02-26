@@ -137,6 +137,6 @@ export const selectStartEndStop = (start, end) =>
     }
 
     if (google && ((startStop && end) || (start && endStop) || (start && end))) {
-      dispatch(calculateRoute(map.graph, busStopsMap, start || startStop, end || endStop));
+      dispatch(calculateRoute(map.graph, busStopsMap, start || startStop, end || endStop, google));
     }
   };
