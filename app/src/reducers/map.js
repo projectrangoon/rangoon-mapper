@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import types from '../constants/ActionTypes';
-import { calculateRoute } from '../utils';
 
 const initialState = {
   center: { lat: 16.7943528, lng: 96.1518985 },
@@ -29,9 +28,9 @@ const map = (state = initialState, action) => {
         center: action.center,
       });
     }
+
     case types.CALCULATE_ROUTE: {
-      const { graph, busStopsMap, startStop, endStop } = action;
-      const routePath = calculateRoute(graph, busStopsMap, startStop, endStop);
+      const { routePath, busStopsMap } = action;
       let payload = {};
       let polylines = {};
       if (routePath && routePath.path) {
@@ -53,6 +52,7 @@ const map = (state = initialState, action) => {
         polylines,
       });
     }
+
     case types.AJACENCY_LIST_LOADED: {
       return Object.assign({}, state, {
         graph: action.graph,
