@@ -36,7 +36,7 @@ class Map extends Component {
         onGoogleApiLoaded={this.props.onMapLoad}
       >
         {routePath && routePath.path && startStop.bus_stop_id !== routePath.path[0].bus_stop_id &&
-          <Marker color="#ffffff" midpoint={false} {...startStop} />
+          <Marker color="#6c62a5" midpoint={false} {...startStop} />
         }
 
         {routePath && routePath.path && routePath.path.map((marker, index) =>
@@ -50,7 +50,7 @@ class Map extends Component {
 
         {routePath && routePath.path &&
          endStop.bus_stop_id !== routePath.path[routePath.path.length - 1].bus_stop_id &&
-         <Marker color="#ffffff" midpoint={false} {...endStop} />
+         <Marker color="#6c62a5" midpoint={false} {...endStop} />
         }
 
       </GoogleMap>
