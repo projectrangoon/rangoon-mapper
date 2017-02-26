@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import types from '../constants/ActionTypes';
 
 const initialState = {
@@ -23,36 +22,17 @@ const map = (state = initialState, action) => {
         center,
       });
     }
+
     case types.UPDATE_MAP_CENTER: {
       return Object.assign({}, state, {
         center: action.center,
       });
     }
 
-    case types.CALCULATE_ROUTE: {
-      const { routePath, busStopsMap } = action;
-      let payload = {};
-      let polylines = {};
-      if (routePath && routePath.path) {
-        payload = { ...routePath, path: [] };
-        routePath.path.forEach((busStop) => {
-          const stop = busStopsMap[busStop.bus_stop_id];
-          stop.service_name = busStop.service_name;
-          if (busStop.walk) {
-            stop.walk = true;
-          }
-          payload.path.push(stop);
-        });
-
-        if (payload.path.length >= 2) {
-          payload.path[0].service_name = payload.path[1].service_name;
-        }
-
-        polylines = _.groupBy(payload.path || [], 'service_name');
-      }
+    case types.DRAW_POLYLINES: {
       return Object.assign({}, state, {
-        routePath: payload,
-        polylines,
+        routePath: action.payload,
+        polylines: action.polylines,
       });
     }
 
@@ -63,22 +43,26 @@ const map = (state = initialState, action) => {
         busServices: action.busServices,
       });
     }
+
     case types.ON_MAP_LOAD: {
       const { google } = action;
       return Object.assign({}, state, {
         google,
       });
     }
+
     case types.SELECT_START_STOP: {
       return Object.assign({}, state, {
         startStop: action.startStop,
       });
     }
+
     case types.SELECT_END_STOP: {
       return Object.assign({}, state, {
         endStop: action.endStop,
       });
     }
+
     default: {
       return state;
     }

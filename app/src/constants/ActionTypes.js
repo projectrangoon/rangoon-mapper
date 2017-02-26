@@ -9,8 +9,7 @@ export default createConstants(
   // Map
   'PLACES_CHANGED',
   'UPDATE_MAP_CENTER',
-  'DRAW_ROUTE',
-  'CALCULATE_ROUTE',
+  'DRAW_POLYLINES',
   'AJACENCY_LIST_LOADED',
   'ON_MAP_LOAD',
   'SHOW_JOURNEY',
