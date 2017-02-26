@@ -1,3 +1,20 @@
+.journey {
+  i {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: .5rem;
+  }
+}
+
+.details {
+  h2 {
+    font-size: 23px;
+    font-weight: lighter;
+  }
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  padding: 1rem;
+}
+
 .busstop-list {
   padding-left: 15px;
 }
@@ -17,4 +34,15 @@
   vertical-align: middle;
   width: $service-name-logo-size;
   font-size: .675rem;
+  border-radius: $border-radius;
+}
+
+.walk {
+  padding: 1rem 0;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #dddddd;
+  i {
+    margin: 0 .25rem;
+  }
 }

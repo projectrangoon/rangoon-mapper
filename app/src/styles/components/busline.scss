@@ -1,6 +1,9 @@
 .busline {
-  padding-left: 0;
-
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #dddddd;
+  padding: 1.5rem 0;
+  margin-bottom: 0;
   li {
     list-style: none;
     list-style-type: none;
@@ -39,6 +42,11 @@
   }
 
   button {
+    i {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: .25rem;
+    }
     font-size: .875rem;
     margin: .5rem 1.5rem;
   }
@@ -73,13 +81,13 @@
 
 .collapse-enter,
 .collapse-leave {
-  transition: all .5s ease-in-out;
+  transition: all .4s linear;
 }
 
 .collapse-enter,
 .collapse-leave.collapse-leave-active {
   opacity: 0;
-  transform: scale(.5, 0);
+  transform: scale(0, 0);
   transform-origin: top left;
   max-height: 0;
 }
@@ -87,7 +95,6 @@
 .collapse-leave,
 .collapse-enter.collapse-enter-active {
   opacity: 1;
-  height: auto;
   transform: scale(1, 1);
   transform-origin: top left;
   max-height: 5000px;

@@ -2,7 +2,8 @@ import React, { PropTypes } from 'react';
 
 const Walk = ({ destination }) => (
   <div className="walk">
-    Walk to {destination.name_mm}
+    <i className="material-icons">directions_walk</i>
+    Walk to <i className="material-icons">directions_bus</i>{destination.name_mm}
   </div>
 );
 

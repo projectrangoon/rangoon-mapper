@@ -8,14 +8,15 @@ export const handlePlacesChanged = places => ({
   places,
 });
 
-export const updateMapCenter = (google, routePath) => {
+export const updateMapCenter = (google, routePath, startStop, endStop) => {
+  const bounds = new google.maps.LatLngBounds();
+  bounds.extend(startStop);
   if (routePath.path.length > 1) {
-    const bounds = new google.maps.LatLngBounds();
     routePath.path.forEach(stop => bounds.extend(stop));
-    google.map.fitBounds(bounds);
-    return { type: types.UPDATE_MAP_CENTER };
   }
-  return { type: types.UPDATE_MAP_CENTER, center: routePath.path[0] };
+  bounds.extend(endStop);
+  google.map.fitBounds(bounds);
+  return { type: types.UPDATE_MAP_CENTER };
 };
 
 
@@ -24,8 +25,8 @@ export const drawPolylines = (google, routePath, startStop, endStop) => {
   _.map(services, (service) => {
     const polyline = new google.maps.Polyline({
       strokeColor: service[0].color,
-      strokeOpacity: 0.5,
-      strokeWeight: 2,
+      strokeOpacity: 1,
+      strokeWeight: 3,
       clickable: false,
       path: service,
     });
@@ -76,7 +77,7 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop, google) =
     calculateRouteAction(graph, busStopsMap, startStop, endStop).then(
       (routePath) => {
         if (google) {
-          updateMapCenter(google, routePath);
+          updateMapCenter(google, routePath, startStop, endStop);
           drawPolylines(google, routePath, startStop, endStop);
           dispatch({ type: types.PLACE_MARKERS, routePath });
           dispatch(push(`/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}`));

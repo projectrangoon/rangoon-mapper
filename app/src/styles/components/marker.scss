@@ -1,6 +1,26 @@
 .marker,
 .midpoint-marker {
   cursor: pointer;
+  &:hover {
+    ~ .name {
+      transform: scale(.75, .75);
+      transform-origin: top left;
+    }
+  }
+}
+
+.name {
+  color: $ghostwhite;
+  display: inline-block;
+  padding: .5rem;
+  border-radius: $border-radius;
+  margin-top: 10px;
+  margin-left: 10px;
+  transform: scale(0, 0);
+  transform-origin: top left;
+  transition: transform .3s ease-out;
+  width: 100px;
+  text-align: center;
 }
 
 .midpoint-marker {

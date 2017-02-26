@@ -28,46 +28,49 @@ class BusLine extends Component {
 
 
     return (
-      <ul className="busline">
-        <li className="start">
-          <span className="logo" style={{ backgroundColor: color }} >
-            {start.service_name}
-          </span>
-          {start.name_mm}
-        </li>
+      <div>
+        <ul className="busline">
+          <li className="start">
+            <span className="logo" style={{ backgroundColor: color }} >
+              {start.service_name}
+            </span>
+            {start.name_mm}
+          </li>
 
-        <li className="middle">
-          <span className="line" style={{ backgroundColor: color }} />
-          {(middle.length > 0) &&
-            <button type="button" onClick={this.toggleList}>
-              {middle.length} stops
-            </button>
-          }
-          <ReactCSSTransitionGroup
-            transitionName="collapse"
-            transitionEnterTimeout={500}
-            transitionLeaveTimeout={300}
-          >
-            {this.state.isOpened &&
-              <ul className="midstops">
-                {middle.map(stop => (
-                  <li key={stop.bus_stop_id} className="midstop">
-                    <span className="notch" style={{ backgroundColor: color }} />
-                    {stop.name_mm}
-                  </li>
-                ))}
-              </ul>
+          <li className="middle">
+            <span className="line" style={{ backgroundColor: color }} />
+            {middle.length &&
+              <button type="button" onClick={this.toggleList}>
+                <i className="material-icons">directions_bus</i>
+                {middle.length} stops
+              </button>
             }
-          </ReactCSSTransitionGroup>
-        </li>
+            <ReactCSSTransitionGroup
+              transitionName="collapse"
+              transitionEnterTimeout={500}
+              transitionLeaveTimeout={300}
+            >
+              {this.state.isOpened &&
+                <ul className="midstops">
+                  {middle.map(stop => (
+                    <li key={stop.bus_stop_id} className="midstop">
+                      <span className="notch" style={{ backgroundColor: color }} />
+                      {stop.name_mm}
+                    </li>
+                  ))}
+                </ul>
+              }
+            </ReactCSSTransitionGroup>
+          </li>
 
-        <li className="end">
-          <span className="logo" style={{ backgroundColor: color }} >
-            {end.service_name}
-          </span>
-          {end.name_mm}
-        </li>
-      </ul>
+          <li className="end">
+            <span className="logo" style={{ backgroundColor: color }} >
+              {end.service_name}
+            </span>
+            {end.name_mm}
+          </li>
+        </ul>
+      </div>
     );
   }
 }

@@ -26,7 +26,7 @@ class App extends Component {
             <aside className="col-sm-12 col-md-3 sidebar">
               {this.props.sidebar}
             </aside>
-            <main className="col-sm-12 col-md-9 map">
+            <main className="col-sm-12 col-md-9  map">
               {this.props.main}
             </main>
           </div>
