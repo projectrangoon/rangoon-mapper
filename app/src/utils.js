@@ -34,15 +34,93 @@ export const getEngNames = busStops => busStops.map(x => _.pick(x, 'name_en'));
 
 export const getNames = busStops => busStops.map(x => _.pick(x, 'name_en', 'sequence', 'route'));
 
-export const calculateRoute = (graph, busStopsMap, startStop, endStop, walkingDistance=0.5, perStopCost=0.35, perTransferCost=10) => {
-  /*
-   * walkingDistance is in Kilometers
-   */
+export const toRadians = degrees => degrees * (Math.PI / 180);
 
+export const getDistance = (lat1Deg, lng1Deg, lat2Deg, lng2Deg) => {
+  const lat1 = toRadians(lat1Deg);
+  const lng1 = toRadians(lng1Deg);
+  const lat2 = toRadians(lat2Deg);
+  const lng2 = toRadians(lng2Deg);
+  const dlon = lng2 - lng1;
+  const dlat = lat2 - lat1;
+  const a = (Math.sin(dlat / 2) ** 2) + (Math.cos(lat1) * Math.cos(lat2) *
+                                         (Math.sin(dlon / 2) ** 2));
+  const c = 2 * Math.asin(Math.sqrt(a));
+  return 6367 * c;
+};
+
+export const flatternServices = (busStop, stop) => {
+  const result = [];
+  const s = {
+    lng: busStop.lng,
+    lat: busStop.lat,
+    name_en: busStop.name_en,
+    name_mm: busStop.name_mm,
+    road_mm: busStop.road_mm,
+    road_en: busStop.road_en,
+    bus_stop_id: busStop.bus_stop_id,
+    township_en: busStop.township_en,
+    township_mm: busStop.township_mm,
+  };
+  if (stop) {
+    s.distance = getDistance(busStop.lat, busStop.lng, stop.lat, stop.lng);
+  }
+  busStop.services.forEach((service) => {
+    result.push(Object.assign({}, s, {
+      service_name: service.service_name,
+      color: service.color,
+      sequence: service.sequence,
+    }));
+  });
+  return result;
+};
+
+export const getNearbyStops = (busStopsMap, stop, radius = 0.5) => {
+  if (!stop.lat) {
+    // eslint-disable-next-line no-param-reassign
+    stop = _.filter(busStopsMap, x => x.bus_stop_id === stop.bus_stop_id)[0];
+  }
+  const deltaLat = radius / 110.567;
+  const maximalLat = stop.lat + deltaLat;
+  const minimalLat = stop.lat - deltaLat;
+
+  const maxDeltaLng = Math.cos(maximalLat) * (radius / 111.321);
+  const minDeltaLng = Math.cos(minimalLat) * (radius / 111.321);
+  const maximalLng = stop.lng - maxDeltaLng;
+  const minimalLng = stop.lng + minDeltaLng;
+  const stops = _.filter(busStopsMap, x => (x.lat !== stop.lat) && (x.lng !== stop.lng) &&
+                  (minimalLat < x.lat) && (x.lat < maximalLat) &&
+                  (minimalLng < x.lng) && (x.lng < maximalLng));
+  const result = [];
+  stops.forEach((busStop) => {
+    const s = {
+      lng: busStop.lng,
+      lat: busStop.lat,
+      name_en: busStop.name_en,
+      name_mm: busStop.name_mm,
+      township_en: busStop.township_en,
+      township_mm: busStop.township_mm,
+      bus_stop_id: busStop.bus_stop_id,
+      road_mm: busStop.road_mm,
+      road_en: busStop.road_en,
+      distance: getDistance(stop.lat, stop.lng, busStop.lat, busStop.lng),
+    };
+    busStop.services.forEach((service) => {
+      result.push(Object.assign({}, s, {
+        service_name: service.service_name,
+        color: service.color,
+        sequence: service.sequence,
+      }));
+    });
+  });
+  return result;
+};
+
+export const calculateRoute = (graph, busStopsMap, startStop, endStop,
+                               walkingDistance = 0.9, perStopCost = 0.35,
+                               perTransferCost = 10, walkingCost = 0.5) => {
   const seen = new Set();
-  const queue = new Heap((a, b) => (a.currCost - b.currCost)
-                         || (a.currTransfers - b.currTransfers)
-                         || (a.currDistance - b.currDistance));
+  const queue = new Heap((a, b) => (a.currCost - b.currCost));
 
   queue.push({
     currCost: 0,
@@ -53,6 +131,19 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop, walkingDi
       service_name: 0,
     }],
   });
+
+
+  const nearbyStops = getNearbyStops(busStopsMap, startStop, walkingDistance);
+  nearbyStops.map(stop => queue.push({
+    currCost: stop.distance * walkingCost,
+    currDistance: 0,
+    currTransfers: 0,
+    path: [{
+      bus_stop_id: stop.bus_stop_id,
+      service_name: 0,
+      walk: true,
+    }],
+  }));
 
   while (queue.size()) {
     const top = queue.pop();
@@ -70,6 +161,20 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop, walkingDi
       return result;
     }
 
+    const nearbyLastKnownStops = getNearbyStops(busStopsMap, lastKnownStop, walkingDistance);
+    const found = _.find(nearbyLastKnownStops, { bus_stop_id: endStop.bus_stop_id });
+    if (found) {
+      const result = {
+        ...top,
+        currTransfers: top.currTransfers - 1,
+      };
+      result.path[result.path.length - 1].walk = true;
+      if (result.path.length >= 2) {
+        result.path[0].service_name = result.path[1].service_name;
+      }
+      return result;
+    }
+
     const lastStopId = getUniqueId(lastKnownStop, lastKnownServiceName);
     if (seen.has(lastStopId)) {
       continue;
@@ -77,6 +182,17 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop, walkingDi
     seen.add(lastStopId);
 
     const neighbours = graph[lastKnownStop.bus_stop_id] || [];
+    // neighbours.forEach((x) => {
+    //   const nearby = getNearbyStops(busStopsMap, x);
+    //   nearby.forEach(y => {
+    //     const id = getUniqueId(y, y.service_name);
+    //     if (!seen.has(id)) {
+    //       neighbours.push(y);
+    //       seen.add(id);
+    //     }
+    //   });
+    // });
+
     neighbours.forEach((x) => {
       const y = {
         ...top,

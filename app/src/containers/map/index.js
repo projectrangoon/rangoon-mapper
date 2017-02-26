@@ -10,7 +10,7 @@ import Polyline from '../../components/Polyline';
 
 class Map extends Component {
   componentDidMount() {
-    const { startStop, endStop } = this.props.params;
+    const { startStop, endStop } = this.props.params; // URL params
     const { busStopsMap } = this.props.map;
     if (startStop || endStop) {
       this.props.selectStartEndStop(busStopsMap[startStop], busStopsMap[endStop]);
