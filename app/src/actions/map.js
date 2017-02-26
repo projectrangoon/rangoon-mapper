@@ -1,5 +1,6 @@
 import { push } from 'react-router-redux';
 import types from '../constants/ActionTypes';
+import { calculateRoute as calculateRouteAction } from '../utils';
 
 export const handlePlacesChanged = places => ({
   type: types.PLACES_CHANGED,
@@ -23,13 +24,25 @@ export const adjacencyListLoaded = (graph, busStopsMap, busServices) => ({
   busServices,
 });
 
-export const calculateRoute = (graph, busStopsMap, startStop, endStop) => ({
-  type: types.CALCULATE_ROUTE,
-  graph,
-  busStopsMap,
-  startStop,
-  endStop,
-});
+export const calculateRoute = (graph, busStopsMap, startStop, endStop) =>
+  dispatch =>
+    calculateRouteAction(graph, busStopsMap, startStop, endStop).then(
+      (response) => {
+        dispatch({
+          type: types.CALCULATE_ROUTE,
+          busStopsMap,
+          routePath: response,
+        });
+        dispatch(push(`/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}`));
+        dispatch(updateMapCenter({ lat: startStop.lat, lng: endStop.lng }));
+      },
+      (error) => {
+        dispatch({
+          type: types.CALCULATE_ROUTE_ERROR,
+        });
+        throw error;
+      },
+    );
 
 
 // Bus stop actions
@@ -46,13 +59,7 @@ export const selectEndStop = endStop => ({
 export const selectStartEndStop = (start, end) =>
   (dispatch, getState) => {
     const { map } = getState();
-
-    const {
-      busStopsMap,
-      startStop,
-      endStop,
-    } = map;
-
+    const { busStopsMap, startStop, endStop } = map;
 
     if (start) {
       dispatch(selectStartStop(start));
@@ -63,10 +70,6 @@ export const selectStartEndStop = (start, end) =>
     }
 
     if ((startStop && end) || (start && endStop) || (start && end)) {
-      const origin = start || startStop;
-      const destination = end || endStop;
-      dispatch(push(`/directions/${origin.bus_stop_id}/${destination.bus_stop_id}`));
-      dispatch(calculateRoute(map.graph, busStopsMap, origin, destination));
-      dispatch(updateMapCenter({ lat: origin.lat, lng: origin.lng }));
+      dispatch(calculateRoute(map.graph, busStopsMap, start || startStop, end || endStop));
     }
   };

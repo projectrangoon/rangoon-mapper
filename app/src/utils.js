@@ -117,8 +117,8 @@ export const getNearbyStops = (busStopsMap, stop, radius = 0.5) => {
 };
 
 export const calculateRoute = (graph, busStopsMap, startStop, endStop,
-                               walkingDistance = 0.9, perStopCost = 0.35,
-                               perTransferCost = 10, walkingCost = 0.5) => {
+                               walkingDistance = 0.78, perStopCost = 0.35,
+                               perTransferCost = 10, walkingCost = 8) => {
   const seen = new Set();
   const queue = new Heap((a, b) => (a.currCost - b.currCost));
 
@@ -158,7 +158,13 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop,
       if (result.path.length >= 2) {
         result.path[0].service_name = result.path[1].service_name;
       }
-      return result;
+      return new Promise((resolve, reject) => {
+        if (result.path.length) {
+          resolve(result);
+        } else {
+          reject({ error: 'Unable to calculate any route.' });
+        }
+      });
     }
 
     const nearbyLastKnownStops = getNearbyStops(busStopsMap, lastKnownStop, walkingDistance);
@@ -172,7 +178,13 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop,
       if (result.path.length >= 2) {
         result.path[0].service_name = result.path[1].service_name;
       }
-      return result;
+      return new Promise((resolve, reject) => {
+        if (result.path.length) {
+          resolve(result);
+        } else {
+          reject({ error: 'Unable to calculate any route.' });
+        }
+      });
     }
 
     const lastStopId = getUniqueId(lastKnownStop, lastKnownServiceName);
