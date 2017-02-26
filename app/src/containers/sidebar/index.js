@@ -9,7 +9,7 @@ import allBusStops from '../../../../experiment/unique_stops.json';
 
 const Sidebar = (props) => {
   const { handleStartEndSelect, map, params } = props;
-  const { busStopsMap, routePath, busServices } = map;
+  const { busStopsMap, routePath, busServices, startStop, endStop } = map;
   return (
     <div className="container-fluid">
       <div className="row">
@@ -17,19 +17,26 @@ const Sidebar = (props) => {
           <AutoCompleteSearch
             source={allBusStops}
             placeholder="Start"
-            onSelect={startStop => handleStartEndSelect(startStop, null)}
+            onSelect={stop => handleStartEndSelect(stop, null)}
             defaultStop={busStopsMap[params.startStop] || null}
           />
           <AutoCompleteSearch
             source={allBusStops}
             placeholder="End"
-            onSelect={endStop => handleStartEndSelect(null, endStop)}
+            onSelect={stop => handleStartEndSelect(null, stop)}
             defaultStop={busStopsMap[params.endStop] || null}
           />
         </form>
       </div>
       <div className="row">
-        { routePath ? <Journey routePath={routePath} busServices={busServices} /> : null }
+        { routePath ?
+          <Journey
+            routePath={routePath}
+            busServices={busServices}
+            startStop={startStop}
+            endStop={endStop}
+          />
+        : null }
       </div>
     </div>
   );
