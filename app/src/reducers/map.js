@@ -38,6 +38,9 @@ const map = (state = initialState, action) => {
         routePath.path.forEach((busStop) => {
           const stop = busStopsMap[busStop.bus_stop_id];
           stop.service_name = busStop.service_name;
+          if (busStop.walk) {
+            stop.walk = true;
+          }
           payload.path.push(stop);
         });
 
@@ -51,6 +54,9 @@ const map = (state = initialState, action) => {
         routePath: payload,
         polylines,
       });
+    }
+
+    case types.DRAW_POLYLINE: {
     }
 
     case types.AJACENCY_LIST_LOADED: {
