@@ -56,9 +56,6 @@ const map = (state = initialState, action) => {
       });
     }
 
-    case types.DRAW_POLYLINE: {
-    }
-
     case types.AJACENCY_LIST_LOADED: {
       return Object.assign({}, state, {
         graph: action.graph,
