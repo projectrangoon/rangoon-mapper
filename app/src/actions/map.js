@@ -9,35 +9,41 @@ export const handlePlacesChanged = places => ({
 });
 
 export const updateMapCenter = (google, routePath) => {
-  const bounds = new google.maps.LatLngBounds();
-  routePath.path.forEach(stop => bounds.extend(stop));
-  google.map.fitBounds(bounds);
+  if (routePath.path.length > 1) {
+    const bounds = new google.maps.LatLngBounds();
+    routePath.path.forEach(stop => bounds.extend(stop));
+    google.map.fitBounds(bounds);
+    return { type: types.UPDATE_MAP_CENTER };
+  }
+  return { type: types.UPDATE_MAP_CENTER, center: routePath.path[0] };
+};
+
+
+export const drawPolylines = (google, routePath) => {
+  const services = _.groupBy(routePath.path || [], 'service_name');
+  // console.log('services', services);
+  _.map(services, (service) => {
+    const polyline = new google.maps.Polyline({
+      strokeColor: service[0].color,
+      strokeOpacity: 0.5,
+      strokeWeight: 2,
+      clickable: false,
+      path: service,
+    });
+    polyline.setMap(google.map);
+  });
 };
 
 export const calculateRoute = (graph, busStopsMap, startStop, endStop, google) =>
   dispatch =>
     calculateRouteAction(graph, busStopsMap, startStop, endStop).then(
       (routePath) => {
-        let payload = {};
-        let polylines = {};
-        if (routePath && routePath.path) {
-          payload = { ...routePath, path: [] };
-          routePath.path.forEach((busStop) => {
-            const stop = busStopsMap[busStop.bus_stop_id];
-            stop.service_name = busStop.service_name;
-            if (busStop.walk) {
-              stop.walk = true;
-            }
-            payload.path.push(stop);
-          });
-          polylines = _.groupBy(payload.path || [], 'service_name');
-
-          if (google) {
-            updateMapCenter(google, payload);
-          }
+        if (google) {
+          updateMapCenter(google, routePath);
+          drawPolylines(google, routePath);
+          dispatch({ type: types.PLACE_MARKERS, routePath });
+          dispatch(push(`/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}`));
         }
-        dispatch(push(`/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}`));
-        dispatch({ type: types.DRAW_POLYLINES, polylines, payload });
       },
       (error) => {
         dispatch({

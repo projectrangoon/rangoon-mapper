@@ -116,6 +116,36 @@ export const getNearbyStops = (busStopsMap, stop, radius = 0.5) => {
   return result;
 };
 
+export const getStopsObjects = (busStopsMap, routePath) => {
+  const z = {
+    ...routePath,
+    path: _.map(routePath.path, (busStop) => {
+      const x = busStopsMap[busStop.bus_stop_id];
+      x.service_name = busStop.service_name;
+      x.walk = busStop.walk || undefined;
+      x.color = x.services.filter(y => x.service_name === y.service_name)[0].color;
+      return x;
+    }),
+  };
+
+  if (z.currTransfers > 0) {
+    const path = [z.path[0]];
+    for (let i = 1; i < z.path.length - 1; i++) {
+      if (z.path[i].service_name !== z.path[i - 1].service_name) {
+        const last = {
+          ...z.path[i],
+          service_name: z.path[i - 1].service_name,
+          color: z.path[i - 1].color,
+        };
+        path.push(last);
+      }
+      path.push(z.path[i]);
+    }
+    return { ...z, path };
+  }
+  return z;
+};
+
 export const calculateRoute = (graph, busStopsMap, startStop, endStop,
                                walkingDistance = 0.78, perStopCost = 0.35,
                                perTransferCost = 10, walkingCost = 8) => {
@@ -160,7 +190,7 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop,
       }
       return new Promise((resolve, reject) => {
         if (result.path.length) {
-          resolve(result);
+          resolve(getStopsObjects(busStopsMap, result));
         } else {
           reject({ error: 'Unable to calculate any route.' });
         }
@@ -180,7 +210,7 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop,
       }
       return new Promise((resolve, reject) => {
         if (result.path.length) {
-          resolve(result);
+          resolve(getStopsObjects(busStopsMap, result));
         } else {
           reject({ error: 'Unable to calculate any route.' });
         }

@@ -29,10 +29,9 @@ const map = (state = initialState, action) => {
       });
     }
 
-    case types.DRAW_POLYLINES: {
+    case types.PLACE_MARKERS: {
       return Object.assign({}, state, {
-        routePath: action.payload,
-        polylines: action.polylines,
+        routePath: action.routePath,
       });
     }
 
