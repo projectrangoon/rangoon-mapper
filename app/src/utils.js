@@ -123,7 +123,11 @@ export const getStopsObjects = (busStopsMap, routePath) => {
       const x = busStopsMap[busStop.bus_stop_id];
       x.service_name = busStop.service_name;
       x.walk = busStop.walk || undefined;
-      x.color = x.services.filter(y => x.service_name === y.service_name)[0].color;
+      if(x.service_name === 0) {
+        x.color = '#ffffff';
+      } else {
+        x.color = x.services.filter(y => x.service_name === y.service_name)[0].color;
+      }
       return x;
     }),
   };
@@ -148,10 +152,11 @@ export const getStopsObjects = (busStopsMap, routePath) => {
 };
 
 export const calculateRoute = (graph, busStopsMap, startStop, endStop,
-                               walkingDistance = 0.78, perStopCost = 0.35,
-                               perTransferCost = 10, walkingCost = 8) => {
+                               walkingDistance = 0.75, perStopCost = 0.35,
+                               perTransferCost = 10, walkingCost = 7.5) =>
+{
   const seen = new Set();
-  const queue = new Heap((a, b) => (a.currCost - b.currCost));
+  const queue = new Heap((a, b) => (a.currCost - b.currCost) || (a.currDistance - b.currDistance));
 
   queue.push({
     currCost: 0,
@@ -183,7 +188,7 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop,
     if (lastKnownStop.bus_stop_id === endStop.bus_stop_id) {
       const result = {
         ...top,
-        currTransfers: top.currTransfers - 1,
+        currTransfers: top.currTransfers > 0 ? top.currTransfers - 1 : 0,
       };
 
       if (result.path.length >= 2) {
@@ -203,7 +208,7 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop,
     if (found) {
       const result = {
         ...top,
-        currTransfers: top.currTransfers - 1,
+        currTransfers: top.currTransfers > 0 ? top.currTransfers - 1 : 0,
       };
       result.path[result.path.length - 1].walk = true;
       if (result.path.length >= 2) {
