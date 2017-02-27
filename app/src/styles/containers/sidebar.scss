@@ -1,7 +1,15 @@
 .sidebar {
-  background: $ghostwhite;
-  height: 100vh;
-  overflow-y: scroll;
+  @include media-breakpoint-up(md) {
+    background: rgba(255, 255, 255, .85);
+    position: fixed;
+    top: $grid-gutter-width-base;
+    left: $grid-gutter-width-base;
+    z-index: 3;
+    max-height: 94vh;
+    overflow-y: scroll;
+    border-radius: $border-radius;
+    padding: $grid-gutter-width-base / 4;
+  }
 }
 
 form {

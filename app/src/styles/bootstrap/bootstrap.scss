@@ -1,8 +1,8 @@
 // Duplicate _bootstrap.scss to include only what we need
 
-@import "custom";
 
 @import "~bootstrap/scss/variables";
+@import "custom";
 @import "~bootstrap/scss/mixins";
 
 @import "~bootstrap/scss/normalize";

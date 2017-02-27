@@ -43,15 +43,18 @@ const selectEndStopActions = createActions([
 
 export const updateMapCenter = () => (dispatch, getState) => {
   const { map } = getState();
-  const { google, routePath } = map;
+  const { google, routePath, startStop, endStop } = map;
   if (routePath.path.length > 1) {
     dispatch(updateMapCenterActions.request(map));
     const bounds = new google.maps.LatLngBounds();
+    bounds.extend(startStop);
     routePath.path.forEach(stop => bounds.extend(stop));
+    bounds.extend(endStop);
     google.map.fitBounds(bounds);
-    dispatch(updateMapCenterActions.success(map));
+    // google.map.setZoom(google.map.getZoom() - 1);
+    dispatch(updateMapCenterActions.success({ ...map, center: bounds.getCenter() }));
   } else {
-    dispatch(updateMapCenterActions.success({ center: routePath.path[0] }));
+    dispatch(updateMapCenterActions.success({ ...map, center: routePath.path[0] }));
   }
 };
 

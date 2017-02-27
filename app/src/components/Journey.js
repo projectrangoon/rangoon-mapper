@@ -16,13 +16,13 @@ const Journey = ({ routePath, busServices, startStop, endStop }) => {
       <Summary routePath={routePath} />
       <div className="details">
         <h2>Suggested Route</h2>
-        {walkingToStartStop && <Walk destination={routePath.path[0]} />}
+        {walkingToStartStop && <Walk from={startStop} to={routePath.path[0]} />}
 
         {busLines ?
         busLines.map(busLine =>
           <BusLine key={_.uniqueId('busline')} stops={busLine} busServices={busServices} startStop={startStop} endStop={endStop} />)
         : null }
-        {walkingToEndStop && <Walk destination={endStop} />}
+        {walkingToEndStop && <Walk from={routePath.path[routePath.path.length - 1]} to={endStop} />}
       </div>
     </section>
   );

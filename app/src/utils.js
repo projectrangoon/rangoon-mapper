@@ -123,6 +123,7 @@ export const getStopsObjects = (busStopsMap, routePath) => {
       const x = busStopsMap[busStop.bus_stop_id];
       x.service_name = busStop.service_name;
       x.walk = busStop.walk || undefined;
+      x.distance = busStop.distance || undefined;
       if (x.service_name === 0) {
         x.color = '#ffffff';
       } else {
@@ -164,6 +165,7 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop,
     path: [{
       bus_stop_id: startStop.bus_stop_id,
       service_name: 0,
+      distance: 0,
     }],
   });
 
@@ -177,6 +179,7 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop,
       bus_stop_id: stop.bus_stop_id,
       service_name: 0,
       walk: true,
+      distance: stop.distance,
     }],
   }));
 
@@ -244,7 +247,11 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop,
       const y = {
         ...top,
         currDistance: top.currDistance + x.distance,
-        path: [...top.path, { bus_stop_id: x.bus_stop_id, service_name: x.service_name }],
+        path: [
+          ...top.path,
+          { bus_stop_id: x.bus_stop_id,
+            service_name: x.service_name,
+            distance: x.distance }],
       };
       if (lastKnownServiceName !== x.service_name) {
         y.currTransfers = top.currTransfers + 1;
