@@ -9,13 +9,11 @@
   max-height: $autocomplete-height;
   overflow-y: scroll;
   background-color: $ghostwhite;
-  transition: all 450ms cubic-bezier(.23, 1, .32, 1) 0ms;
   box-sizing: border-box;
   box-shadow: $shadow-color 0 1px 6px, $shadow-color 0 1px 4px;
   border-radius: $border-radius;
   display: inline-block;
   z-index: 10;
-  min-width: 100%;
 
   li {
     list-style: none;
