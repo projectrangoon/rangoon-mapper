@@ -35,10 +35,11 @@ class BusLine extends Component {
     return (
       <div>
         <ul className="busline">
-          <li className="start">
+          <li className="start myanmar">
             <span className="logo" style={{ backgroundColor: color }} >
               {start.service_name}
             </span>
+            <i className="material-icons">directions_bus</i>
             {start.name_mm}
           </li>
 
@@ -48,7 +49,6 @@ class BusLine extends Component {
               <span className="line" style={{ backgroundColor: color }} />
               {middle.length &&
                 <button type="button" onClick={this.toggleList}>
-                  <i className="material-icons">directions_bus</i>
                   {middle.length} stops
                 </button>
               }
@@ -60,7 +60,7 @@ class BusLine extends Component {
                 {this.state.isOpened &&
                   <ul className="midstops">
                     {middle.map(stop => (
-                      <li key={stop.bus_stop_id} className="midstop">
+                      <li key={stop.bus_stop_id} className="midstop myanmar">
                         <span className="notch" style={{ backgroundColor: color }} />
                         {stop.name_mm}
                       </li>
@@ -70,10 +70,11 @@ class BusLine extends Component {
               </ReactCSSTransitionGroup>
             </li>
 
-            <li className="end">
+            <li className="end myanmar">
               <span className="logo" style={{ backgroundColor: color }} >
                 {end.service_name}
               </span>
+              <i className="material-icons">directions_bus</i>
               {end.name_mm}
             </li>
           </div>

@@ -39,7 +39,12 @@
   }
 
   button {
-    font-size: .875rem;
+    i {
+      color: $body-color;
+    }
+    color: lighten($body-color, 10%);
+    font-family: $font-family-base;
+    font-size: .775rem;
     margin: .5rem 1.5rem;
   }
 }

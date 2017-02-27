@@ -1,20 +1,28 @@
 .sidebar {
   @include media-breakpoint-up(md) {
-    background: rgba(255, 255, 255, .85);
+    max-width: 380px;
+    background: rgba($ghostwhite, .8);
     position: absolute;
     top: $grid-gutter-width-base;
     left: $grid-gutter-width-base;
     z-index: 3;
     max-height: 94vh;
     border-radius: $border-radius;
-    padding: $grid-gutter-width-base / 4;
+    padding: 0;
   }
 }
 
 form {
+  background-color: $black;
+  border-radius: $border-radius $border-radius 0 0;
   padding: 0;
 
+  input {
+    color: $ghostwhite !important;
+  }
+
   [type=text] {
+    font-family: $myanmar-font !important;
     line-height: 2rem;
   }
 }

@@ -7,9 +7,12 @@ const Walk = ({ from, to }) => {
 
   return (
     <div className="walk">
-      <i className="material-icons">directions_walk</i>
-      Walk to <i className="material-icons">directions_bus</i>{to.name_mm}
-      <span className="distance">{roundDistance} m</span>
+      <span>
+        <i className="material-icons">directions_walk</i>
+        Walk to <i className="material-icons">directions_bus</i>
+        <span className="myanmar">{to.name_mm}</span>
+      </span>
+      <span className="distance">{roundDistance}m</span>
     </div>
   );
 };

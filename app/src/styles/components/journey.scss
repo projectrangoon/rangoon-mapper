@@ -42,14 +42,20 @@
   text-align: center;
   vertical-align: middle;
   width: $service-name-logo-size;
-  font-size: .675rem;
+  font-size: .875rem;
   border-radius: $border-radius;
 }
 
+.distance {
+  color: lighten($body-color, 30%);
+}
+
 .walk {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   border-bottom: 1px solid $border-color;
   padding: $grid-gutter-width-base/2 0;
-
   i {
     margin: 0 ($grid-gutter-width-base/4);
   }
