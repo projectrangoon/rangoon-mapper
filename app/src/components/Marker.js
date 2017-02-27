@@ -5,7 +5,7 @@ const Bus = ({ color, midpoint, name_mm }) => {
     return (
       <div>
         <div className="midpoint-marker" style={{ background: color }} />
-        <div className="name" style={{ background: color }}>{name_mm}</div>
+        <div className="name myanmar" style={{ background: color }}>{name_mm}</div>
       </div>
     );
   }

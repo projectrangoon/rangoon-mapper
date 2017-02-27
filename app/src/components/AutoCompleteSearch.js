@@ -1,8 +1,24 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import TextField from 'material-ui/TextField';
+import { lightGreen400, lightGreen600 } from 'material-ui/styles/colors';
 
 import { searchBusStops } from '../utils';
+
+const styles = {
+  underlineStyle: {
+    borderColor: '#3d4046',
+  },
+  underlineFocusStyle: {
+    borderColor: lightGreen400,
+  },
+  floatingLabelStyle: {
+    color: lightGreen600,
+  },
+  floatingLabelFocusStyle: {
+    color: lightGreen400,
+  },
+};
 
 class AutoCompleteSearch extends Component {
   componentWillMount() {
@@ -123,7 +139,7 @@ class AutoCompleteSearch extends Component {
     return (
       <div className="form-group to-from">
         <TextField
-          hintText="Type Bustop name to search..."
+          hintText="BusStop name ..."
           floatingLabelText={this.props.placeholder}
           onChange={this.handleChange}
           onKeyDown={this.handleKeyDown}
@@ -131,6 +147,10 @@ class AutoCompleteSearch extends Component {
           value={value}
           key={id}
           fullWidth
+          underlineStyle={styles.underlineStyle}
+          underlineFocusStyle={styles.underlineFocusStyle}
+          floatingLabelStyle={styles.floatingLabelStyle}
+          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
         />
         <ul className="busmenu">
           {results.map((r, i) => (
@@ -140,8 +160,8 @@ class AutoCompleteSearch extends Component {
               className={currentSelectedBusMenuLi === i ? 'selected' : null}
             >
               <a href="" onClick={e => this.handleResultSelect(e, r)}>
-                <strong>{`${r.name_en} - ${r.name_mm}`}</strong>
-                <small>{`${r.road_en} - ${r.road_mm}`}</small>
+                <strong>{r.name_en} - <span className="myanmar">{r.name_mm}</span></strong>
+                <small>{r.road_en} - <span className="myanmar">{r.road_mm}</span></small>
               </a>
             </li>
             ))
