@@ -15,9 +15,9 @@ const initialState = {
 
 const map = (state = initialState, action) => {
   switch (action.type) {
-    case types.UPDATE_MAP_CENTER: {
+    case types.UPDATE_MAP_CENTER_SUCCESS: {
       return Object.assign({}, state, {
-        center: action.center,
+        center: action.payload.center,
       });
     }
 
