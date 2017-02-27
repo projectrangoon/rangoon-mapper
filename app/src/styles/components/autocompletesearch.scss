@@ -1,49 +1,47 @@
-.busmenu-wrapper {
-  width: 100%;
+.to-from {
   position: relative;
+}
+.busmenu {
+  padding-left: 0;
+  position: absolute;
+  top: $input-height;
+  left: 0;
+  max-height: $autocomplete-height;
+  overflow-y: scroll;
+  background-color: $ghostwhite;
+  transition: all 450ms cubic-bezier(.23, 1, .32, 1) 0ms;
+  box-sizing: border-box;
+  box-shadow: $shadow-color 0 1px 6px, $shadow-color 0 1px 4px;
+  border-radius: $border-radius;
+  display: inline-block;
+  z-index: 10;
+  min-width: 100%;
 
-  .busmenu {
-    padding-left: 0;
-    position: absolute;
-    max-height: 42vh;
-    overflow-y: scroll;
-    color: rgba(0, 0, 0, 0.870588);
-    background-color: rgb(255, 255, 255);
-    transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
-    box-sizing: border-box;
-    font-family: Roboto, sans-serif;
-    box-shadow: rgba(0, 0, 0, .117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
-    border-radius: $border-radius;
-    display: inline-block;
-    z-index: 10;
-    min-width: 100%;
+  li {
+    list-style: none;
+    list-style-type: none;
+  }
 
-    li {
-      list-style: none;
-      list-style-type: none;
-    }
+  a {
+    display: block;
+    text-decoration: none;
+    padding: 12px 20px;
+    color: #777;
+    text-align: left;
+    border-bottom: 1px solid $border-color;
+  }
 
-    a {
-      display: block;
-      text-decoration: none;
-      padding: 12px 20px;
-      color: #777;
-      text-align: left;
-      border-bottom: 1px solid #eee;
-    }
+  small {
+    display: block;
+    font-size: 10px;
+  }
 
-    small {
-      display: block;
-      font-size: 10px;
-    }
+  li,
+  button {
+    cursor: pointer;
+  }
 
-    li,
-    button {
-      cursor: pointer;
-    }
-
-    .selected {
-      background-color: #EEEEEE;
-    }
+  .selected {
+    background-color: $selected-color;
   }
 }

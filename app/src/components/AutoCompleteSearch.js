@@ -121,7 +121,7 @@ class AutoCompleteSearch extends Component {
     const { results, value, id, currentSelectedBusMenuLi } = this.state;
 
     return (
-      <div className="form-group">
+      <div className="form-group to-from">
         <TextField
           hintText="Type Bustop name to search..."
           floatingLabelText={this.props.placeholder}
@@ -132,23 +132,21 @@ class AutoCompleteSearch extends Component {
           key={id}
           fullWidth
         />
-        <div className="busmenu-wrapper">
-          <ul className="busmenu">
-            {results.map((r, i) => (
-              <li
-                key={r.bus_stop_id}
-                onMouseEnter={() => this.handleLiMouseEnter(i)}
-                className={currentSelectedBusMenuLi === i ? 'selected' : null}
-              >
-                <a href="" onClick={e => this.handleResultSelect(e, r)}>
-                  <strong>{`${r.name_en} - ${r.name_mm}`}</strong>
-                  <small>{`${r.road_en} - ${r.road_mm}`}</small>
-                </a>
-              </li>
-              ))
-            }
-          </ul>
-        </div>
+        <ul className="busmenu">
+          {results.map((r, i) => (
+            <li
+              key={r.bus_stop_id}
+              onMouseEnter={() => this.handleLiMouseEnter(i)}
+              className={currentSelectedBusMenuLi === i ? 'selected' : null}
+            >
+              <a href="" onClick={e => this.handleResultSelect(e, r)}>
+                <strong>{`${r.name_en} - ${r.name_mm}`}</strong>
+                <small>{`${r.road_en} - ${r.road_mm}`}</small>
+              </a>
+            </li>
+            ))
+          }
+        </ul>
       </div>
     );
   }
