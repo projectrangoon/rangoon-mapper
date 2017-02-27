@@ -266,3 +266,87 @@ export const groupBy = (xs, key) => {
   }, []);
   return groups.map(obj => obj.values);
 };
+
+export const drawPolylines = (google, routePath, startStop, endStop) => {
+  const polylines = [];
+  const services = _.groupBy(routePath.path || [], 'service_name');
+  _.map(services, (service) => {
+    const polyline = new google.maps.Polyline({
+      strokeColor: service[0].color,
+      strokeOpacity: 1,
+      strokeWeight: 3,
+      clickable: false,
+      path: service,
+    });
+    polyline.setMap(google.map);
+    polylines.push(polyline);
+  });
+
+  const lineSymbol = {
+    path: 'M 0,-1 0,1',
+    strokeOpacity: 0.5,
+    scale: 4,
+  };
+
+  if (startStop.bus_stop_id !== routePath.path[0].bus_stop_id) {
+    const polyline = new google.maps.Polyline({
+      strokeColor: '#ffffff',
+      strokeOpacity: 0,
+      strokeWeight: 2,
+      clickable: false,
+      icons: [{
+        icon: lineSymbol,
+        offset: '0',
+        repeat: '20px',
+      }],
+      path: [startStop, routePath.path[0]],
+    });
+    polyline.setMap(google.map);
+    polylines.push(polyline);
+  }
+
+  if (endStop.bus_stop_id !== routePath.path[routePath.path.length - 1].bus_stop_id) {
+    const polyline = new google.maps.Polyline({
+      strokeColor: '#ffffff',
+      strokeOpacity: 0,
+      strokeWeight: 2,
+      clickable: false,
+      icons: [{
+        icon: lineSymbol,
+        offset: '0',
+        repeat: '20px',
+      }],
+      path: [endStop, routePath.path[routePath.path.length - 1]],
+    });
+    polyline.setMap(google.map);
+    polylines.push(polyline);
+  }
+  return new Promise((resolve, reject) => {
+    if (polylines) {
+      resolve(polylines);
+    } else {
+      reject({ error: 'Unable to draw polylines' });
+    }
+  });
+};
+
+export const createActions = types => ({
+  request(payload) {
+    return {
+      type: types[0],
+      payload,
+    };
+  },
+  success(payload) {
+    return {
+      type: types[1],
+      payload,
+    };
+  },
+  fail(error) {
+    return {
+      type: types[2],
+      errorMessage: error || 'Something bad happened',
+    };
+  },
+});

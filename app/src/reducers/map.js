@@ -29,12 +29,6 @@ const map = (state = initialState, action) => {
       });
     }
 
-    case types.PLACE_MARKERS: {
-      return Object.assign({}, state, {
-        routePath: action.routePath,
-      });
-    }
-
     case types.AJACENCY_LIST_LOADED: {
       return Object.assign({}, state, {
         graph: action.graph,
@@ -50,15 +44,27 @@ const map = (state = initialState, action) => {
       });
     }
 
-    case types.SELECT_START_STOP: {
+    case types.SELECT_START_STOP_SUCCESS: {
       return Object.assign({}, state, {
-        startStop: action.startStop,
+        startStop: action.payload.startStop,
       });
     }
 
-    case types.SELECT_END_STOP: {
+    case types.SELECT_END_STOP_SUCCESS: {
       return Object.assign({}, state, {
-        endStop: action.endStop,
+        endStop: action.payload.endStop,
+      });
+    }
+
+    case types.CALCULATE_ROUTE_SUCCESS: {
+      return Object.assign({}, state, {
+        routePath: action.payload.routePath,
+      });
+    }
+
+    case types.DRAW_POLYLINES_SUCCESS: {
+      return Object.assign({}, state, {
+        polylines: action.payload.polylines,
       });
     }
 
