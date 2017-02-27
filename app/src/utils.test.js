@@ -1,5 +1,25 @@
-import { searchBusStops, getEngNames } from './utils';
-import allBusStops from '../../experiment/unique_stops.json';
+import { searchBusStops, getEngNames, getNearbyStops, flatternServices } from './utils';
+import uniqueStops from '../../experiment/unique_stops.json';
+import busStopsMap from '../../experiment/stops_map.json';
+
+
+describe('Get Nearby bus stops', () => {
+  it('Nearby bus stops within 500m', () => {
+    const stop = {
+      bus_stop_id: 118,
+      name_en: 'Kili',
+      lat: 16.774989,
+      lng: 96.139475,
+    };
+
+    const nearbyStops = getNearbyStops(busStopsMap, stop, 0.5);
+    let results = [];
+    const search = uniqueStops.filter(s => s.bus_stop_id === 119 || s.bus_stop_id === 124);
+    // eslint-disable-next-line no-return-assign
+    search.forEach(x => results = results.concat(flatternServices(x, stop)));
+    expect(nearbyStops).toEqual(results);
+  });
+});
 
 
 describe('Searching of Bus Stops', () => {
@@ -39,7 +59,7 @@ describe('Searching of Bus Stops', () => {
   });
   it('Word boundary testing with busStops data', () => {
     const searchString = 'kone';
-    let result = getEngNames(searchBusStops(allBusStops, searchString));
+    let result = getEngNames(searchBusStops(uniqueStops, searchString));
     result = result.map(x => x.name_en);
     expect(result).toEqual([
       'Sae-Mile Kone',

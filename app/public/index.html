@@ -3,10 +3,46 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="HandheldFriendly" content="True">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     <title>Rangoon Mapper</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Padauk" rel="stylesheet">
+
+    <meta name="keywords" content="yangon, rangoon, transport, transportation, ybs, yangon bus, yangon trains">
+    <meta name="description" content="The ultimate transport app for Yangon">
+    <meta name="subject" content="The ultimate transport app for Yangon">
+
+    <meta property="fb:app_id"  content="119587475232444"/>
+    <meta property="og:title" content="Rangoon Mapper"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="http://mapper.rangoon.io"/>
+    <meta property="og:image" content=""/>
+
+    <meta property="og:site_name" content="Rangoon Mapper"/>
+    <meta property="fb:admins" content="1673059171"/>
+    <meta property="og:description" content="The ultimate transport app for Yangon"/>
+
   </head>
   <body>
     <div id="root"></div>
+    <script>
+     window.fbAsyncInit = function() {
+       FB.init({
+         appId      : '119587475232444',
+         xfbml      : true,
+         version    : 'v2.8'
+       });
+       FB.AppEvents.logPageView();
+     };
+
+     (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "//connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+    </script>
   </body>
 </html>

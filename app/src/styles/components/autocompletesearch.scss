@@ -1,0 +1,46 @@
+.to-from {
+  position: relative;
+}
+
+.busmenu {
+  padding-left: 0;
+  position: absolute;
+  top: $input-height;
+  left: 0;
+  max-height: $autocomplete-height;
+  overflow-y: scroll;
+  background-color: $ghostwhite;
+  box-sizing: border-box;
+  box-shadow: $shadow-color 0 1px 6px, $shadow-color 0 1px 4px;
+  border-radius: $border-radius;
+  display: inline-block;
+  z-index: 10;
+
+  li {
+    list-style: none;
+    list-style-type: none;
+  }
+
+  a {
+    display: block;
+    text-decoration: none;
+    padding: 12px 20px;
+    color: #777;
+    text-align: left;
+    border-bottom: 1px solid $border-color;
+  }
+
+  small {
+    display: block;
+    font-size: 10px;
+  }
+
+  li,
+  button {
+    cursor: pointer;
+  }
+
+  .selected {
+    background-color: $selected-color;
+  }
+}
