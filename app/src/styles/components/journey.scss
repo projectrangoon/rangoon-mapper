@@ -1,13 +1,14 @@
 .journey {
+  animation: fadeIn 1s;
   border-top: 1px solid #cccccc;
+  padding-bottom: $grid-gutter-width-base / 2;
+  padding-top: $grid-gutter-width-base / 2;
+
   i {
     display: inline-block;
     margin-right: .5rem;
     vertical-align: middle;
   }
-  animation: fadeIn 1s;
-  padding-top: $grid-gutter-width-base / 2;
-  padding-bottom: $grid-gutter-width-base / 2;
 }
 
 .details {
@@ -15,6 +16,7 @@
     font-size: 23px;
     font-weight: lighter;
   }
+
   > div {
     margin-left: .3em;
   }
@@ -43,11 +45,10 @@
 }
 
 .walk {
+  border-bottom: 1px solid $border-color;
   padding: $grid-gutter-width-base/2 0;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  border-bottom-color: #dddddd;
+
   i {
-    margin: 0 ($grid-gutter-width-base / 4);
+    margin: 0 ($grid-gutter-width-base/4);
   }
 }

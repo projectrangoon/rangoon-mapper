@@ -1,7 +1,7 @@
 .sidebar {
   @include media-breakpoint-up(md) {
     background: rgba(255, 255, 255, .85);
-    position: fixed;
+    position: absolute;
     top: $grid-gutter-width-base;
     left: $grid-gutter-width-base;
     z-index: 3;
