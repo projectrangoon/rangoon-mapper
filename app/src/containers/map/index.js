@@ -19,7 +19,6 @@ class Map extends Component {
     const {
       center,
       zoom,
-      busServices,
       routePath,
       startStop,
       endStop,
@@ -42,11 +41,10 @@ class Map extends Component {
         {routePath && routePath.path && routePath.path.map((marker, index) =>
           <Marker
             key={_.uniqueId('marker')}
-            color={busServices[marker.service_name].color}
+            color={marker.color}
             midpoint={marker.walk || !(index === 0 || index === routePath.path.length - 1)}
             {...marker}
-          />)
-        }
+          />)}
 
         {routePath && routePath.path &&
          endStop.bus_stop_id !== routePath.path[routePath.path.length - 1].bus_stop_id &&

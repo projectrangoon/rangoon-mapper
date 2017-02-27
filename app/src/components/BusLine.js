@@ -24,7 +24,12 @@ class BusLine extends Component {
     const start = stops[0];
     const end = stops[stops.length - 1];
     const middle = stops.slice(1, -1);
-    const color = busServices[start.service_name].color;
+    let color;
+    if (start.service_name === 0) {
+      color = '#ffffff';
+    } else {
+      color = busServices[start.service_name].color;
+    }
 
 
     return (
@@ -37,38 +42,42 @@ class BusLine extends Component {
             {start.name_mm}
           </li>
 
-          <li className="middle">
-            <span className="line" style={{ backgroundColor: color }} />
-            {middle.length &&
-              <button type="button" onClick={this.toggleList}>
-                <i className="material-icons">directions_bus</i>
-                {middle.length} stops
-              </button>
-            }
-            <ReactCSSTransitionGroup
-              transitionName="collapse"
-              transitionEnterTimeout={500}
-              transitionLeaveTimeout={300}
-            >
-              {this.state.isOpened &&
-                <ul className="midstops">
-                  {middle.map(stop => (
-                    <li key={stop.bus_stop_id} className="midstop">
-                      <span className="notch" style={{ backgroundColor: color }} />
-                      {stop.name_mm}
-                    </li>
-                  ))}
-                </ul>
+          {start.bus_stop_id !== end.bus_stop_id &&
+          <div>
+            <li className="middle">
+              <span className="line" style={{ backgroundColor: color }} />
+              {middle.length &&
+                <button type="button" onClick={this.toggleList}>
+                  <i className="material-icons">directions_bus</i>
+                  {middle.length} stops
+                </button>
               }
-            </ReactCSSTransitionGroup>
-          </li>
+              <ReactCSSTransitionGroup
+                transitionName="collapse"
+                transitionEnterTimeout={500}
+                transitionLeaveTimeout={300}
+              >
+                {this.state.isOpened &&
+                  <ul className="midstops">
+                    {middle.map(stop => (
+                      <li key={stop.bus_stop_id} className="midstop">
+                        <span className="notch" style={{ backgroundColor: color }} />
+                        {stop.name_mm}
+                      </li>
+                    ))}
+                  </ul>
+                }
+              </ReactCSSTransitionGroup>
+            </li>
 
-          <li className="end">
-            <span className="logo" style={{ backgroundColor: color }} >
-              {end.service_name}
-            </span>
-            {end.name_mm}
-          </li>
+            <li className="end">
+              <span className="logo" style={{ backgroundColor: color }} >
+                {end.service_name}
+              </span>
+              {end.name_mm}
+            </li>
+          </div>
+          }
         </ul>
       </div>
     );

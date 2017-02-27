@@ -50,6 +50,8 @@ export const updateMapCenter = () => (dispatch, getState) => {
     routePath.path.forEach(stop => bounds.extend(stop));
     google.map.fitBounds(bounds);
     dispatch(updateMapCenterActions.success(map));
+  } else {
+    dispatch(updateMapCenterActions.success({ center: routePath.path[0] }));
   }
 };
 
@@ -90,7 +92,6 @@ export const calculateRoute = (startStop, endStop) =>
         dispatch(calculateRouteActions.success({ routePath }));
         dispatch(updateMapCenter());
         dispatch(drawPolylines());
-        dispatch(push(`/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}`));
       },
       (error) => {
         dispatch(calculateRouteActions.fail(error));
@@ -139,6 +140,9 @@ export const selectStartEndStop = (start, end) =>
     }
 
     if (google && ((startStop && end) || (start && endStop) || (start && end))) {
-      dispatch(calculateRoute(start || startStop, end || endStop));
+      const a = start || startStop;
+      const b = end || endStop;
+      dispatch(push(`/directions/${a.bus_stop_id}/${b.bus_stop_id}`));
+      dispatch(calculateRoute(a, b));
     }
   };
