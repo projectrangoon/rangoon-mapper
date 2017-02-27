@@ -123,7 +123,7 @@ export const getStopsObjects = (busStopsMap, routePath) => {
       const x = busStopsMap[busStop.bus_stop_id];
       x.service_name = busStop.service_name;
       x.walk = busStop.walk || undefined;
-      if(x.service_name === 0) {
+      if (x.service_name === 0) {
         x.color = '#ffffff';
       } else {
         x.color = x.services.filter(y => x.service_name === y.service_name)[0].color;
@@ -153,8 +153,7 @@ export const getStopsObjects = (busStopsMap, routePath) => {
 
 export const calculateRoute = (graph, busStopsMap, startStop, endStop,
                                walkingDistance = 0.75, perStopCost = 0.35,
-                               perTransferCost = 10, walkingCost = 7.5) =>
-{
+                               perTransferCost = 10, walkingCost = 7.5) => {
   const seen = new Set();
   const queue = new Heap((a, b) => (a.currCost - b.currCost) || (a.currDistance - b.currDistance));
 
