@@ -6,7 +6,6 @@ import { syncHistoryWithStore } from 'react-router-redux';
 
 import routes from './routes';
 import globalStore from './globalStore';
-import './index.css';
 
 const store = globalStore();
 

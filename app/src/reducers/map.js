@@ -1,6 +1,4 @@
-import _ from 'lodash';
 import types from '../constants/ActionTypes';
-import { calculateRoute } from '../utils';
 
 const initialState = {
   center: { lat: 16.7943528, lng: 96.1518985 },
@@ -17,61 +15,51 @@ const initialState = {
 
 const map = (state = initialState, action) => {
   switch (action.type) {
-    case types.PLACES_CHANGED: {
-      const location = action.places[0].geometry.location;
-      const center = { lat: location.lat(), lng: location.lng() };
+    case types.UPDATE_MAP_CENTER_SUCCESS: {
       return Object.assign({}, state, {
-        center,
+        center: action.payload.center,
       });
     }
-    case types.UPDATE_MAP_CENTER: {
-      return Object.assign({}, state, {
-        center: action.center,
-      });
-    }
-    case types.CALCULATE_ROUTE: {
-      const { graph, busStopsMap, startStop, endStop } = action;
-      const routePath = calculateRoute(graph, busStopsMap, startStop, endStop);
-      let payload = {};
-      let polylines = {};
-      if (routePath && routePath.path) {
-        payload = { ...routePath, path: [] };
-        routePath.path.forEach((busStop) => {
-          const stop = busStopsMap[busStop.bus_stop_id];
-          stop.service_name = busStop.service_name;
-          payload.path.push(stop);
-        });
 
-        polylines = _.groupBy(payload.path || [], 'service_name');
-      }
+    case types.LOAD_ADJACENCY_LIST_SUCCESS: {
       return Object.assign({}, state, {
-        routePath: payload,
-        polylines,
+        graph: action.payload.graph,
+        busStopsMap: action.payload.busStopsMap,
+        busServices: action.payload.busServices,
       });
     }
-    case types.AJACENCY_LIST_LOADED: {
-      return Object.assign({}, state, {
-        graph: action.graph,
-        busStopsMap: action.busStopsMap,
-        busServices: action.busServices,
-      });
-    }
-    case types.ON_MAP_LOAD: {
-      const { google } = action;
+
+    case types.LOAD_MAP_SUCCESS: {
+      const { google } = action.payload;
       return Object.assign({}, state, {
         google,
       });
     }
-    case types.SELECT_START_STOP: {
+
+    case types.SELECT_START_STOP_SUCCESS: {
       return Object.assign({}, state, {
-        startStop: action.startStop,
+        startStop: action.payload.startStop,
       });
     }
-    case types.SELECT_END_STOP: {
+
+    case types.SELECT_END_STOP_SUCCESS: {
       return Object.assign({}, state, {
-        endStop: action.endStop,
+        endStop: action.payload.endStop,
       });
     }
+
+    case types.CALCULATE_ROUTE_SUCCESS: {
+      return Object.assign({}, state, {
+        routePath: action.payload.routePath,
+      });
+    }
+
+    case types.DRAW_POLYLINES_SUCCESS: {
+      return Object.assign({}, state, {
+        polylines: action.payload.polylines,
+      });
+    }
+
     default: {
       return state;
     }

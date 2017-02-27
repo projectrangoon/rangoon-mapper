@@ -10,7 +10,8 @@ build:
       code: |
         cd app
         npm run lint
-deploy:
+
+deploy-production:
   steps:
     - npm-install:
       cwd: app/
@@ -25,3 +26,19 @@ deploy:
         ls -la
         which fly || echo "?"
         fly production && echo "ran and exited successfully" || echo "$?"
+
+deploy-staging:
+  steps:
+    - npm-install:
+      cwd: app/
+    - script:
+      name: global install flightplan
+      code: |
+        npm i -g flightplan
+    - script:
+      name: deploy to staging
+      code: |
+        cd app
+        ls -la
+        which fly || echo "?"
+        fly staging && echo "ran and exited successfully" || echo "?"

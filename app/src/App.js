@@ -1,31 +1,37 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'antd';
 import { connect } from 'react-redux';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import graph from '../../experiment/adjancencyList.json';
 import busStopsMap from '../../experiment/stops_map.json';
 import busServices from '../../experiment/bus_services.json';
-import { adjacencyListLoaded } from './actions/map';
-import './App.css';
+import { loadAdjacencyList } from './actions/map';
+import './styles/main.scss';
 // import { distance } from './utils';
+
+
+// Needed for onTouchTap
+// http://stackoverflow.com/a/34015469/988941
+injectTapEventPlugin();
 
 class App extends Component {
   componentWillMount() {
-    this.props.loadGraph();
+    this.props.loadAdjacencyList();
   }
   render() {
     return (
-      <Row type="flex" className="app">
-        <Col xs={24} md={6} className="sidebar">
-          <aside>
-            {this.props.sidebar}
-          </aside>
-        </Col>
-        <Col xs={24} md={18}>
-          <main className="map">
-            {this.props.main}
-          </main>
-        </Col>
-      </Row>
+      <MuiThemeProvider>
+        <div className="container-fluid">
+          <div className="row">
+            <aside className="col-sm-12 col-md-3 sidebar">
+              {this.props.sidebar}
+            </aside>
+            <main className="col-sm-12 map">
+              {this.props.main}
+            </main>
+          </div>
+        </div>
+      </MuiThemeProvider>
     );
   }
 }
@@ -37,12 +43,12 @@ App.defaultProps = {
 App.propTypes = {
   main: React.PropTypes.element.isRequired,
   sidebar: React.PropTypes.element,
-  loadGraph: React.PropTypes.func.isRequired,
+  loadAdjacencyList: React.PropTypes.func.isRequired,
 };
 
 
 const mapDispatchToProps = dispatch => ({
-  loadGraph: () => dispatch(adjacencyListLoaded(graph, busStopsMap, busServices)),
+  loadAdjacencyList: () => dispatch(loadAdjacencyList(graph, busStopsMap, busServices)),
 });
 
 const mapStateToProps = () => ({

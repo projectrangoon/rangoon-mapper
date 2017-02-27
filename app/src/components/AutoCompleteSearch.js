@@ -1,12 +1,28 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import Input from 'antd/lib/input';
-import Icon from 'antd/lib/icon';
+import TextField from 'material-ui/TextField';
+import { lightGreen400, lightGreen600 } from 'material-ui/styles/colors';
 
 import { searchBusStops } from '../utils';
 
+const styles = {
+  underlineStyle: {
+    borderColor: '#3d4046',
+  },
+  underlineFocusStyle: {
+    borderColor: lightGreen400,
+  },
+  floatingLabelStyle: {
+    color: lightGreen600,
+  },
+  floatingLabelFocusStyle: {
+    color: lightGreen400,
+  },
+};
+
 class AutoCompleteSearch extends Component {
   componentWillMount() {
+    const id = _.uniqueId();
     const source = [];
     this.props.source.forEach((obj) => {
       const found = source.some(el => el.bus_stop_id === obj.bus_stop_id);
@@ -14,16 +30,19 @@ class AutoCompleteSearch extends Component {
     });
     this.resetComponent();
     this.setState({
+      currentSelectedBusMenuLi: 0,
       source,
-      value: this.props.defaultStop ? `(${this.props.defaultStop.name_en} - ${this.props.defaultStop.name_mm}) (${this.props.defaultStop.road_en} - ${this.props.defaultStop.road_mm})` : null,
+      value: this.props.defaultStop ? `${this.props.defaultStop.name_en} (${this.props.defaultStop.name_mm})` : '',
       typingTimer: 0,
       doneTypingInterval: 300,
+      id,
     });
   }
 
   resetComponent = () => this.setState({
     isLoading: false,
     results: [],
+    currentSelectedBusMenuLi: 0,
     value: '',
   })
 
@@ -45,25 +64,56 @@ class AutoCompleteSearch extends Component {
     }
   }
 
-  handleKeyDown = () => {
+  handleKeyDown = (e) => {
+    const { currentSelectedBusMenuLi, results } = this.state;
     clearTimeout(this.state.typingTimer);
+    // When Key down
+    if (e.keyCode === 40) {
+      e.preventDefault();
+      if (currentSelectedBusMenuLi === results.length - 1) {
+        this.setState({
+          currentSelectedBusMenuLi: 0,
+        });
+      } else {
+        this.setState({
+          currentSelectedBusMenuLi: currentSelectedBusMenuLi + 1,
+        });
+      }
+    } else if (e.keyCode === 38) { // When key up
+      e.preventDefault();
+      if (currentSelectedBusMenuLi === 0) {
+        this.setState({
+          currentSelectedBusMenuLi: results.length - 1,
+        });
+      } else {
+        this.setState({
+          currentSelectedBusMenuLi: currentSelectedBusMenuLi - 1,
+        });
+      }
+    } else if (e.keyCode === 13) { // On Enter
+      this.handleResultSelect(e, results[currentSelectedBusMenuLi]);
+    }
   }
 
   searchBusStops = () => {
     const sortByEngName =
-      result => result.name_en.toLowerCase().startsWith(this.state.value.toLowerCase());
+      (result) => {
+        result.name_en.toLowerCase().startsWith(this.state.value.toLowerCase());
+      };
+
+    const results =
+      (_.sortBy(searchBusStops(this.state.source, this.state.value), sortByEngName)).reverse();
 
     return this.setState({
       isLoading: false,
-      results:
-      (_.sortBy(searchBusStops(this.state.source, this.state.value), sortByEngName)).reverse(),
+      results,
     });
   }
 
   handleResultSelect = (e, payload) => {
     e.preventDefault();
     this.setState({
-      value: `(${payload.name_en} - ${payload.name_mm}) (${payload.road_en} - ${payload.road_mm})`,
+      value: `${payload.name_en} (${payload.name_mm})`,
       results: [],
     });
     if (this.props.onSelect) {
@@ -71,34 +121,57 @@ class AutoCompleteSearch extends Component {
     }
   }
 
+  handleUpdateInput = (value) => {
+    this.setState({
+      value,
+    });
+  };
+
+  handleLiMouseEnter = (index) => {
+    this.setState({
+      currentSelectedBusMenuLi: index,
+    });
+  }
+
   render() {
-    const { value, results } = this.state;
+    const { results, value, id, currentSelectedBusMenuLi } = this.state;
 
     return (
-      <div>
-        <Input
-          style={{ borderRadius: 0, height: '3.5em' }}
+      <div className="form-group to-from">
+        <TextField
+          hintText="BusStop name ..."
+          floatingLabelText={this.props.placeholder}
           onChange={this.handleChange}
-          onKeyUp={this.handleKeyUp}
           onKeyDown={this.handleKeyDown}
+          onKeyUp={this.handleKeyUp}
           value={value}
-          placeholder={this.props.placeholder}
+          key={id}
+          fullWidth
+          underlineStyle={styles.underlineStyle}
+          underlineFocusStyle={styles.underlineFocusStyle}
+          floatingLabelStyle={styles.floatingLabelStyle}
+          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
         />
-        <ul className="bus-menu">
-          {results.map(r =>
-            <li key={r.bus_stop_id}>
+        <ul className="busmenu">
+          {results.map((r, i) => (
+            <li
+              key={r.bus_stop_id}
+              onMouseEnter={() => this.handleLiMouseEnter(i)}
+              className={currentSelectedBusMenuLi === i ? 'selected' : null}
+            >
               <a href="" onClick={e => this.handleResultSelect(e, r)}>
-                <Icon type="environment-o" />
-                <strong>{`${r.name_en} - ${r.name_mm}`}</strong>
-                <small>{`${r.road_en} - ${r.road_mm}`}</small>
+                <strong>{r.name_en} - <span className="myanmar">{r.name_mm}</span></strong>
+                <small>{r.road_en} - <span className="myanmar">{r.road_mm}</span></small>
               </a>
-            </li>,
-          )}
+            </li>
+            ))
+          }
         </ul>
       </div>
     );
   }
 }
+
 
 AutoCompleteSearch.defaultProps = {
   defaultStop: null,
@@ -112,3 +185,41 @@ AutoCompleteSearch.propTypes = {
 };
 
 export default AutoCompleteSearch;
+        /* <label className="sr-only" htmlFor={id}>From</label>
+        <input
+          value={value}
+          type="text"
+          id={id}
+          className="form-control"
+          onChange={this.handleChange}
+          onKeyDown={this.handleKeyDown}
+          onKeyUp={this.handleKeyUp}
+          placeholder={this.props.placeholder}
+        />
+        <ul className="bus-menu">
+          {results.map(r =>
+            <li key={r.bus_stop_id}>
+              <a href="" onClick={e => this.handleResultSelect(e, r)}>
+                <strong>{`${r.name_en} - ${r.name_mm}`}</strong>
+                <small>{`${r.road_en} - ${r.road_mm}`}</small>
+              </a>
+            </li>,
+          )}
+        </ul>*/
+        /* <Paper
+          style={{
+            display: 'inline-block',
+            float: 'left',
+            width: '100%',
+          }}
+        >
+          <Menu>
+            {results.map(r =>
+              <MenuItem
+                key={r.bus_stop_id}
+                primaryText={`${r.name_en} - ${r.name_mm}`}
+                leftIcon={<MapsPlace />}
+              />,
+            )}
+          </Menu>
+        </Paper>*/

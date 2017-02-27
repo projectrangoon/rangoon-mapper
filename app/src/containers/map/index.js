@@ -3,15 +3,13 @@ import { connect } from 'react-redux';
 import GoogleMap from 'google-map-react';
 import _ from 'lodash';
 
-import './index.css';
-import { handlePlacesChanged, onMapLoad, selectStartEndStop } from '../../actions/map';
+import { loadMap, selectStartEndStop } from '../../actions/map';
 import customMapStyles from '../../constants/CustomMapStyles.json';
-import BusStop from '../../components/BusStop';
-import Polyline from '../../components/Polyline';
+import Marker from '../../components/Marker';
 
 class Map extends Component {
   componentDidMount() {
-    const { startStop, endStop } = this.props.query;
+    const { startStop, endStop } = this.props.params; // URL params
     const { busStopsMap } = this.props.map;
     if (startStop || endStop) {
       this.props.selectStartEndStop(busStopsMap[startStop], busStopsMap[endStop]);
@@ -21,10 +19,10 @@ class Map extends Component {
     const {
       center,
       zoom,
-      busServices,
       routePath,
-      polylines,
-      google } = this.props.map;
+      startStop,
+      endStop,
+      } = this.props.map;
 
 
     return (
@@ -34,16 +32,24 @@ class Map extends Component {
         zoom={zoom}
         options={{ styles: customMapStyles }}
         yesIWantToUseGoogleMapApiInternals
-        onGoogleApiLoaded={this.props.onMapLoad}
+        onGoogleApiLoaded={this.props.loadMap}
       >
+        {routePath && routePath.path && startStop.bus_stop_id !== routePath.path[0].bus_stop_id &&
+          <Marker color="#6c62a5" midpoint={false} {...startStop} />
+        }
 
-        {routePath && routePath.path ?
-          routePath.path.map(marker => <BusStop key={marker.bus_stop_id} {...marker} />)
-          : null}
+        {routePath && routePath.path && routePath.path.map((marker, index) =>
+          <Marker
+            key={_.uniqueId('marker')}
+            color={marker.color}
+            midpoint={marker.walk || !(index === 0 || index === routePath.path.length - 1)}
+            {...marker}
+          />)}
 
-        {polylines && google ?
-         _.map(polylines, (value, key) => <Polyline key={key} google={google} color={key === '0' ? '#000' : busServices[key].color} routePath={value} />)
-        : null}
+        {routePath && routePath.path &&
+         endStop.bus_stop_id !== routePath.path[routePath.path.length - 1].bus_stop_id &&
+         <Marker color="#6c62a5" midpoint={false} {...endStop} />
+        }
 
       </GoogleMap>
     );
@@ -51,7 +57,7 @@ class Map extends Component {
 }
 
 Map.defaultProps = {
-  query: {
+  params: {
     startStop: null,
     endStop: null,
   },
@@ -59,29 +65,24 @@ Map.defaultProps = {
 
 Map.propTypes = {
   map: React.PropTypes.object.isRequired,
-  onMapLoad: React.PropTypes.func.isRequired,
+  loadMap: React.PropTypes.func.isRequired,
   selectStartEndStop: React.PropTypes.func.isRequired,
-  query: React.PropTypes.object,
+  params: React.PropTypes.object,
 };
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   const { map, busStops } = state;
-  const { query } = ownProps.location;
 
   return {
     map,
     busStops,
-    query,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    handlePlacesChanged: (places) => {
-      dispatch(handlePlacesChanged(places));
-    },
-    onMapLoad: (google) => {
-      dispatch(onMapLoad(google));
+    loadMap: (google) => {
+      dispatch(loadMap(google));
     },
     selectStartEndStop: (startStop, endStop) => {
       dispatch(selectStartEndStop(startStop, endStop));

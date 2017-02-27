@@ -1,57 +1,138 @@
 import { push } from 'react-router-redux';
+import _ from 'lodash';
 import types from '../constants/ActionTypes';
+import { calculateRoute as calculateRouteAction, drawPolylines as drawPolylinesAction, createActions } from '../utils';
 
-export const handlePlacesChanged = places => ({
-  type: types.PLACES_CHANGED,
-  places,
-});
+// Begin Action creators
+const updateMapCenterActions = createActions([
+  types.UPDATE_MAP_CENTER_REQUEST,
+  types.UPDATE_MAP_CENTER_SUCCESS,
+  types.UPDATE_MAP_CENTER_FAIL,
+]);
+const loadAdjacencyListActions = createActions([
+  types.LOAD_ADJACENCY_LIST_REQUEST,
+  types.LOAD_ADJACENCY_LIST_SUCCESS,
+  types.LOAD_ADJACENCY_LIST_FAIL,
+]);
+const loadMapActions = createActions([
+  types.LOAD_MAP_REQUEST,
+  types.LOAD_MAP_SUCCESS,
+  types.LOAD_MAP_FAIL,
+]);
+const calculateRouteActions = createActions([
+  types.CALCULATE_ROUTE_REQUEST,
+  types.CALCULATE_ROUTE_SUCCESS,
+  types.CALCULATE_ROUTE_ERROR,
+]);
+const drawPolylinesActions = createActions([
+  types.DRAW_POLYLINES_REQUEST,
+  types.DRAW_POLYLINES_SUCCESS,
+  types.DRAW_POLYLINES_FAIL,
+]);
+const selectStartStopActions = createActions([
+  types.SELECT_START_STOP_REQUEST,
+  types.SELECT_START_STOP_SUCCESS,
+  types.SELECT_START_STOP_FAIL,
+]);
+const selectEndStopActions = createActions([
+  types.SELECT_END_STOP_REQUEST,
+  types.SELECT_END_STOP_SUCCESS,
+  types.SELECT_END_STOP_FAIL,
+]);
+// End Action creators
 
-export const updateMapCenter = center => ({
-  type: types.UPDATE_MAP_CENTER,
-  center,
-});
+export const updateMapCenter = () => (dispatch, getState) => {
+  const { map } = getState();
+  const { google, routePath, startStop, endStop } = map;
+  if (routePath.path.length > 1) {
+    dispatch(updateMapCenterActions.request(map));
+    const bounds = new google.maps.LatLngBounds();
+    bounds.extend(startStop);
+    routePath.path.forEach(stop => bounds.extend(stop));
+    bounds.extend(endStop);
+    google.map.fitBounds(bounds);
+    // google.map.setZoom(google.map.getZoom() - 1);
+    dispatch(updateMapCenterActions.success({ ...map, center: bounds.getCenter() }));
+  } else {
+    dispatch(updateMapCenterActions.success({ ...map, center: routePath.path[0] }));
+  }
+};
 
-export const onMapLoad = google => ({
-  type: types.ON_MAP_LOAD,
-  google,
-});
+export const drawPolylines = () =>
+  (dispatch, getState) => {
+    const { map } = getState();
+    const { google, routePath, startStop, endStop, polylines } = map;
 
-export const adjacencyListLoaded = (graph, busStopsMap, busServices) => ({
-  type: types.AJACENCY_LIST_LOADED,
-  graph,
-  busStopsMap,
-  busServices,
-});
+    // Clear all previous polylines from state if there are any
+    if (polylines) {
+      // can still put in actions if we would like to e.g (dispatch(removePolylines()))
+      _.map(polylines, (polyline) => {
+        polyline.setMap(null);
+      });
+    }
 
-export const calculateRoute = (graph, busStopsMap, startStop, endStop) => ({
-  type: types.CALCULATE_ROUTE,
-  graph,
-  busStopsMap,
-  startStop,
-  endStop,
-});
+    dispatch(drawPolylinesActions.request());
 
-// Bus stop actions
-export const selectStartStop = startStop => ({
-  type: types.SELECT_START_STOP,
-  startStop,
-});
+    drawPolylinesAction(google, routePath, startStop, endStop).then(
+      (response) => {
+        dispatch(drawPolylinesActions.success({ polylines: response }));
+      },
+      (error) => {
+        dispatch(drawPolylinesActions.fail(error));
+      },
+    );
+  };
 
-export const selectEndStop = endStop => ({
-  type: types.SELECT_END_STOP,
-  endStop,
-});
+export const calculateRoute = (startStop, endStop) =>
+  (dispatch, getState) => {
+    const { map } = getState();
+    const { graph, busStopsMap } = map;
+
+    dispatch(calculateRouteActions.request());
+
+    calculateRouteAction(graph, busStopsMap, startStop, endStop).then(
+      (routePath) => {
+        dispatch(calculateRouteActions.success({ routePath }));
+        dispatch(updateMapCenter());
+        dispatch(drawPolylines());
+      },
+      (error) => {
+        dispatch(calculateRouteActions.fail(error));
+      },
+    );
+  };
+
+export const loadMap = google =>
+  (dispatch, getState) => {
+    const { map } = getState();
+    const { startStop, endStop } = map;
+
+    dispatch(loadMapActions.success({ google }));
+
+    if (startStop && endStop) {
+      dispatch(calculateRoute(startStop, endStop));
+    }
+  };
+
+export const loadAdjacencyList = (graph, busStopsMap, busServices) =>
+  (dispatch) => {
+    dispatch(loadAdjacencyListActions.success({ graph, busStopsMap, busServices }));
+  };
+
+export const selectStartStop = startStop =>
+  (dispatch) => {
+    dispatch(selectStartStopActions.success({ startStop }));
+  };
+
+export const selectEndStop = endStop =>
+  (dispatch) => {
+    dispatch(selectEndStopActions.success({ endStop }));
+  };
 
 export const selectStartEndStop = (start, end) =>
   (dispatch, getState) => {
     const { map } = getState();
-
-    const {
-      busStopsMap,
-      startStop,
-      endStop,
-    } = map;
-
+    const { startStop, endStop, google } = map;
 
     if (start) {
       dispatch(selectStartStop(start));
@@ -61,11 +142,10 @@ export const selectStartEndStop = (start, end) =>
       dispatch(selectEndStop(end));
     }
 
-    if ((startStop && end) || (start && endStop) || (start && end)) {
-      const origin = start || startStop;
-      const destination = end || endStop;
-      dispatch(push(`/directions?startStop=${origin.bus_stop_id}&endStop=${destination.bus_stop_id}`));
-      dispatch(calculateRoute(map.graph, busStopsMap, origin, destination));
-      dispatch(updateMapCenter({ lat: origin.lat, lng: origin.lng }));
+    if (google && ((startStop && end) || (start && endStop) || (start && end))) {
+      const a = start || startStop;
+      const b = end || endStop;
+      dispatch(push(`/directions/${a.bus_stop_id}/${b.bus_stop_id}`));
+      dispatch(calculateRoute(a, b));
     }
   };

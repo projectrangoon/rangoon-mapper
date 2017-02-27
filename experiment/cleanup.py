@@ -61,14 +61,15 @@ for bus in bus_stops:
                 {
                     'service_name': bus['service_name'],
                     'sequence': bus['sequence'],
-                    'color': colors[bus['service_name']]
+                    'color': colors[int(bus['service_name'])]
                 }
             ]
         }
     else:
         unique_stops[bus['bus_stop_id']]['services'].append({
             'service_name': bus['service_name'],
-            'sequence': bus['sequence']
+            'sequence': bus['sequence'],
+            'color': colors[bus['service_name']]
         })
 
 
@@ -96,6 +97,23 @@ all_bus_stops = sorted(all_bus_stops, key=itemgetter('service_name'))
 def compose(f, g):
     return lambda x: f(g(x))
 
+def get_nearby_stops(busStops, lat, lng, radius=0.5):
+    from math import cos
+    delta_lat = radius / 110.567
+    maximal_lat, minimal_lat = lat + delta_lat, lat - delta_lat
+
+    delta_lng = cos(maximal_lat) * radius / 111.321
+    delta_lng_2 = cos(minimal_lat) * radius / 111.321
+    print delta_lng, delta_lng_2
+    maximal_lng, minimal_lng = lng - delta_lng, lng + delta_lng_2
+
+    print lng, maximal_lng, minimal_lng
+    return filter(lambda x: (minimal_lat < x['lat'] < maximal_lat) and
+                  (minimal_lng < x['lng'] < maximal_lng) and
+                  (x['lat'] != lat and x['lng'] != lng), busStops)
+
+def get_foo():
+    return 2
 
 def get_distance(lon1, lat1, lon2, lat2):
     from math import radians, cos, sin, asin, sqrt
@@ -139,3 +157,25 @@ for service_no, stops in services:
 
 with open('adjancencyList.json', 'wb') as f:
     f.write(json.dumps(graph))
+
+
+def dijkstra(graph, stops_map, start, end, walking_distance=0.7, per_stop_cost=0.35, per_transfer_cost=10, walking_cost=8):
+    import heapq
+
+    seen = set()
+    queue = []
+
+    heapq.heappush(queue, (0, 0, 0, [(start, None)]))
+
+    while queue:
+        (curr_cost, curr_distance, curr_transfers, path) = heapq.heappop(queue)
+        (stop, curr_service) = path[-1]
+        if stop == end:
+            return (curr_cost, curr_distance, curr_transfers, path)
+
+        if (stop, curr_service) in seen:
+            continue
+        seen.add((stop, curr_service))
+
+        neighbours = graph.get(stop)
+
