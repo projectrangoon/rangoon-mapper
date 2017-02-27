@@ -15,30 +15,22 @@ const initialState = {
 
 const map = (state = initialState, action) => {
   switch (action.type) {
-    case types.PLACES_CHANGED: {
-      const location = action.places[0].geometry.location;
-      const center = { lat: location.lat(), lng: location.lng() };
-      return Object.assign({}, state, {
-        center,
-      });
-    }
-
     case types.UPDATE_MAP_CENTER: {
       return Object.assign({}, state, {
         center: action.center,
       });
     }
 
-    case types.AJACENCY_LIST_LOADED: {
+    case types.LOAD_ADJACENCY_LIST_SUCCESS: {
       return Object.assign({}, state, {
-        graph: action.graph,
-        busStopsMap: action.busStopsMap,
-        busServices: action.busServices,
+        graph: action.payload.graph,
+        busStopsMap: action.payload.busStopsMap,
+        busServices: action.payload.busServices,
       });
     }
 
-    case types.ON_MAP_LOAD: {
-      const { google } = action;
+    case types.LOAD_MAP_SUCCESS: {
+      const { google } = action.payload;
       return Object.assign({}, state, {
         google,
       });

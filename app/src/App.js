@@ -5,7 +5,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import graph from '../../experiment/adjancencyList.json';
 import busStopsMap from '../../experiment/stops_map.json';
 import busServices from '../../experiment/bus_services.json';
-import { adjacencyListLoaded } from './actions/map';
+import { loadAdjacencyList } from './actions/map';
 import './styles/main.scss';
 // import { distance } from './utils';
 
@@ -16,7 +16,7 @@ injectTapEventPlugin();
 
 class App extends Component {
   componentWillMount() {
-    this.props.loadGraph();
+    this.props.loadAdjacencyList();
   }
   render() {
     return (
@@ -43,12 +43,12 @@ App.defaultProps = {
 App.propTypes = {
   main: React.PropTypes.element.isRequired,
   sidebar: React.PropTypes.element,
-  loadGraph: React.PropTypes.func.isRequired,
+  loadAdjacencyList: React.PropTypes.func.isRequired,
 };
 
 
 const mapDispatchToProps = dispatch => ({
-  loadGraph: () => dispatch(adjacencyListLoaded(graph, busStopsMap, busServices)),
+  loadAdjacencyList: () => dispatch(loadAdjacencyList(graph, busStopsMap, busServices)),
 });
 
 const mapStateToProps = () => ({

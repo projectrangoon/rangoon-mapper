@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import GoogleMap from 'google-map-react';
 import _ from 'lodash';
 
-import { handlePlacesChanged, onMapLoad, selectStartEndStop } from '../../actions/map';
+import { loadMap, selectStartEndStop } from '../../actions/map';
 import customMapStyles from '../../constants/CustomMapStyles.json';
 import Marker from '../../components/Marker';
 
@@ -33,7 +33,7 @@ class Map extends Component {
         zoom={zoom}
         options={{ styles: customMapStyles }}
         yesIWantToUseGoogleMapApiInternals
-        onGoogleApiLoaded={this.props.onMapLoad}
+        onGoogleApiLoaded={this.props.loadMap}
       >
         {routePath && routePath.path && startStop.bus_stop_id !== routePath.path[0].bus_stop_id &&
           <Marker color="#6c62a5" midpoint={false} {...startStop} />
@@ -67,7 +67,7 @@ Map.defaultProps = {
 
 Map.propTypes = {
   map: React.PropTypes.object.isRequired,
-  onMapLoad: React.PropTypes.func.isRequired,
+  loadMap: React.PropTypes.func.isRequired,
   selectStartEndStop: React.PropTypes.func.isRequired,
   params: React.PropTypes.object,
 };
@@ -83,11 +83,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    handlePlacesChanged: (places) => {
-      dispatch(handlePlacesChanged(places));
-    },
-    onMapLoad: (google) => {
-      dispatch(onMapLoad(google));
+    loadMap: (google) => {
+      dispatch(loadMap(google));
     },
     selectStartEndStop: (startStop, endStop) => {
       dispatch(selectStartEndStop(startStop, endStop));

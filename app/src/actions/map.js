@@ -4,25 +4,20 @@ import types from '../constants/ActionTypes';
 import { calculateRoute as calculateRouteAction, drawPolylines as drawPolylinesAction, createActions } from '../utils';
 
 // Begin Action creators
-// const handlePlacesChangedActions = createActions([
-//   types.PLACES_CHANGED_REQUEST,
-//   types.PLACES_CHANGED_SUCCESS,
-//   types.PLACES_CHANGED_FAIL,
-// ]);
 const updateMapCenterActions = createActions([
   types.UPDATE_MAP_CENTER_REQUEST,
   types.UPDATE_MAP_CENTER_SUCCESS,
   types.UPDATE_MAP_CENTER_FAIL,
 ]);
-const mapLoadActions = createActions([
-  types.MAP_LOAD_REQUEST,
-  types.MAP_LOAD_SUCCESS,
-  types.MAP_LOAD_FAIL,
-]);
 const loadAdjacencyListActions = createActions([
-  types.AJACENCY_LOAD_REQUEST,
-  types.AJACENCY_LOAD_SUCCESS,
-  types.AJACENCY_LOAD_FAIL,
+  types.LOAD_ADJACENCY_LIST_REQUEST,
+  types.LOAD_ADJACENCY_LIST_SUCCESS,
+  types.LOAD_ADJACENCY_LIST_FAIL,
+]);
+const loadMapActions = createActions([
+  types.LOAD_MAP_REQUEST,
+  types.LOAD_MAP_SUCCESS,
+  types.LOAD_MAP_FAIL,
 ]);
 const calculateRouteActions = createActions([
   types.CALCULATE_ROUTE_REQUEST,
@@ -46,10 +41,6 @@ const selectEndStopActions = createActions([
 ]);
 // End Action creators
 
-// export const handlePlacesChanged = places => ({
-//   type: types.PLACES_CHANGED,
-//   places,
-// });
 export const updateMapCenter = () => (dispatch, getState) => {
   const { map } = getState();
   const { google, routePath } = map;
@@ -107,24 +98,22 @@ export const calculateRoute = (startStop, endStop) =>
     );
   };
 
-export const onMapLoad = google =>
+export const loadMap = google =>
   (dispatch, getState) => {
     const { map } = getState();
     const { startStop, endStop } = map;
 
-    dispatch({ type: types.ON_MAP_LOAD, google });
+    dispatch(loadMapActions.success({ google }));
 
     if (startStop && endStop) {
       dispatch(calculateRoute(startStop, endStop));
     }
   };
 
-export const adjacencyListLoaded = (graph, busStopsMap, busServices) => ({
-  type: types.AJACENCY_LIST_LOADED,
-  graph,
-  busStopsMap,
-  busServices,
-});
+export const loadAdjacencyList = (graph, busStopsMap, busServices) =>
+  (dispatch) => {
+    dispatch(loadAdjacencyListActions.success({ graph, busStopsMap, busServices }));
+  };
 
 export const selectStartStop = startStop =>
   (dispatch) => {
