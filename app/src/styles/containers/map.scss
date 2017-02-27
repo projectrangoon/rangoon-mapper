@@ -1,4 +1,7 @@
 .map {
-  height: 100vh;
-  padding: 0
+  min-height: 100vh;
+  padding: 0;
+  @include media-breakpoint-down(sm) {
+    padding: $grid-gutter-width-base / 2;
+  }
 }

@@ -2,7 +2,7 @@
   border-bottom-style: solid;
   border-bottom-width: 1px;
   border-bottom-color: #dddddd;
-  padding: 1.5rem 0;
+  padding: $grid-gutter-width-base/2 0;
   margin-bottom: 0;
   li {
     list-style: none;
@@ -76,14 +76,14 @@
 
 .collapse-enter,
 .collapse-leave {
-  transition: all .4s linear;
+  transition: all 1s cubic-bezier(.23, 1, .32, 1);
 }
 
 .collapse-enter,
 .collapse-leave.collapse-leave-active {
   opacity: 0;
   transform: scale(0, 0);
-  transform-origin: top left;
+  transform-origin: center left;
   max-height: 0;
 }
 
@@ -91,6 +91,6 @@
 .collapse-enter.collapse-enter-active {
   opacity: 1;
   transform: scale(1, 1);
-  transform-origin: top left;
+  transform-origin: center left;
   max-height: 5000px;
 }

@@ -1,9 +1,13 @@
 .journey {
+  border-top: 1px solid #cccccc;
   i {
     display: inline-block;
-    vertical-align: middle;
     margin-right: .5rem;
+    vertical-align: middle;
   }
+  animation: fadeIn 1s;
+  padding-top: $grid-gutter-width-base / 2;
+  padding-bottom: $grid-gutter-width-base / 2;
 }
 
 .details {
@@ -11,8 +15,9 @@
     font-size: 23px;
     font-weight: lighter;
   }
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-  padding: 1rem;
+  > div {
+    margin-left: .3em;
+  }
 }
 
 .busstop-list {
@@ -29,7 +34,7 @@
   display: inline-block;
   height: $service-name-logo-size;
   line-height: $service-name-logo-size;
-  margin-right: .5rem;
+  margin-right: $grid-gutter-width-base / 2;
   text-align: center;
   vertical-align: middle;
   width: $service-name-logo-size;
@@ -38,11 +43,11 @@
 }
 
 .walk {
-  padding: 1rem 0;
+  padding: $grid-gutter-width-base/2 0;
   border-bottom-style: solid;
   border-bottom-width: 1px;
   border-bottom-color: #dddddd;
   i {
-    margin: 0 .25rem;
+    margin: 0 ($grid-gutter-width-base / 4);
   }
 }

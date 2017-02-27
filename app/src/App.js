@@ -23,10 +23,10 @@ class App extends Component {
       <MuiThemeProvider>
         <div className="container-fluid">
           <div className="row">
-            <aside className="col-sm-12 col-md-3 sidebar">
+            <aside className="col-sm-12 col-md-2 sidebar">
               {this.props.sidebar}
             </aside>
-            <main className="col-sm-12 col-md-9  map">
+            <main className="col-sm-12 map">
               {this.props.main}
             </main>
           </div>
