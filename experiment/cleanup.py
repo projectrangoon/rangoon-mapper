@@ -131,9 +131,10 @@ print 'Creating bus_services.json'
 bus_services = {}
 services = groupby(all_bus_stops, key=itemgetter('service_name'))
 for service_no, stops in services:
+    sorted_stops = sorted(list(stops), key=lambda x: int(x['sequence']))
     bus_services[service_no] = {
         'color': colors[service_no],
-        'stops': list(stops)
+        'stops': sorted_stops
     }
 with open('bus_services.json', 'wb') as f:
     f.write(json.dumps(bus_services))
@@ -142,7 +143,7 @@ print 'Creating adjacencyList.json'
 graph = {}
 services = groupby(all_bus_stops, key=itemgetter('service_name'))
 for service_no, stops in services:
-    stops = list(stops)
+    stops = sorted(list(stops), key=lambda x: int(x['sequence']))
     for stop in stops[:-1]:
         key = stop['bus_stop_id']
         if key not in graph:
