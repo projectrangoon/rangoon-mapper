@@ -1,5 +1,4 @@
 .journey {
-  animation: fadeIn 1s;
   border-top: 1px solid $border-color;
   padding-bottom: $grid-gutter-width-base / 2;
   padding-top: $grid-gutter-width-base / 2;
@@ -51,6 +50,7 @@
 }
 
 .walk {
+  cursor: pointer;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

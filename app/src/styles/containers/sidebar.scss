@@ -7,14 +7,13 @@
     left: $grid-gutter-width-base;
     z-index: 3;
     max-height: 94vh;
-    border-radius: $border-radius;
     padding: 0;
+    border-radius: $border-radius;
   }
 }
 
 form {
-  background-color: $black;
-  border-radius: $border-radius $border-radius 0 0;
+  background-color: rgba($black, .8);
   padding: 0;
 
   input {
