@@ -56,8 +56,10 @@ export const updateMapCenter = () => (dispatch, getState) => {
     routePath.path.forEach(stop => bounds.extend(stop));
     bounds.extend(endStop);
     google.map.fitBounds(bounds);
-    google.map.setZoom(google.map.getZoom() - 1);
-    google.map.panBy(-200, 0);
+    if (window.innerWidth >= 768) {
+      google.map.setZoom(google.map.getZoom() - 1);
+      google.map.panBy(-200, 0);
+    }
     dispatch(updateMapCenterActions.success(map));
   } else {
     dispatch(updateMapCenterActions.success({ ...map, center: routePath.path[0] }));
