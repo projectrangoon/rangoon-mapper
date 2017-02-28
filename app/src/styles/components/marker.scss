@@ -3,8 +3,8 @@
   cursor: pointer;
   &:hover {
     ~ .name {
-      transform: scale(.75, .75);
-      transform-origin: top left;
+      transform: scale(.8, .8);
+      transform-origin: top center;
     }
   }
 }
@@ -12,15 +12,17 @@
 .name {
   color: $ghostwhite;
   display: inline-block;
-  padding: .5rem;
+  padding: .7rem;
   border-radius: $border-radius;
-  margin-top: 10px;
-  margin-left: 10px;
+  position: absolute;
+  font-size: .9rem;
+  top: .875rem;
+  left: -40px;
+  min-width: 100px;
   transform: scale(0, 0);
-  transform-origin: top left;
-  transition: transform .3s ease-out;
-  width: 100px;
+  transition: transform .3s ease-in-out;
   text-align: center;
+  z-index: 2;
 }
 
 .midpoint-marker {
