@@ -284,8 +284,8 @@ export const drawPolylines = (google, routePath, startStop, endStop) => {
   _.map(services, (service) => {
     const polyline = new google.maps.Polyline({
       strokeColor: service[0].color,
-      strokeOpacity: 1,
-      strokeWeight: 3,
+      strokeOpacity: 0.8,
+      strokeWeight: 1.6,
       clickable: false,
       path: service,
     });
