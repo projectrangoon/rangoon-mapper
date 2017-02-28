@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Helmet from 'react-helmet';
 import GoogleMap from 'google-map-react';
 import _ from 'lodash';
 
@@ -25,9 +26,7 @@ class Map extends Component {
       routePath,
       startStop,
       endStop,
-      } = this.props.map;
-
-
+    } = this.props.map;
     return (
       <GoogleMap
         bootstrapURLKeys={{ key: 'AIzaSyBePNN11JZSltU-e8ht5z176ZWDKpx5Jg0' }}
@@ -52,10 +51,17 @@ class Map extends Component {
           />)}
 
         {routePath && routePath.path && endStop && startStop &&
-         endStop.bus_stop_id !== routePath.path[routePath.path.length - 1].bus_stop_id &&
-         <Marker color="#6c62a5" midpoint={false} {...endStop} />
+        endStop.bus_stop_id !== routePath.path[routePath.path.length - 1].bus_stop_id &&
+        <Marker color="#6c62a5" midpoint={false} {...endStop} />
         }
-
+        {routePath && routePath.path && endStop && startStop &&
+          <Helmet
+            meta={[
+              { property: 'og:description', content: `Suggested route from ${startStop.name_en} to ${endStop.name_en}. Total transfers: ${routePath.currTransfers}` },
+              { name: 'description', content: `Suggested route from ${startStop.name_en} to ${endStop.name_en}. Total transfers: ${routePath.currTransfers}` },
+            ]}
+          />
+        }
       </GoogleMap>
     );
   }
