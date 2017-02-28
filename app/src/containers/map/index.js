@@ -56,7 +56,9 @@ class Map extends Component {
         }
         {routePath && routePath.path && endStop && startStop &&
           <Helmet
+            title="Routing Page"
             meta={[
+              { property: 'og:url', content: `${window.location.protocol}//${window.location.host}/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}` },
               { property: 'og:description', content: `Suggested route from ${startStop.name_en} to ${endStop.name_en}. Total transfers: ${routePath.currTransfers}` },
               { name: 'description', content: `Suggested route from ${startStop.name_en} to ${endStop.name_en}. Total transfers: ${routePath.currTransfers}` },
             ]}

@@ -24,8 +24,10 @@ class App extends Component {
       <MuiThemeProvider>
         <div className="container-fluid">
           <Helmet
+            defaultTitle="Rangoon Mapper"
             meta={[
               { property: 'og:description', content: 'The ultimate transport app for Yangon' },
+              { property: 'og:url', content: `${window.location.protocol}//${window.location.host}` },
               { name: 'description', content: 'The ultimate transport app for Yangon' },
             ]}
           />
