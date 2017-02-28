@@ -75,7 +75,7 @@
     width: $marker-pulse-ring-size;
     position: absolute;
     margin: -10px 0 0 -10px;
-    animation: pulsate 1.5s ease-out;
+    animation: pulsate 1.5s ease-in-out;
     animation-iteration-count: infinite;
     opacity: 0;
     box-shadow: 0 0 1px 1px $marker-pulse-shadow-color;

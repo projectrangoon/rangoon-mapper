@@ -1,6 +1,6 @@
 .map {
-  height: 100vh;
-  min-height: 100vh;
+  min-height: calc(100vh - 55px);
+  height: calc(100vh - 55px);
   padding: 0;
   @include media-breakpoint-down(sm) {
     padding: $grid-gutter-width-base / 2;
