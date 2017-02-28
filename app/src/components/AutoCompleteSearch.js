@@ -71,7 +71,7 @@ class AutoCompleteSearch extends Component {
   }
 
   handleKeyDown = (e) => {
-    const { currentSelectedBusMenuLi, results } = this.state;
+    const { currentSelectedBusMenuLi, results, value } = this.state;
     clearTimeout(this.state.typingTimer);
     // When Key down
     if (e.keyCode === 40) {
@@ -96,7 +96,7 @@ class AutoCompleteSearch extends Component {
           currentSelectedBusMenuLi: currentSelectedBusMenuLi - 1,
         });
       }
-    } else if (e.keyCode === 13) { // On Enter
+    } else if (e.keyCode === 13 && value) { // On Enter
       this.handleResultSelect(e, results[currentSelectedBusMenuLi]);
     }
   }

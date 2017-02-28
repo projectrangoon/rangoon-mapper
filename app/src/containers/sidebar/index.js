@@ -8,6 +8,21 @@ import LoadingJourney from '../../components/LoadingJourney';
 
 import allBusStops from '../../../../experiment/unique_stops.json';
 
+const renderJourney = (routePath, startStop, endStop, busServices, calculatingRoute) => {
+  if (routePath && startStop && endStop) {
+    return (
+      <Journey
+        routePath={routePath}
+        busServices={busServices}
+        startStop={startStop}
+        endStop={endStop}
+        calculatingRoute={calculatingRoute}
+      />
+    );
+  }
+  return null;
+};
+
 const Sidebar = (props) => {
   const { handleStartSelect, handleEndSelect, map, params } = props;
   const { busStopsMap, routePath, busServices, startStop, endStop, calculatingRoute } = map;
@@ -33,17 +48,7 @@ const Sidebar = (props) => {
         { calculatingRoute ? (
           <LoadingJourney />
         ) : (
-          <div>
-            { routePath && startStop && endStop ?
-              <Journey
-                routePath={routePath}
-                busServices={busServices}
-                startStop={startStop}
-                endStop={endStop}
-                calculatingRoute={calculatingRoute}
-              />
-            : null }
-          </div>
+          renderJourney(routePath, startStop, endStop, busServices, calculatingRoute)
         )}
       </div>
     </div>
