@@ -1,15 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { selectStartEndStop } from '../../actions/map';
+import { selectStartStop, selectEndStop } from '../../actions/map';
 import AutoCompleteSearch from '../../components/AutoCompleteSearch';
 import Journey from '../../components/Journey';
+import LoadingJourney from '../../components/LoadingJourney';
 
 import allBusStops from '../../../../experiment/unique_stops.json';
 
 const Sidebar = (props) => {
-  const { handleStartEndSelect, map, params } = props;
-  const { busStopsMap, routePath, busServices, startStop, endStop } = map;
+  const { handleStartSelect, handleEndSelect, map, params } = props;
+  const { busStopsMap, routePath, busServices, startStop, endStop, calculatingRoute } = map;
   return (
     <div className="container-fluid">
       <div className="row">
@@ -17,26 +18,33 @@ const Sidebar = (props) => {
           <AutoCompleteSearch
             source={allBusStops}
             placeholder="Start"
-            onSelect={stop => handleStartEndSelect(stop, null)}
+            onSelect={stop => handleStartSelect(stop)}
             defaultStop={busStopsMap[params.startStop] || null}
           />
           <AutoCompleteSearch
             source={allBusStops}
             placeholder="End"
-            onSelect={stop => handleStartEndSelect(null, stop)}
+            onSelect={stop => handleEndSelect(stop)}
             defaultStop={busStopsMap[params.endStop] || null}
           />
         </form>
       </div>
       <div className="row">
-        { routePath ?
-          <Journey
-            routePath={routePath}
-            busServices={busServices}
-            startStop={startStop}
-            endStop={endStop}
-          />
-        : null }
+        { calculatingRoute ? (
+          <LoadingJourney />
+        ) : (
+          <div>
+            { routePath && startStop && endStop ?
+              <Journey
+                routePath={routePath}
+                busServices={busServices}
+                startStop={startStop}
+                endStop={endStop}
+                calculatingRoute={calculatingRoute}
+              />
+            : null }
+          </div>
+        )}
       </div>
     </div>
   );
@@ -50,7 +58,8 @@ Sidebar.defaultProps = {
 };
 
 Sidebar.propTypes = {
-  handleStartEndSelect: React.PropTypes.func.isRequired,
+  handleStartSelect: React.PropTypes.func.isRequired,
+  handleEndSelect: React.PropTypes.func.isRequired,
   params: React.PropTypes.object,
   map: React.PropTypes.object.isRequired,
 };
@@ -68,7 +77,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  handleStartEndSelect: (startStop, endStop) => dispatch(selectStartEndStop(startStop, endStop)),
+  handleStartSelect: startStop => dispatch(selectStartStop(startStop)),
+  handleEndSelect: endStop => dispatch(selectEndStop(endStop)),
 });
 
 export default connect(

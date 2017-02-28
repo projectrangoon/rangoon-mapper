@@ -61,6 +61,9 @@ class AutoCompleteSearch extends Component {
       });
     } else {
       this.resetComponent();
+      if (this.props.onSelect) {
+        this.props.onSelect(null);
+      }
     }
   }
 
@@ -121,6 +124,16 @@ class AutoCompleteSearch extends Component {
     }
   }
 
+  removeInput = (e) => {
+    e.preventDefault();
+    this.setState({
+      value: '',
+    });
+    if (this.props.onSelect) {
+      this.props.onSelect(null);
+    }
+  }
+
   handleUpdateInput = (value) => {
     this.setState({
       value,
@@ -152,8 +165,15 @@ class AutoCompleteSearch extends Component {
           floatingLabelStyle={styles.floatingLabelStyle}
           floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
         />
+        {value ? (
+          <a href="" onClick={this.removeInput}>
+            <i className="material-icons">clear</i>
+          </a>
+        ) : (
+          null
+        )}
         <ul className="busmenu">
-          {results.map((r, i) => (
+          {value && results.map((r, i) => (
             <li
               key={r.bus_stop_id}
               onMouseEnter={() => this.handleLiMouseEnter(i)}
