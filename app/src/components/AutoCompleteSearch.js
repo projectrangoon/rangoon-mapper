@@ -1,22 +1,25 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import TextField from 'material-ui/TextField';
-import { lightGreen400, lightGreen600 } from 'material-ui/styles/colors';
+import { orange300, grey500, grey700 } from 'material-ui/styles/colors';
 
 import { searchBusStops } from '../utils';
 
 const styles = {
   underlineStyle: {
-    borderColor: '#3d4046',
+    borderColor: grey700,
   },
   underlineFocusStyle: {
-    borderColor: lightGreen400,
+    borderColor: orange300,
   },
   floatingLabelStyle: {
-    color: lightGreen600,
+    color: orange300,
   },
   floatingLabelFocusStyle: {
-    color: lightGreen400,
+    color: orange300,
+  },
+  hintStyle: {
+    color: grey500,
   },
 };
 
@@ -152,7 +155,7 @@ class AutoCompleteSearch extends Component {
     return (
       <div className="form-group to-from">
         <TextField
-          hintText="BusStop name ..."
+          hintText="Name of the bus stop"
           floatingLabelText={this.props.placeholder}
           onChange={this.handleChange}
           onKeyDown={this.handleKeyDown}
@@ -160,6 +163,7 @@ class AutoCompleteSearch extends Component {
           value={value}
           key={id}
           fullWidth
+          hintStyle={styles.hintStyle}
           underlineStyle={styles.underlineStyle}
           underlineFocusStyle={styles.underlineFocusStyle}
           floatingLabelStyle={styles.floatingLabelStyle}
