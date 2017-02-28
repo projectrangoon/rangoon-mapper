@@ -213,6 +213,8 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop,
         currTransfers: top.currTransfers > 0 ? top.currTransfers - 1 : 0,
       };
       result.path[result.path.length - 1].walk = true;
+      // TODO: shouldn't override the cumulative distance with walking distance
+      result.path[result.path.length - 1].distance = found.distance;
       if (result.path.length >= 2) {
         result.path[0].service_name = result.path[1].service_name;
       }
