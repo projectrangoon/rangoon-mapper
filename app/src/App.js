@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -23,14 +22,6 @@ class App extends Component {
     return (
       <MuiThemeProvider>
         <div className="container-fluid">
-          <Helmet
-            defaultTitle="Rangoon Mapper"
-            meta={[
-              { property: 'og:description', content: 'The ultimate transport app for Yangon' },
-              { property: 'og:url', content: `${window.location.protocol}//${window.location.host}` },
-              { name: 'description', content: 'The ultimate transport app for Yangon' },
-            ]}
-          />
           <div className="row">
             <aside className="col-sm-12 col-md-3 sidebar">
               {this.props.sidebar}
