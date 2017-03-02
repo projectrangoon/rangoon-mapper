@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Helmet from 'react-helmet';
 import GoogleMap from 'google-map-react';
-import _ from 'lodash';
+import { uniqueId } from 'lodash';
 
 import { loadMap, selectStartStop, selectEndStop, calculateRoute } from '../../actions/map';
 import customMapStyles from '../../constants/CustomMapStyles.json';
@@ -44,7 +43,7 @@ class Map extends Component {
         {routePath && startStop && endStop &&
         routePath.path && routePath.path.map((marker, index) =>
           <Marker
-            key={_.uniqueId('marker')}
+            key={uniqueId('marker')}
             color={marker.color}
             midpoint={marker.walk || !(index === 0 || index === routePath.path.length - 1)}
             {...marker}
@@ -53,16 +52,6 @@ class Map extends Component {
         {routePath && routePath.path && endStop && startStop &&
         endStop.bus_stop_id !== routePath.path[routePath.path.length - 1].bus_stop_id &&
         <Marker color="#6c62a5" midpoint={false} {...endStop} />
-        }
-        {routePath && routePath.path && endStop && startStop &&
-          <Helmet
-            title="Routing Page"
-            meta={[
-              { property: 'og:url', content: `${window.location.protocol}//${window.location.host}/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}` },
-              { property: 'og:description', content: `Suggested route from ${startStop.name_en} to ${endStop.name_en}. Total transfers: ${routePath.currTransfers}` },
-              { name: 'description', content: `Suggested route from ${startStop.name_en} to ${endStop.name_en}. Total transfers: ${routePath.currTransfers}` },
-            ]}
-          />
         }
       </GoogleMap>
     );
