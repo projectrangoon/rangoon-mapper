@@ -30,8 +30,9 @@ export default createConstants(
   'DRAW_POLYLINES_SUCCESS',
   'DRAW_POLYLINES_FAIL',
 
-  'DRAW_ROUTE',
-  'SHOW_JOURNEY',
+  'CLEAR_POLYLINES_REQUEST',
+  'CLEAR_POLYLINES_SUCCESS',
+  'CLEAR_POLYLINES_FAIL',
 
   'SELECT_START_STOP',
   'SELECT_END_STOP',
@@ -40,4 +41,8 @@ export default createConstants(
   'LOAD_ALL_BUS_STOPS',
 
   'LOAD_ALL_BUS_SERVICES',
+
+  'DRAW_ROUTE',
+  'SHOW_JOURNEY',
+
   );

@@ -39,11 +39,16 @@ const selectEndStopActions = createActions([
   types.SELECT_END_STOP_SUCCESS,
   types.SELECT_END_STOP_FAIL,
 ]);
+const clearPolylinesActions = createActions([
+  types.CLEAR_POLYLINES_REQUEST,
+  types.CLEAR_POLYLINES_SUCCESS,
+  types.CLEAR_POLYLINES_FAIL,
+]);
 // End Action creators
 
 export const updateMapCenter = () => (dispatch, getState) => {
   const { map } = getState();
-  const { google, routePath, startStop, endStop } = map;
+  const { google, startStop, endStop, routePath } = map;
   if (routePath.path.length > 1) {
     dispatch(updateMapCenterActions.request(map));
     const bounds = new google.maps.LatLngBounds();
@@ -51,25 +56,34 @@ export const updateMapCenter = () => (dispatch, getState) => {
     routePath.path.forEach(stop => bounds.extend(stop));
     bounds.extend(endStop);
     google.map.fitBounds(bounds);
-    google.map.setZoom(google.map.getZoom() - 1);
-    google.map.panBy(-200, 0);
-    dispatch(updateMapCenterActions.success({ ...map, center: bounds.getCenter() }));
+    if (window.innerWidth >= 768) {
+      google.map.setZoom(google.map.getZoom() - 1);
+      google.map.panBy(-200, 0);
+    }
+    dispatch(updateMapCenterActions.success(map));
   } else {
     dispatch(updateMapCenterActions.success({ ...map, center: routePath.path[0] }));
   }
 };
 
+export const clearPolylines = () => (dispatch, getState) => {
+  const { map } = getState();
+  const { polylines } = map;
+
+  dispatch(clearPolylinesActions.request());
+  _.map(polylines, (polyline) => {
+    polyline.setMap(null);
+  });
+  dispatch(clearPolylinesActions.success({ polylines: null }));
+};
+
 export const drawPolylines = () =>
   (dispatch, getState) => {
     const { map } = getState();
-    const { google, routePath, startStop, endStop, polylines } = map;
+    const { google, startStop, endStop, polylines, routePath } = map;
 
-    // Clear all previous polylines from state if there are any
     if (polylines) {
-      // can still put in actions if we would like to e.g (dispatch(removePolylines()))
-      _.map(polylines, (polyline) => {
-        polyline.setMap(null);
-      });
+      dispatch(clearPolylines());
     }
 
     dispatch(drawPolylinesActions.request());
@@ -87,7 +101,11 @@ export const drawPolylines = () =>
 export const calculateRoute = (startStop, endStop) =>
   (dispatch, getState) => {
     const { map } = getState();
-    const { graph, busStopsMap } = map;
+    const { graph, busStopsMap, polylines } = map;
+
+    if (polylines) {
+      dispatch(clearPolylines());
+    }
 
     dispatch(calculateRouteActions.request());
 
@@ -121,32 +139,45 @@ export const loadAdjacencyList = (graph, busStopsMap, busServices) =>
   };
 
 export const selectStartStop = startStop =>
-  (dispatch) => {
-    dispatch(selectStartStopActions.success({ startStop }));
+  (dispatch, getState) => {
+    const { map } = getState();
+    const { endStop, google } = map;
+    if (!startStop) {
+      dispatch(clearPolylines());
+    }
+    if (google && startStop && endStop) {
+      dispatch(selectStartStopActions.success({ startStop,
+        routePath: null,
+        calculatingRoute: true,
+      }));
+      dispatch(push(`/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}`));
+      setTimeout(() => { dispatch(calculateRoute(startStop, endStop)); }, 100);
+    } else {
+      dispatch(selectStartStopActions.success({ startStop,
+        routePath: null,
+        calculatingRoute: false,
+      }));
+    }
   };
 
 export const selectEndStop = endStop =>
-  (dispatch) => {
-    dispatch(selectEndStopActions.success({ endStop }));
-  };
-
-export const selectStartEndStop = (start, end) =>
   (dispatch, getState) => {
     const { map } = getState();
-    const { startStop, endStop, google } = map;
-
-    if (start) {
-      dispatch(selectStartStop(start));
+    const { startStop, google } = map;
+    if (!endStop) {
+      dispatch(clearPolylines());
     }
-
-    if (end) {
-      dispatch(selectEndStop(end));
-    }
-
-    if (google && ((startStop && end) || (start && endStop) || (start && end))) {
-      const a = start || startStop;
-      const b = end || endStop;
-      dispatch(push(`/directions/${a.bus_stop_id}/${b.bus_stop_id}`));
-      dispatch(calculateRoute(a, b));
+    if (google && startStop && endStop) {
+      dispatch(selectEndStopActions.success({ endStop,
+        routePath: null,
+        calculatingRoute: true,
+      }));
+      dispatch(push(`/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}`));
+      setTimeout(() => { dispatch(calculateRoute(startStop, endStop)); }, 100);
+    } else {
+      dispatch(selectEndStopActions.success({ endStop,
+        routePath: null,
+        calculatingRoute: false,
+      }));
     }
   };

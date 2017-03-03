@@ -5,27 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="HandheldFriendly" content="True">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    <title>Rangoon Mapper</title>
+    <title>Rangoon Mapper | The ultimate transport app for Yangon</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Padauk" rel="stylesheet">
 
+    <meta name="description"  content="The ultimate transport app for Yangon">
     <meta name="keywords" content="yangon, rangoon, transport, transportation, ybs, yangon bus, yangon trains">
-    <meta name="description" content="The ultimate transport app for Yangon">
     <meta name="subject" content="The ultimate transport app for Yangon">
 
     <meta property="fb:app_id"  content="119587475232444"/>
     <meta property="og:title" content="Rangoon Mapper"/>
     <meta property="og:type" content="website"/>
-    <meta property="og:url" content="http://mapper.rangoon.io"/>
-    <meta property="og:image" content=""/>
+    <meta property="og:url"  content="http://mapper.rangoon.io"/>
+    <meta property="og:image" content="http://mapper.rangoon.io/social.png"/>
+    <meta property="og:site_name"  content="Rangoon Mapper"/>
+    <meta property="og:description"  content="The ultimate transport app for Yangon" />
 
     <meta property="og:site_name" content="Rangoon Mapper"/>
-    <meta property="fb:admins" content="1673059171"/>
-    <meta property="og:description" content="The ultimate transport app for Yangon"/>
+    <meta property="fb:admins" content="1673059171, 1623090108"/>
 
   </head>
   <body>
     <div id="root"></div>
+    <footer class="navbar fixed-bottom">
+      <span>Developed by
+        <a href="https://www.facebook.com/kaunghtetzaw" title="Kaung Htet Zaw"><img class="avatar" src="%PUBLIC_URL%/kaunghtetzaw.jpg" alt="Kaung Htet Zaw"></a>
+        <a href="https://www.facebook.com/minthetnaing" title="Min Thet Naing"><img class="avatar" src="%PUBLIC_URL%/minthetnaing.jpg" alt="Min Thet Naing"></a>
+      </span>
+      <div class="fb-like" data-href="http://mapper.rangoon.io" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></div>
+    </footer>
+
+    <div id="fb-root"></div>
     <script>
      window.fbAsyncInit = function() {
        FB.init({

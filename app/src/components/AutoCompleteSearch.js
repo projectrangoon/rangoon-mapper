@@ -64,11 +64,14 @@ class AutoCompleteSearch extends Component {
       });
     } else {
       this.resetComponent();
+      if (this.props.onSelect) {
+        this.props.onSelect(null);
+      }
     }
   }
 
   handleKeyDown = (e) => {
-    const { currentSelectedBusMenuLi, results } = this.state;
+    const { currentSelectedBusMenuLi, results, value } = this.state;
     clearTimeout(this.state.typingTimer);
     // When Key down
     if (e.keyCode === 40) {
@@ -93,7 +96,7 @@ class AutoCompleteSearch extends Component {
           currentSelectedBusMenuLi: currentSelectedBusMenuLi - 1,
         });
       }
-    } else if (e.keyCode === 13) { // On Enter
+    } else if (e.keyCode === 13 && value) { // On Enter
       this.handleResultSelect(e, results[currentSelectedBusMenuLi]);
     }
   }
@@ -121,6 +124,16 @@ class AutoCompleteSearch extends Component {
     });
     if (this.props.onSelect) {
       this.props.onSelect(payload);
+    }
+  }
+
+  removeInput = (e) => {
+    e.preventDefault();
+    this.setState({
+      value: '',
+    });
+    if (this.props.onSelect) {
+      this.props.onSelect(null);
     }
   }
 
@@ -156,8 +169,15 @@ class AutoCompleteSearch extends Component {
           floatingLabelStyle={styles.floatingLabelStyle}
           floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
         />
+        {value ? (
+          <a href="" onClick={this.removeInput}>
+            <i className="material-icons">clear</i>
+          </a>
+        ) : (
+          null
+        )}
         <ul className="busmenu">
-          {results.map((r, i) => (
+          {value && results.map((r, i) => (
             <li
               key={r.bus_stop_id}
               onMouseEnter={() => this.handleLiMouseEnter(i)}

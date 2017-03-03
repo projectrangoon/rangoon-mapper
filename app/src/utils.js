@@ -213,6 +213,8 @@ export const calculateRoute = (graph, busStopsMap, startStop, endStop,
         currTransfers: top.currTransfers > 0 ? top.currTransfers - 1 : 0,
       };
       result.path[result.path.length - 1].walk = true;
+      // TODO: shouldn't override the cumulative distance with walking distance
+      result.path[result.path.length - 1].distance = found.distance;
       if (result.path.length >= 2) {
         result.path[0].service_name = result.path[1].service_name;
       }
@@ -284,8 +286,8 @@ export const drawPolylines = (google, routePath, startStop, endStop) => {
   _.map(services, (service) => {
     const polyline = new google.maps.Polyline({
       strokeColor: service[0].color,
-      strokeOpacity: 1,
-      strokeWeight: 3,
+      strokeOpacity: 0.8,
+      strokeWeight: 1.6,
       clickable: false,
       path: service,
     });
