@@ -11,6 +11,11 @@ build:
       code: |
         cd app
         npm run lint
+    - script:
+      name: build
+      code: |
+        cd app
+        npm run build
 
 deploy-production:
   steps:
