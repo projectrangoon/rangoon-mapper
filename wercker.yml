@@ -1,4 +1,5 @@
 box: node:latest
+no-response-timeout: 15
 build:
   steps:
     - npm-install:
