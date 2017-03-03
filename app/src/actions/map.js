@@ -44,6 +44,11 @@ const clearPolylinesActions = createActions([
   types.CLEAR_POLYLINES_SUCCESS,
   types.CLEAR_POLYLINES_FAIL,
 ]);
+const swapStopsActions = createActions([
+  types.SWAP_STOPS_REQUEST,
+  types.SWAP_STOPS_SUCCESS,
+  types.SWAP_STOPS_FAIL,
+]);
 // End Action creators
 
 export const updateMapCenter = () => (dispatch, getState) => {
@@ -181,3 +186,15 @@ export const selectEndStop = endStop =>
       }));
     }
   };
+
+export const swapStops = _ => (dispatch, getState) => {
+  const { map } = getState();
+  const { startStop, endStop } = map;
+
+  if(startStop && endStop) {
+    console.log(startStop);
+    console.log(endStop);
+    dispatch(selectStartStop(endStop));
+    dispatch(selectEndStop(startStop));
+  }
+};

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
+import { uniqueId } from 'lodash';
 import TextField from 'material-ui/TextField';
 import { orange300, grey500, grey700 } from 'material-ui/styles/colors';
 
@@ -25,7 +25,7 @@ const styles = {
 
 class AutoCompleteSearch extends Component {
   componentWillMount() {
-    const id = _.uniqueId();
+    const id = uniqueId();
     const source = [];
     this.props.source.forEach((obj) => {
       const found = source.some(el => el.bus_stop_id === obj.bus_stop_id);

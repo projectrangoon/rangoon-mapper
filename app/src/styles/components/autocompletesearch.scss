@@ -3,7 +3,6 @@
   input {
     width: calc(100% - 24px) !important; // 24px is the font-size of material icons
   }
-
   i {
     position: absolute;
     top: calc(14px + #{$input-height/2} - #{$font-size-base/1.2});
@@ -11,6 +10,12 @@
     color: $orange;
   }
 }
+
+.swap {
+  align-self: center;
+  color: $orange;
+}
+
 .busmenu {
   padding-left: 0;
   position: absolute;

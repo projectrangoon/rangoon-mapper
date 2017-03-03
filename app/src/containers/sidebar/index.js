@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { selectStartStop, selectEndStop } from '../../actions/map';
+import { selectStartStop, selectEndStop, swapStops } from '../../actions/map';
 import AutoCompleteSearch from '../../components/AutoCompleteSearch';
 import Journey from '../../components/Journey';
 import LoadingJourney from '../../components/LoadingJourney';
@@ -24,12 +24,12 @@ const renderJourney = (routePath, startStop, endStop, busServices, calculatingRo
 };
 
 const Sidebar = (props) => {
-  const { handleStartSelect, handleEndSelect, map, params } = props;
+  const { handleStartSelect, handleEndSelect, handleSwap, map, params } = props;
   const { busStopsMap, routePath, busServices, startStop, endStop, calculatingRoute } = map;
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <form className="col-sm">
+    <div className="container">
+      <div className="row top-form">
+        <form className="col" style={{ paddingRight: 0 }}>
           <AutoCompleteSearch
             source={allBusStops}
             placeholder="Start"
@@ -43,6 +43,9 @@ const Sidebar = (props) => {
             defaultStop={busStopsMap[params.endStop] || null}
           />
         </form>
+        <button onClick={handleSwap}>
+          <i className="material-icons swap">swap_vert</i>
+        </button>
       </div>
       <div className="row">
         { calculatingRoute ? (
@@ -65,6 +68,7 @@ Sidebar.defaultProps = {
 Sidebar.propTypes = {
   handleStartSelect: React.PropTypes.func.isRequired,
   handleEndSelect: React.PropTypes.func.isRequired,
+  handleSwap: React.PropTypes.func.isRequired,
   params: React.PropTypes.object,
   map: React.PropTypes.object.isRequired,
 };
@@ -82,6 +86,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
+  handleSwap: _ => dispatch(swapStops()),
   handleStartSelect: startStop => dispatch(selectStartStop(startStop)),
   handleEndSelect: endStop => dispatch(selectEndStop(endStop)),
 });
