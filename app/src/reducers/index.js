@@ -10,11 +10,7 @@ import modals from './modals';
 const rootReducer = combineReducers({
   actions,
   map,
-  webglmap: enhanceMapReducer(webglmap, {
-    zoom: 15,
-    bearing: 0,
-    pitch: 45,
-  }),
+  webglmap,
   busStops,
   busServices,
   modals,
