@@ -255,10 +255,6 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
-autobind-decorator@^1.3.3:
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/autobind-decorator/-/autobind-decorator-1.3.4.tgz#b67560e6bbbb68a35c049c82d6351ea0e82d820d"
-
 autoprefixer@6.5.1, autoprefixer@^6.3.1:
   version "6.5.1"
   resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-6.5.1.tgz#ae759a5221e709f3da17c2d656230e67c43cbb75"
@@ -1106,7 +1102,7 @@ bops@0.0.6:
     base64-js "0.0.2"
     to-utf8 "0.0.1"
 
-bowser@^1.0.0, bowser@^1.2.0:
+bowser@^1.0.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/bowser/-/bowser-1.6.0.tgz#37fc387b616cb6aef370dab4d6bd402b74c5c54d"
 
@@ -1287,10 +1283,6 @@ caniuse-api@^1.5.2:
 caniuse-db@^1.0.30000346, caniuse-db@^1.0.30000539, caniuse-db@^1.0.30000554, caniuse-db@^1.0.30000604:
   version "1.0.30000605"
   resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000605.tgz#c616e335a6df02f865af5e02add72c897cb6579d"
-
-canvas-composite-types@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/canvas-composite-types/-/canvas-composite-types-1.0.4.tgz#7b44e7b179f06d84acbf1570480e70bef2a6a922"
 
 cardinal@^1.0.0:
   version "1.0.0"
@@ -1758,60 +1750,6 @@ cycle@1.0.x:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/cycle/-/cycle-1.0.3.tgz#21e80b2be8580f98b468f379430662b046c34ad2"
 
-d3-array@1, d3-array@^1.0.1:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.1.0.tgz#bfea66b89d46f9aedf77296d3aad6307b50771cc"
-
-d3-collection@1:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/d3-collection/-/d3-collection-1.0.2.tgz#df5acb5400443e9eabe9c1379896c67e52426b39"
-
-d3-color@1, d3-color@^1.0.1:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/d3-color/-/d3-color-1.0.2.tgz#83cb4b3a9474e40795f009d97e97a15649830bbc"
-
-d3-format@1, d3-format@^1.0.2:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/d3-format/-/d3-format-1.1.0.tgz#736775d5e6604421bef6c76d5746638a8e70d295"
-
-d3-geo@^1.2.4:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/d3-geo/-/d3-geo-1.6.1.tgz#071aee9d54bcecc5c74958c4aec7b76c685b6f3b"
-  dependencies:
-    d3-array "1"
-
-d3-interpolate@1:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/d3-interpolate/-/d3-interpolate-1.1.3.tgz#e119c91b6be4941e581675ca3e1279bb92bd2c9b"
-  dependencies:
-    d3-color "1"
-
-d3-scale@^1.0.3:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/d3-scale/-/d3-scale-1.0.4.tgz#50e28bf6a193b706745528515ed9b3d44205a033"
-  dependencies:
-    d3-array "1"
-    d3-collection "1"
-    d3-color "1"
-    d3-format "1"
-    d3-interpolate "1"
-    d3-time "1"
-    d3-time-format "2"
-
-d3-selection@^1.0.2:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/d3-selection/-/d3-selection-1.0.4.tgz#b862c7ae22436efe8459b7659ccdae84f09b43a3"
-
-d3-time-format@2:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/d3-time-format/-/d3-time-format-2.0.4.tgz#db0ab6910b3f2fc729a2ddfd2ac1b750962e1f72"
-  dependencies:
-    d3-time "1"
-
-d3-time@1:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/d3-time/-/d3-time-1.0.5.tgz#ef07a27d4b56522d984a41c27b1c67aa80b0cdd9"
-
 d@^0.1.1, d@~0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/d/-/d-0.1.1.tgz#da184c535d18d8ee7ba2aa229b914009fae11309"
@@ -1852,7 +1790,7 @@ deep-diff@0.3.4:
   version "0.3.4"
   resolved "https://registry.yarnpkg.com/deep-diff/-/deep-diff-0.3.4.tgz#aac5c39952236abe5f037a2349060ba01b00ae48"
 
-deep-equal@*, deep-equal@1.0.1, deep-equal@^1.0.0:
+deep-equal@*, deep-equal@1.0.1, deep-equal@^1.0.0, deep-equal@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-1.0.1.tgz#f5d260292b660e084eff4cdbc9f08ad3247448b5"
 
@@ -1944,10 +1882,6 @@ dom-serializer@0:
   dependencies:
     domelementtype "~1.1.1"
     entities "~1.1.1"
-
-dom-walk@^0.1.0:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/dom-walk/-/dom-walk-0.1.1.tgz#672226dc74c8f799ad35307df936aba11acd6018"
 
 domain-browser@^1.1.1:
   version "1.1.7"
@@ -2499,7 +2433,7 @@ fb-watchman@^1.8.0, fb-watchman@^1.9.0:
   dependencies:
     bser "^1.0.2"
 
-fbjs@^0.8.0, fbjs@^0.8.1, fbjs@^0.8.3, fbjs@^0.8.4, fbjs@^0.8.6:
+fbjs@^0.8.1, fbjs@^0.8.3, fbjs@^0.8.4, fbjs@^0.8.6:
   version "0.8.8"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.8.tgz#02f1b6e0ea0d46c24e0b51a2d24df069563a5ad6"
   dependencies:
@@ -2661,7 +2595,7 @@ for-in@^0.1.5:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-0.1.6.tgz#c9f96e89bfad18a545af5ec3ed352a1d9e5b4dc8"
 
-for-own@^0.1.4:
+for-own@^0.1.1, for-own@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/for-own/-/for-own-0.1.4.tgz#0149b41a39088c7515f51ebe1c1386d45f935072"
   dependencies:
@@ -2826,7 +2760,7 @@ glob@^5.0.15:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-glob@^7.0.0, glob@^7.0.3, glob@^7.0.5, glob@^7.1.1, glob@~7.1.1:
+glob@^7.0.0, glob@^7.0.3, glob@^7.0.5, glob@~7.1.1:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.1.tgz#805211df04faaf1c63a3600306cdf5ade50b2ec8"
   dependencies:
@@ -2852,13 +2786,6 @@ global-prefix@^0.1.4:
     ini "^1.3.4"
     is-windows "^0.2.0"
     which "^1.2.12"
-
-global@^4.3.0:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/global/-/global-4.3.1.tgz#5f757908c7cbabce54f386ae440e11e26b7916df"
-  dependencies:
-    min-document "^2.19.0"
-    process "~0.5.1"
 
 globals@^9.0.0, globals@^9.14.0:
   version "9.14.0"
@@ -4158,7 +4085,7 @@ mapbox-gl-supported@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/mapbox-gl-supported/-/mapbox-gl-supported-1.2.0.tgz#cbd34df894206cadda9a33c8d9a4609f26bb1989"
 
-mapbox-gl@0.32.1:
+mapbox-gl@^0.32.1:
   version "0.32.1"
   resolved "https://registry.yarnpkg.com/mapbox-gl/-/mapbox-gl-0.32.1.tgz#fb12d33dc97a96ef5d2ad4f0b7827ccc247a8ad2"
   dependencies:
@@ -4311,12 +4238,6 @@ mime@1.2.x:
 mime@1.3.4, mime@^1.3.4:
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.3.4.tgz#115f9e3b6b3daf2959983cb38f149a2d40eb5d53"
-
-min-document@^2.19.0:
-  version "2.19.0"
-  resolved "https://registry.yarnpkg.com/min-document/-/min-document-2.19.0.tgz#7bd282e3f5842ed295bb748cdd9f1ffa2c824685"
-  dependencies:
-    dom-walk "^0.1.0"
 
 "minimatch@2 || 3", minimatch@^3.0.0, minimatch@^3.0.2, minimatch@^3.0.3, minimatch@~3.0.2:
   version "3.0.3"
@@ -5167,10 +5088,6 @@ process@^0.11.0:
   version "0.11.9"
   resolved "https://registry.yarnpkg.com/process/-/process-0.11.9.tgz#7bd5ad21aa6253e7da8682264f1e11d11c0318c1"
 
-process@~0.5.1:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/process/-/process-0.5.2.tgz#1638d8a8e34c2f440a91db95ab9aeb677fc185cf"
-
 progress@^1.1.8:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/progress/-/progress-1.1.8.tgz#e260c78f6161cdd9b0e56cc3e0a85de17c7a57be"
@@ -5217,12 +5134,6 @@ punycode@1.3.2:
 punycode@^1.2.4, punycode@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.4.1.tgz#c0d5a63b2718800ad8e1eb0fa5269c84dd41845e"
-
-pure-render-decorator@^1.1.0:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/pure-render-decorator/-/pure-render-decorator-1.2.1.tgz#568870eeca17a1cee536b4fe94a3477fcd31eeb9"
-  dependencies:
-    fbjs "^0.8.0"
 
 q@^1.1.2:
   version "1.4.1"
@@ -5374,26 +5285,14 @@ react-icons@^2.2.3:
   dependencies:
     react-icon-base "2.0.4"
 
-react-map-gl@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/react-map-gl/-/react-map-gl-2.0.2.tgz#d7bb1b60edf7921f9c79746ee74972fcce5021a5"
+react-mapbox-gl@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/react-mapbox-gl/-/react-mapbox-gl-1.3.3.tgz#dc8745b87a52e2c09ec19b795899cb43722337b9"
   dependencies:
-    autobind-decorator "^1.3.3"
-    bowser "^1.2.0"
-    canvas-composite-types "^1.0.4"
-    d3-array "^1.0.1"
-    d3-color "^1.0.1"
-    d3-format "^1.0.2"
-    d3-geo "^1.2.4"
-    d3-scale "^1.0.3"
-    d3-selection "^1.0.2"
-    flow-remove-types "^1.1.2"
-    glob "^7.1.1"
-    global "^4.3.0"
-    mapbox-gl "0.32.1"
-    pure-render-decorator "^1.1.0"
-    svg-transform "0.0.3"
-    viewport-mercator-project "^2.0.1"
+    deep-equal "^1.0.1"
+    mapbox-gl "^0.32.1"
+    reduce-object "^0.1.3"
+    supercluster "^2.2.0"
 
 react-redux@^5.0.2:
   version "5.0.2"
@@ -5568,17 +5467,17 @@ reduce-function-call@^1.0.1:
   dependencies:
     balanced-match "^0.4.2"
 
+reduce-object@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/reduce-object/-/reduce-object-0.1.3.tgz#d549d40a6c2936fa4e3e9b78ca89c93314594218"
+  dependencies:
+    for-own "^0.1.1"
+
 redux-logger@^2.7.4:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/redux-logger/-/redux-logger-2.7.4.tgz#891e5d29e7f111d08b5781a237b9965b5858c7f8"
   dependencies:
     deep-diff "0.3.4"
-
-redux-map-gl@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/redux-map-gl/-/redux-map-gl-0.1.0.tgz#d2bec142d5c82bf67532b941c48197b4d3a350d8"
-  dependencies:
-    immutable "^3.8.1"
 
 redux-mock-store@^1.2.1:
   version "1.2.2"
@@ -6192,7 +6091,7 @@ style-loader@0.13.1:
   dependencies:
     loader-utils "^0.2.7"
 
-supercluster@^2.0.1:
+supercluster@^2.0.1, supercluster@^2.2.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/supercluster/-/supercluster-2.3.0.tgz#87ab56081bbea9a1d724df5351ee9e8c3af2f48b"
   dependencies:
@@ -6211,10 +6110,6 @@ supports-color@^3.1.0, supports-color@^3.1.1, supports-color@^3.1.2:
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-3.1.2.tgz#72a262894d9d408b956ca05ff37b2ed8a6e2a2d5"
   dependencies:
     has-flag "^1.0.0"
-
-svg-transform@0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/svg-transform/-/svg-transform-0.0.3.tgz#dbe5756748483a8ba0d262674357aeb29a64b081"
 
 svgo@^0.7.0:
   version "0.7.1"
@@ -6585,10 +6480,6 @@ verror@1.3.6:
   resolved "https://registry.yarnpkg.com/verror/-/verror-1.3.6.tgz#cff5df12946d297d2baaefaa2689e25be01c005c"
   dependencies:
     extsprintf "1.0.2"
-
-viewport-mercator-project@^2.0.1:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/viewport-mercator-project/-/viewport-mercator-project-2.1.0.tgz#6ae6249d199a80ca01319cdd821d7c6b7feae792"
 
 vlq@^0.2.1:
   version "0.2.1"
