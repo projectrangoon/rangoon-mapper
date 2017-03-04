@@ -72,6 +72,7 @@
     "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",
     "redux-logger": "^2.7.4",
+    "redux-map-gl": "^0.1.0",
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.2.0"
   },

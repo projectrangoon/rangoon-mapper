@@ -1,28 +1,23 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import MapGL from 'react-map-gl';
+import { onChangeViewport } from 'redux-map-gl';
 
 const token = 'pk.eyJ1Ijoia2h6YXciLCJhIjoiN3liaDByOCJ9.nMTO6Nz-aAibwaN9ydIXYg';
 
 class WebGLMap extends Component {
   render() {
-    const { latitude, longitude, zoom, bearing, pitch } = this.props.map;
+    const { viewport, onChangeViewport } = this.props;
     const { busServices } = this.props.busServices;
     return (
       <MapGL
-        longitude={longitude}
-        latitude={latitude}
-        zoom={zoom}
-        bearing={bearing}
-        pitch={pitch}
+        {...viewport}
         width={window.innerWidth}
         height={window.innerHeight}
         perspectiveEnabled
         mapboxApiAccessToken={token}
         mapStyle="mapbox://styles/mapbox/dark-v9"
-        onChangeViewport={(viewport) => {
-          console.log(viewport);
-        }}
+        onChangeViewport={onChangeViewport}
       />
     );
   }
@@ -31,15 +26,22 @@ class WebGLMap extends Component {
 function mapStateToProps(state) {
   const { webglmap, map } = state;
   return {
+    viewport: webglmap.viewport.toJS(),
     map: webglmap,
     busServices: map.busServices,
   };
 }
 
+const actions = {
+  onChangeViewport,
+};
+
 
 WebGLMap.propTypes = {
+  viewport: PropTypes.object.isRequired,
   map: PropTypes.object.isRequired,
   busServices: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps)(WebGLMap);
+
+export default connect(mapStateToProps, actions)(WebGLMap);
