@@ -6,6 +6,7 @@ import { uniqueId } from 'lodash';
 import { loadMap, selectStartStop, selectEndStop, calculateRoute } from '../../actions/map';
 import customMapStyles from '../../constants/CustomMapStyles.json';
 import Marker from '../../components/Marker';
+import { GOOGLE_MAPS_API_KEY } from '../../constants/lib';
 
 class Map extends Component {
   componentDidMount() {
@@ -28,7 +29,7 @@ class Map extends Component {
     } = this.props.map;
     return (
       <GoogleMap
-        bootstrapURLKeys={{ key: 'AIzaSyBePNN11JZSltU-e8ht5z176ZWDKpx5Jg0' }}
+        bootstrapURLKeys={{ key: GOOGLE_MAPS_API_KEY }}
         center={center}
         zoom={zoom}
         options={{ styles: customMapStyles }}
