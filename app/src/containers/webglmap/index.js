@@ -1,36 +1,47 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import MapGL, { ScatterplotOverlay } from 'react-map-gl';
-import { onChangeViewport } from 'redux-map-gl';
+import ReactMapboxGl, { Layer, Feature } from 'react-mapbox-gl';
 import { MAPBOX_TOKEN } from '../../constants/lib';
+import { map } from 'lodash';
 
 class WebGLMap extends Component {
   componentDidMount() {
   }
   render() {
-    const { viewport, changeViewport } = this.props;
-    const { busServices } = this.props.busServices;
+    const { center, pitch, zoom } = this.props.map;
+    const { busServices } = this.props;
     return (
-      <MapGL
-        {...viewport}
-        width={window.innerWidth}
-        height={window.innerHeight}
-        perspectiveEnabled
-        mapboxApiAccessToken={MAPBOX_TOKEN}
-        mapStyle="mapbox://styles/mapbox/dark-v9"
-        onChangeViewport={changeViewport}
+      <ReactMapboxGl
+        // eslint-disable-next-line
+        style="mapbox://styles/mapbox/dark-v9"
+        accessToken={MAPBOX_TOKEN}
+        center={center}
+        zoom={zoom}
+        pitch={pitch}
+        containerStyle={{
+          height: "100%",
+          width: "100%"
+        }}
       >
-        {busServices &&
-        <ScatterplotOverlay
-          {...viewport}
-          width={window.innerWidth}
-          height={window.innerHeight}
-          locations={busServices}
-          dotRadius={4}
-          globalOpacity={1}
-          compositeOperation="screen"
-        />}
-      </MapGL>
+
+      {busServices && map(busServices, (value, key) =>
+        <Layer
+          key={"line" + key}
+          type="symbol"
+          id={"line" + key}
+          layout={{ "icon-image": "bus-11" }}
+        >
+        {
+          value.stops.map((stop) =>
+            <Feature
+              key={stop.sequence}
+              coordinates={[stop.lng, stop.lat]}
+            />
+          )
+        }
+        </Layer>
+      )}
+      </ReactMapboxGl>
     );
   }
 }
@@ -38,22 +49,16 @@ class WebGLMap extends Component {
 function mapStateToProps(state) {
   const { webglmap, map } = state;
   return {
-    viewport: webglmap.viewport.toJS(),
-    map: webglmap,
     busServices: map.busServices,
+    map: webglmap,
   };
 }
 
-const actions = {
-  changeViewport: onChangeViewport,
-};
-
 
 WebGLMap.propTypes = {
-  viewport: PropTypes.object.isRequired,
+  map: PropTypes.object.isRequired,
   busServices: PropTypes.object.isRequired,
-  changeViewport: PropTypes.func.isRequired,
 };
 
 
-export default connect(mapStateToProps, actions)(WebGLMap);
+export default connect(mapStateToProps)(WebGLMap);
