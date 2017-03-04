@@ -1,13 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import MapGL from 'react-map-gl';
+import MapGL, { ScatterplotOverlay } from 'react-map-gl';
 import { onChangeViewport } from 'redux-map-gl';
-
-const token = 'pk.eyJ1Ijoia2h6YXciLCJhIjoiN3liaDByOCJ9.nMTO6Nz-aAibwaN9ydIXYg';
+import { MAPBOX_TOKEN } from '../../constants/lib';
 
 class WebGLMap extends Component {
+  componentDidMount() {
+  }
   render() {
-    const { viewport, onChangeViewport } = this.props;
+    const { viewport, changeViewport } = this.props;
     const { busServices } = this.props.busServices;
     return (
       <MapGL
@@ -15,10 +16,21 @@ class WebGLMap extends Component {
         width={window.innerWidth}
         height={window.innerHeight}
         perspectiveEnabled
-        mapboxApiAccessToken={token}
+        mapboxApiAccessToken={MAPBOX_TOKEN}
         mapStyle="mapbox://styles/mapbox/dark-v9"
-        onChangeViewport={onChangeViewport}
-      />
+        onChangeViewport={changeViewport}
+      >
+        {busServices &&
+        <ScatterplotOverlay
+          {...viewport}
+          width={window.innerWidth}
+          height={window.innerHeight}
+          locations={busServices}
+          dotRadius={4}
+          globalOpacity={1}
+          compositeOperation="screen"
+        />}
+      </MapGL>
     );
   }
 }
@@ -33,14 +45,14 @@ function mapStateToProps(state) {
 }
 
 const actions = {
-  onChangeViewport,
+  changeViewport: onChangeViewport,
 };
 
 
 WebGLMap.propTypes = {
   viewport: PropTypes.object.isRequired,
-  map: PropTypes.object.isRequired,
   busServices: PropTypes.object.isRequired,
+  changeViewport: PropTypes.func.isRequired,
 };
 
 
