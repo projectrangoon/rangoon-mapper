@@ -24,7 +24,11 @@ const logPageView = () => {
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={history} routes={routes} onUpdate={logPageView} />
+    {window.location.host === 'mapper.rangoon.io' ? (
+      <Router history={history} routes={routes} onUpdate={logPageView} />
+    ) : (
+      <Router history={history} routes={routes} />
+    )}
   </Provider>,
   document.getElementById('root'),
 );

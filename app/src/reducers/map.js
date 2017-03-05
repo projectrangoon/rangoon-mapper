@@ -130,12 +130,14 @@ const map = (state = initialState, action) => {
         startStopValue: `${state.endStop.name_en} ${state.endStop.name_mm}`,
         endStopValue: `${state.startStop.name_en} ${state.startStop.name_mm}`,
         swappingStops: true,
+        calculatingRoute: true,
       });
     }
 
     case types.SWAP_STOPS_SUCCESS: {
       return Object.assign({}, state, {
         swappingStops: false,
+        calculatingRoute: false,
       });
     }
 
