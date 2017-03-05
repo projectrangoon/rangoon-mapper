@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { uniqueId, _ } from 'lodash';
+import { uniqueId, sortBy } from 'lodash';
 import TextField from 'material-ui/TextField';
 import { orange300, grey500, grey700 } from 'material-ui/styles/colors';
 
@@ -130,7 +130,7 @@ class AutoCompleteSearch extends Component {
       };
 
     const results =
-      (_.sortBy(searchBusStops(this.state.source, this.state.value), sortByEngName)).reverse();
+      (sortBy(searchBusStops(this.state.source, this.state.value), sortByEngName)).reverse();
 
     return this.setState({
       isLoading: false,
