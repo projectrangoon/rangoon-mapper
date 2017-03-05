@@ -61,7 +61,7 @@ class WebGLMap extends Component {
           }}
          paint={{ "icon-color": '#ff0000'}}
        >
-         {busService.stops.map(stop => <Feature coordinates={[stop.lng, stop.lat]} />)}
+         {busService.stops.map(stop => <Feature key={stop.sequence} coordinates={[stop.lng, stop.lat]} />)}
        </Layer>
       }
       </ReactMapboxGl>
