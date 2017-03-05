@@ -49,6 +49,16 @@ const swapStopsActions = createActions([
   types.SWAP_STOPS_SUCCESS,
   types.SWAP_STOPS_FAIL,
 ]);
+const changeStartStopValueActions = createActions([
+  types.CHANGE_START_STOP_VALUE_REQUEST,
+  types.CHANGE_START_STOP_VALUE_SUCCESS,
+  types.CHANGE_START_STOP_VALUE_FAIL,
+]);
+const changeEndStopValueActions = createActions([
+  types.CHANGE_END_STOP_VALUE_REQUEST,
+  types.CHANGE_END_STOP_VALUE_SUCCESS,
+  types.CHANGE_END_STOP_VALUE_FAIL,
+]);
 // End Action creators
 
 export const updateMapCenter = () => (dispatch, getState) => {
@@ -114,16 +124,19 @@ export const calculateRoute = (startStop, endStop) =>
 
     dispatch(calculateRouteActions.request());
 
-    calculateRouteAction(graph, busStopsMap, startStop, endStop).then(
-      (routePath) => {
-        dispatch(calculateRouteActions.success({ routePath }));
-        dispatch(updateMapCenter());
-        dispatch(drawPolylines());
-      },
-      (error) => {
-        dispatch(calculateRouteActions.fail(error));
-      },
-    );
+    return new Promise((resolve, reject) => {
+      calculateRouteAction(graph, busStopsMap, startStop, endStop).then(
+        (routePath) => {
+          resolve(dispatch(calculateRouteActions.success({ routePath })));
+          dispatch(updateMapCenter());
+          dispatch(drawPolylines());
+          dispatch(push(`/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}`));
+        },
+        (error) => {
+          reject(dispatch(calculateRouteActions.fail(error)));
+        },
+      );
+    });
   };
 
 export const loadMap = google =>
@@ -155,7 +168,6 @@ export const selectStartStop = startStop =>
         routePath: null,
         calculatingRoute: true,
       }));
-      dispatch(push(`/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}`));
       setTimeout(() => { dispatch(calculateRoute(startStop, endStop)); }, 100);
     } else {
       dispatch(selectStartStopActions.success({ startStop,
@@ -177,7 +189,6 @@ export const selectEndStop = endStop =>
         routePath: null,
         calculatingRoute: true,
       }));
-      dispatch(push(`/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}`));
       setTimeout(() => { dispatch(calculateRoute(startStop, endStop)); }, 100);
     } else {
       dispatch(selectEndStopActions.success({ endStop,
@@ -187,14 +198,26 @@ export const selectEndStop = endStop =>
     }
   };
 
-export const swapStops = _ => (dispatch, getState) => {
+export const changeStartStopValue = value =>
+  (dispatch) => {
+    dispatch(changeStartStopValueActions.success(value));
+  };
+
+export const changeEndStopValue = value =>
+  (dispatch) => {
+    dispatch(changeEndStopValueActions.success(value));
+  };
+
+export const swapStops = () => (dispatch, getState) => {
   const { map } = getState();
   const { startStop, endStop } = map;
 
-  if(startStop && endStop) {
-    console.log(startStop);
-    console.log(endStop);
-    dispatch(selectStartStop(endStop));
-    dispatch(selectEndStop(startStop));
+  if (startStop && endStop) {
+    dispatch(swapStopsActions.request());
+    setTimeout(() => {
+      dispatch(calculateRoute(endStop, startStop)).then(() => {
+        dispatch(swapStopsActions.success());
+      });
+    }, 100);
   }
 };

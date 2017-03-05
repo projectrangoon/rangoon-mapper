@@ -4,7 +4,9 @@ const initialState = {
   center: { lat: 16.7943528, lng: 96.1518985 },
   zoom: 15,
   startStop: null,
+  startStopValue: '',
   endStop: null,
+  endStopValue: '',
   routePath: null,
   graph: null,
   google: null,
@@ -14,6 +16,7 @@ const initialState = {
   calculatingRoute: false,
   updatingMap: false,
   drawingPolylines: false,
+  swappingStops: false,
 };
 
 const map = (state = initialState, action) => {
@@ -105,6 +108,34 @@ const map = (state = initialState, action) => {
     case types.CLEAR_POLYLINES_SUCCESS: {
       return Object.assign({}, state, {
         polylines: action.payload.polylines,
+      });
+    }
+
+    case types.CHANGE_START_STOP_VALUE_SUCCESS: {
+      return Object.assign({}, state, {
+        startStopValue: action.payload,
+      });
+    }
+
+    case types.CHANGE_END_STOP_VALUE_SUCCESS: {
+      return Object.assign({}, state, {
+        endStopValue: action.payload,
+      });
+    }
+
+    case types.SWAP_STOPS_REQUEST: {
+      return Object.assign({}, state, {
+        startStop: state.endStop,
+        endStop: state.startStop,
+        startStopValue: `${state.endStop.name_en} ${state.endStop.name_mm}`,
+        endStopValue: `${state.startStop.name_en} ${state.startStop.name_mm}`,
+        swappingStops: true,
+      });
+    }
+
+    case types.SWAP_STOPS_SUCCESS: {
+      return Object.assign({}, state, {
+        swappingStops: false,
       });
     }
 

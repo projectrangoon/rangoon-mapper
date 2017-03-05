@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { selectStartStop, selectEndStop, swapStops } from '../../actions/map';
+import { selectStartStop, selectEndStop, swapStops, changeStartStopValue, changeEndStopValue } from '../../actions/map';
 import AutoCompleteSearch from '../../components/AutoCompleteSearch';
 import Journey from '../../components/Journey';
 import LoadingJourney from '../../components/LoadingJourney';
@@ -24,8 +24,26 @@ const renderJourney = (routePath, startStop, endStop, busServices, calculatingRo
 };
 
 const Sidebar = (props) => {
-  const { handleStartSelect, handleEndSelect, handleSwap, map, params } = props;
-  const { busStopsMap, routePath, busServices, startStop, endStop, calculatingRoute } = map;
+  const {
+    handleStartSelect,
+    handleEndSelect,
+    handleStartStopValueChange,
+    handleEndStopValueChange,
+    handleSwap,
+    map,
+    params,
+  } = props;
+  const {
+    busStopsMap,
+    routePath,
+    busServices,
+    startStop,
+    startStopValue,
+    endStopValue,
+    endStop,
+    calculatingRoute,
+    swappingStops,
+  } = map;
   return (
     <div className="container">
       <div className="row top-form">
@@ -35,17 +53,27 @@ const Sidebar = (props) => {
             placeholder="Start"
             onSelect={stop => handleStartSelect(stop)}
             defaultStop={busStopsMap[params.startStop] || null}
+            defaultValue={startStopValue}
+            onChange={value => handleStartStopValueChange(value)}
           />
           <AutoCompleteSearch
             source={allBusStops}
             placeholder="End"
             onSelect={stop => handleEndSelect(stop)}
             defaultStop={busStopsMap[params.endStop] || null}
+            defaultValue={endStopValue}
+            onChange={value => handleEndStopValueChange(value)}
           />
         </form>
-        <button onClick={handleSwap}>
-          <i className="material-icons swap">swap_vert</i>
-        </button>
+        {swappingStops || !startStop || !endStop ? (
+          <button className="disabled">
+            <i className="material-icons swap">swap_vert</i>
+          </button>
+        ) : (
+          <button onClick={handleSwap}>
+            <i className="material-icons swap">swap_vert</i>
+          </button>
+        )}
       </div>
       <div className="row">
         { calculatingRoute ? (
@@ -68,6 +96,8 @@ Sidebar.defaultProps = {
 Sidebar.propTypes = {
   handleStartSelect: React.PropTypes.func.isRequired,
   handleEndSelect: React.PropTypes.func.isRequired,
+  handleStartStopValueChange: React.PropTypes.func.isRequired,
+  handleEndStopValueChange: React.PropTypes.func.isRequired,
   handleSwap: React.PropTypes.func.isRequired,
   params: React.PropTypes.object,
   map: React.PropTypes.object.isRequired,
@@ -86,9 +116,11 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  handleSwap: _ => dispatch(swapStops()),
+  handleSwap: () => dispatch(swapStops()),
   handleStartSelect: startStop => dispatch(selectStartStop(startStop)),
   handleEndSelect: endStop => dispatch(selectEndStop(endStop)),
+  handleStartStopValueChange: value => dispatch(changeStartStopValue(value)),
+  handleEndStopValueChange: value => dispatch(changeEndStopValue(value)),
 });
 
 export default connect(
