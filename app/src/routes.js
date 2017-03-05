@@ -11,7 +11,7 @@ module.exports = (
   <Route path="/" component={App} >
     <IndexRoute components={{ main: Map, sidebar: Sidebar }} />
     <Route path="directions/:startStop/:endStop" components={{ main: Map, sidebar: Sidebar }} />
-    <Route path="bus" components={{ main: WebGLMap, sidebar: null }} />
-    <Route path="*" components={{ main: PageNotFound, sidebar: null }} />
+    <Route path="bus(/:serviceName)" components={{ main: WebGLMap }} />
+    <Route path="*" components={{ main: PageNotFound }} />
   </Route>
 );

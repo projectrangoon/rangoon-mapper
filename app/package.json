@@ -53,6 +53,7 @@
     "whatwg-fetch": "1.0.0"
   },
   "dependencies": {
+    "@turf/turf": "^3.11.7",
     "bootstrap": "4.0.0-alpha.6",
     "google-map-react": "^0.22.3",
     "heap": "^0.2.6",
