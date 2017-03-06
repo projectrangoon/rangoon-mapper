@@ -18,8 +18,8 @@ class WebGLMap extends Component {
         new MapboxGl.LngLatBounds(busStopsCoords[0], busStopsCoords[0]));
 
       const path = turf.lineString(busStopsCoords);
-      const pathLength = turf.lineDistance(path, 'miles');
-      const point = turf.along(path, 0, 'miles');
+      const pathLength = turf.lineDistance(path, 'kilometers');
+      const point = turf.along(path, 0, 'kilometers');
 
       this.state = {
         busService,
@@ -33,17 +33,15 @@ class WebGLMap extends Component {
   }
 
   onStyleLoad = (map) => {
-
-    map.fitBounds(this.state.bounds, {
-      padding: 20,
-      easing: t => t - 0.01,
-    });
+    map.fitBounds(this.state.bounds, { padding: 10 });
 
     // wait for map to finish loading, ridiculous I know
     setTimeout(_ => {
+
+      map.flyTo({ pitch: 50, duration: 3000 });
       let step = 0;
-      let numSteps = 500; // animation resolution
-      let timePerStep = 20; // animation speed
+      let numSteps = 1000; // animation resolution
+      let timePerStep = 30;
       const pSource = map.getSource('point');
       setInterval(_ => {
         step += 1;
@@ -51,11 +49,11 @@ class WebGLMap extends Component {
           step = 0;
         } else {
           const curDistance = (step / numSteps) * this.state.pathLength;
-          const point = turf.along(this.state.path, curDistance, 'miles');
+          const point = turf.along(this.state.path, curDistance, 'kilometers');
           pSource.setData(point);
         }
       }, timePerStep);
-    }, 1000);
+    }, 3000);
   }
 
   renderLayers(busService, path, point) {
@@ -119,7 +117,7 @@ class WebGLMap extends Component {
   }
 
   render() {
-    const { center, pitch, zoom, bearing, minZoom } = this.props.map;
+    const { center, zoom, bearing, minZoom } = this.props.map;
     const { busService, path, point } = this.state;
 
     return (
@@ -132,13 +130,11 @@ class WebGLMap extends Component {
         center={center}
         minZoom={minZoom}
         zoom={zoom}
-        pitch={pitch}
         movingMethod="flyTo"
         containerStyle={{
           height: "100%",
           width: "100%"
         }}
-        fitBoundOptions={{ padding: 50, linear: true }}
         onStyleLoad={this.onStyleLoad}
       >
         { this.renderLayers(busService, path, point) }

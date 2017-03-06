@@ -2,8 +2,7 @@ const initialState = {
   center: [ 96.1587996, 16.7849606 ],
   zoom: [13.86],
   bearing: 1,
-  pitch: 30,
-  minZoom: 5,
+  minZoom: 10,
 };
 
 const webglmap = (state = initialState, action) => {
