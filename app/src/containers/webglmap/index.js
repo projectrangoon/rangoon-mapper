@@ -53,7 +53,7 @@ class WebGLMap extends Component {
           pSource.setData(point);
         }
       }, timePerStep);
-    }, 3000);
+    }, 2500);
   }
 
   renderLayers(busService, path, point) {
@@ -107,7 +107,7 @@ class WebGLMap extends Component {
           layout={{
           }}
           paint={{
-            'circle-radius': 5,
+            'circle-radius': 4,
             'circle-color': '#ffffff'
           }}
         >
