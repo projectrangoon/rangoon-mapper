@@ -2,6 +2,16 @@
 # yarn lockfile v1
 
 
+"@mapbox/geojson-area@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@mapbox/geojson-area/-/geojson-area-0.2.2.tgz#18d7814aa36bf23fbbcc379f8e26a22927debf10"
+  dependencies:
+    wgs84 "0.0.0"
+
+"@mapbox/geojson-normalize@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@mapbox/geojson-normalize/-/geojson-normalize-0.0.1.tgz#1da1e6b3a7add3ad29909b30f438f60581b7cd80"
+
 "@mapbox/gl-matrix@^0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@mapbox/gl-matrix/-/gl-matrix-0.0.1.tgz#e5126aab4d64c36b81c7a97d0ae0dddde5773d2b"
@@ -9,6 +19,459 @@
 "@mapbox/unitbezier@^0.0.0":
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/@mapbox/unitbezier/-/unitbezier-0.0.0.tgz#15651bd553a67b8581fb398810c98ad86a34524e"
+
+"@turf/along@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/along/-/along-3.10.5.tgz#51f0ab0ed7c8466ada787010f529b67168d91aaf"
+  dependencies:
+    "@turf/bearing" "^3.10.0"
+    "@turf/destination" "^3.10.5"
+    "@turf/distance" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+
+"@turf/area@^3.10.0":
+  version "3.10.0"
+  resolved "https://registry.yarnpkg.com/@turf/area/-/area-3.10.0.tgz#48d81d5ee6a08b9155eb8f7f3a8b15942b006f37"
+  dependencies:
+    "@mapbox/geojson-area" "^0.2.2"
+
+"@turf/bbox-polygon@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/bbox-polygon/-/bbox-polygon-3.10.5.tgz#0ea66e2a7a3446151b1139661c60c6bf36516248"
+  dependencies:
+    "@turf/helpers" "^3.10.5"
+
+"@turf/bbox@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/bbox/-/bbox-3.10.5.tgz#a130852e89201a59151148f7b1969398fe8a00ba"
+  dependencies:
+    "@turf/meta" "^3.10.5"
+
+"@turf/bearing@^3.10.0":
+  version "3.10.0"
+  resolved "https://registry.yarnpkg.com/@turf/bearing/-/bearing-3.10.0.tgz#caabf2d593678adc8953635704d736f6ca92d26d"
+  dependencies:
+    "@turf/invariant" "^3.10.0"
+
+"@turf/bezier@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/bezier/-/bezier-3.10.5.tgz#3354bbcdf0b017a92b2130bc2ee39c2dd7ecfe0c"
+  dependencies:
+    "@turf/helpers" "^3.10.5"
+
+"@turf/buffer@^3.11.7":
+  version "3.11.7"
+  resolved "https://registry.yarnpkg.com/@turf/buffer/-/buffer-3.11.7.tgz#fac0ce3a26d21b8598a2a21fd9de3afed1e259ea"
+  dependencies:
+    "@mapbox/geojson-normalize" "0.0.1"
+    "@turf/combine" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+    jsts "1.3.0"
+
+"@turf/center-of-mass@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/center-of-mass/-/center-of-mass-3.10.5.tgz#603a011cc92e5f71854c50e66d3bd1b05e539e69"
+  dependencies:
+    "@turf/centroid" "^3.10.5"
+    "@turf/convex" "^3.10.5"
+    "@turf/explode" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+    "@turf/meta" "^3.10.5"
+
+"@turf/center@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/center/-/center-3.10.5.tgz#68c0a7cf5bdbb2aef6a8c6dadabbad83cd9a650a"
+  dependencies:
+    "@turf/bbox" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+
+"@turf/centroid@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/centroid/-/centroid-3.10.5.tgz#e8e547c6830ff5cb326754002df4c419873f4d3b"
+  dependencies:
+    "@turf/helpers" "^3.10.5"
+    "@turf/meta" "^3.10.5"
+
+"@turf/circle@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/circle/-/circle-3.10.5.tgz#6488445f4c6fa3998b3e4fce81985eb30ffa389b"
+  dependencies:
+    "@turf/destination" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+
+"@turf/collect@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/collect/-/collect-3.10.5.tgz#d44c261cf96093e329a49fa349741f601dac0600"
+  dependencies:
+    "@turf/bbox" "^3.10.5"
+    "@turf/inside" "^3.10.5"
+    rbush "^2.0.1"
+
+"@turf/combine@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/combine/-/combine-3.10.5.tgz#3bbfd9d2f59570603d49b52055ee7137abf8ab03"
+  dependencies:
+    "@turf/meta" "^3.10.5"
+
+"@turf/concave@^3.11.6":
+  version "3.11.6"
+  resolved "https://registry.yarnpkg.com/@turf/concave/-/concave-3.11.6.tgz#e6f5eab8f27c9607484c837c838feb1bde423715"
+  dependencies:
+    "@turf/distance" "^3.10.5"
+    "@turf/meta" "^3.10.5"
+    "@turf/tin" "^3.10.5"
+    "@turf/union" "^3.11.6"
+
+"@turf/convex@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/convex/-/convex-3.10.5.tgz#5a5edf138abc19f0bc1ac9053107af88275d554a"
+  dependencies:
+    "@turf/helpers" "^3.10.5"
+    "@turf/meta" "^3.10.5"
+    convex-hull "^1.0.3"
+
+"@turf/destination@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/destination/-/destination-3.10.5.tgz#7053307bc082a973a14a9a7f6f562ed9b00dc968"
+  dependencies:
+    "@turf/helpers" "^3.10.5"
+    "@turf/invariant" "^3.10.0"
+
+"@turf/difference@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/difference/-/difference-3.10.5.tgz#e6853cbc05318d8c1b8445de85f17c3e000f31d3"
+  dependencies:
+    "@turf/helpers" "^3.10.5"
+    jsts "1.3.0"
+
+"@turf/dissolve@^3.11.6":
+  version "3.11.6"
+  resolved "https://registry.yarnpkg.com/@turf/dissolve/-/dissolve-3.11.6.tgz#661f480d716831fd41c2ebe4ceeff1d06238e2c6"
+  dependencies:
+    "@turf/bbox" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+    "@turf/union" "^3.11.6"
+    geojson-utils "^1.1.0"
+    get-closest "0.0.3"
+    rbush "^2.0.1"
+    turf-overlaps "^1.0.3"
+
+"@turf/distance@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/distance/-/distance-3.10.5.tgz#a6cc4d474588494298028cc68da85610a0ae9d46"
+  dependencies:
+    "@turf/helpers" "^3.10.5"
+    "@turf/invariant" "^3.10.0"
+
+"@turf/envelope@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/envelope/-/envelope-3.10.5.tgz#fa4e4c638a143e30f83da1f5463ffed518d4ce9d"
+  dependencies:
+    "@turf/bbox" "^3.10.5"
+    "@turf/bbox-polygon" "^3.10.5"
+
+"@turf/explode@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/explode/-/explode-3.10.5.tgz#c4fe90630b8a30aabe258c1ba99a20016e05c891"
+  dependencies:
+    "@turf/helpers" "^3.10.5"
+    "@turf/meta" "^3.10.5"
+
+"@turf/flatten@^3.12.2":
+  version "3.12.2"
+  resolved "https://registry.yarnpkg.com/@turf/flatten/-/flatten-3.12.2.tgz#2b2ec3a236b95b1a52e00dcdb6b545d343e1dd58"
+  dependencies:
+    "@turf/helpers" "^3.10.5"
+    geojson-flatten "^0.1.0"
+
+"@turf/flip@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/flip/-/flip-3.10.5.tgz#621b3a3fc01b2088cca0b31f7fa98f8e94a9e987"
+  dependencies:
+    "@turf/meta" "^3.10.5"
+
+"@turf/helpers@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/helpers/-/helpers-3.10.5.tgz#1a53a9bd08f4eb4f7544a132f22d23f1b5e7d534"
+
+"@turf/hex-grid@^3.11.7":
+  version "3.11.7"
+  resolved "https://registry.yarnpkg.com/@turf/hex-grid/-/hex-grid-3.11.7.tgz#4876165322d2739e9979157abf031b339213066c"
+  dependencies:
+    "@turf/distance" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+
+"@turf/idw@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/idw/-/idw-3.10.5.tgz#cf89d8f8889a7c5d6ed78e17e0525c7132119cd1"
+  dependencies:
+    "@turf/bbox" "^3.10.5"
+    "@turf/centroid" "^3.10.5"
+    "@turf/distance" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+    "@turf/square-grid" "^3.10.5"
+
+"@turf/inside@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/inside/-/inside-3.10.5.tgz#bbe3a30d7a52b0441581ede91141f9c0621b2672"
+  dependencies:
+    "@turf/invariant" "^3.10.0"
+
+"@turf/intersect@^3.10.0":
+  version "3.10.0"
+  resolved "https://registry.yarnpkg.com/@turf/intersect/-/intersect-3.10.0.tgz#2ff4ab230a07c73c97bb014025bcd1fd8c28975a"
+  dependencies:
+    jsts "1.3.0"
+
+"@turf/invariant@^3.10.0":
+  version "3.10.0"
+  resolved "https://registry.yarnpkg.com/@turf/invariant/-/invariant-3.10.0.tgz#c9e22d0af9a817c42e393fe102c4657dd08de373"
+
+"@turf/isolines@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/isolines/-/isolines-3.10.5.tgz#1bd7ff414c22fd94bffc0a5361e5a7f0ee709061"
+  dependencies:
+    "@turf/bbox" "^3.10.5"
+    "@turf/distance" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+    "@turf/inside" "^3.10.5"
+    "@turf/planepoint" "^3.10.0"
+    "@turf/point-grid" "^3.10.5"
+    "@turf/square" "^3.10.5"
+    "@turf/tin" "^3.10.5"
+
+"@turf/kinks@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/kinks/-/kinks-3.10.5.tgz#ab79d6d7231e05fc605467b5dbe51849d460c744"
+  dependencies:
+    "@turf/helpers" "^3.10.5"
+
+"@turf/line-distance@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/line-distance/-/line-distance-3.10.5.tgz#e9049017ab594378b78fc54532b35c7c8a1e7c4d"
+  dependencies:
+    "@turf/distance" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+
+"@turf/line-intersect@^3.12.2":
+  version "3.12.2"
+  resolved "https://registry.yarnpkg.com/@turf/line-intersect/-/line-intersect-3.12.2.tgz#2077fec98b71eea3b877a9d22cd923798abcd4f8"
+  dependencies:
+    "@turf/bbox-polygon" "^3.10.5"
+    "@turf/flatten" "^3.12.2"
+    "@turf/helpers" "^3.10.5"
+    "@turf/meta" "^3.10.5"
+    rbush "^2.0.1"
+
+"@turf/line-slice-along@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/line-slice-along/-/line-slice-along-3.10.5.tgz#d163dc67cea92036b49278d49ab069648a62f61c"
+  dependencies:
+    "@turf/bearing" "^3.10.0"
+    "@turf/destination" "^3.10.5"
+    "@turf/distance" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+
+"@turf/line-slice@^3.11.7":
+  version "3.11.7"
+  resolved "https://registry.yarnpkg.com/@turf/line-slice/-/line-slice-3.11.7.tgz#746fb497c5cc0a1d9123c209d23b07b95c77bab6"
+  dependencies:
+    "@turf/bearing" "^3.10.0"
+    "@turf/destination" "^3.10.5"
+    "@turf/distance" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+    "@turf/point-on-line" "^3.10.5"
+
+"@turf/mask@^3.12.2":
+  version "3.12.2"
+  resolved "https://registry.yarnpkg.com/@turf/mask/-/mask-3.12.2.tgz#305b0ff4558b303f04cc8fec2a1d41c3a6ac286c"
+  dependencies:
+    "@turf/helpers" "^3.10.5"
+    "@turf/meta" "^3.10.5"
+
+"@turf/meta@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/meta/-/meta-3.10.5.tgz#bf80d4a628032b570f46ea10862b1d1a1768bcf6"
+
+"@turf/midpoint@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/midpoint/-/midpoint-3.10.5.tgz#34c52b994a447e1e02988042840e7c100179a508"
+  dependencies:
+    "@turf/bearing" "^3.10.0"
+    "@turf/destination" "^3.10.5"
+    "@turf/distance" "^3.10.5"
+    "@turf/invariant" "^3.10.0"
+
+"@turf/nearest@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/nearest/-/nearest-3.10.5.tgz#14fda933ab9659bb2d0ee375df6decb7ad477b29"
+  dependencies:
+    "@turf/distance" "^3.10.5"
+
+"@turf/planepoint@^3.10.0":
+  version "3.10.0"
+  resolved "https://registry.yarnpkg.com/@turf/planepoint/-/planepoint-3.10.0.tgz#c7afa475958befff330a596a3b0129fd45f5a7cc"
+
+"@turf/point-grid@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/point-grid/-/point-grid-3.10.5.tgz#5d66c01a95aff61478acc44a46096a935e5b4e29"
+  dependencies:
+    "@turf/distance" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+
+"@turf/point-on-line@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/point-on-line/-/point-on-line-3.10.5.tgz#62c0ac8d21d3ad561ae6040311a10b12a4e50ca0"
+  dependencies:
+    "@turf/bearing" "^3.10.0"
+    "@turf/destination" "^3.10.5"
+    "@turf/distance" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+
+"@turf/point-on-surface@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/point-on-surface/-/point-on-surface-3.10.5.tgz#3d98892ee7924a56ac5f9be1bff34f4bcdbf9393"
+  dependencies:
+    "@turf/center" "^3.10.5"
+    "@turf/distance" "^3.10.5"
+    "@turf/explode" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+    "@turf/inside" "^3.10.5"
+
+"@turf/random@^3.10.0":
+  version "3.10.0"
+  resolved "https://registry.yarnpkg.com/@turf/random/-/random-3.10.0.tgz#a49da20c8716d97bd6489d33c7bee37f1a85fccf"
+  dependencies:
+    geojson-random "^0.2.2"
+
+"@turf/sample@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/sample/-/sample-3.10.5.tgz#eacf59766af427dba6b1a3a0ccd8aa2aa719d893"
+  dependencies:
+    "@turf/helpers" "^3.10.5"
+
+"@turf/simplify@^3.10.0":
+  version "3.10.0"
+  resolved "https://registry.yarnpkg.com/@turf/simplify/-/simplify-3.10.0.tgz#9eaf11b3e088439d8aa23ae1d29adc8d6850220a"
+  dependencies:
+    simplify-js "^1.2.1"
+
+"@turf/square-grid@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/square-grid/-/square-grid-3.10.5.tgz#60fb03dce2c9fc827fc6c65151da79beb8effa01"
+  dependencies:
+    "@turf/distance" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+
+"@turf/square@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/square/-/square-3.10.5.tgz#d1ba63be90a8f1177b48c278a1b86d850bc52c28"
+  dependencies:
+    "@turf/distance" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+
+"@turf/tag@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/tag/-/tag-3.10.5.tgz#c35500278e632a14170f0f35a4655d97df507705"
+  dependencies:
+    "@turf/inside" "^3.10.5"
+
+"@turf/tesselate@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/tesselate/-/tesselate-3.10.5.tgz#595e99eb42a065a96dfe4861065b7a16c1e40ad5"
+  dependencies:
+    "@turf/helpers" "^3.10.5"
+    earcut "^2.0.0"
+
+"@turf/tin@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/tin/-/tin-3.10.5.tgz#79f16d66c0df4cf49a6e5acf743b1c16ec7ff3f2"
+  dependencies:
+    "@turf/helpers" "^3.10.5"
+
+"@turf/triangle-grid@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/triangle-grid/-/triangle-grid-3.10.5.tgz#a0d4bd7739be1a8967ce97ef75f1da161db9ff45"
+  dependencies:
+    "@turf/distance" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+
+"@turf/truncate@^3.11.7":
+  version "3.11.7"
+  resolved "https://registry.yarnpkg.com/@turf/truncate/-/truncate-3.11.7.tgz#24690eada0aea3833a9a49258a0b64fb2e24416a"
+
+"@turf/turf@^3.11.7":
+  version "3.12.2"
+  resolved "https://registry.yarnpkg.com/@turf/turf/-/turf-3.12.2.tgz#02ee60bb26405c37c8a06cb74fa1eee95b256282"
+  dependencies:
+    "@turf/along" "^3.10.5"
+    "@turf/area" "^3.10.0"
+    "@turf/bbox" "^3.10.5"
+    "@turf/bbox-polygon" "^3.10.5"
+    "@turf/bearing" "^3.10.0"
+    "@turf/bezier" "^3.10.5"
+    "@turf/buffer" "^3.11.7"
+    "@turf/center" "^3.10.5"
+    "@turf/center-of-mass" "^3.10.5"
+    "@turf/centroid" "^3.10.5"
+    "@turf/circle" "^3.10.5"
+    "@turf/collect" "^3.10.5"
+    "@turf/combine" "^3.10.5"
+    "@turf/concave" "^3.11.6"
+    "@turf/convex" "^3.10.5"
+    "@turf/destination" "^3.10.5"
+    "@turf/difference" "^3.10.5"
+    "@turf/dissolve" "^3.11.6"
+    "@turf/distance" "^3.10.5"
+    "@turf/envelope" "^3.10.5"
+    "@turf/explode" "^3.10.5"
+    "@turf/flatten" "^3.12.2"
+    "@turf/flip" "^3.10.5"
+    "@turf/helpers" "^3.10.5"
+    "@turf/hex-grid" "^3.11.7"
+    "@turf/idw" "^3.10.5"
+    "@turf/inside" "^3.10.5"
+    "@turf/intersect" "^3.10.0"
+    "@turf/invariant" "^3.10.0"
+    "@turf/isolines" "^3.10.5"
+    "@turf/kinks" "^3.10.5"
+    "@turf/line-distance" "^3.10.5"
+    "@turf/line-intersect" "^3.12.2"
+    "@turf/line-slice" "^3.11.7"
+    "@turf/line-slice-along" "^3.10.5"
+    "@turf/mask" "^3.12.2"
+    "@turf/meta" "^3.10.5"
+    "@turf/midpoint" "^3.10.5"
+    "@turf/nearest" "^3.10.5"
+    "@turf/planepoint" "^3.10.0"
+    "@turf/point-grid" "^3.10.5"
+    "@turf/point-on-line" "^3.10.5"
+    "@turf/point-on-surface" "^3.10.5"
+    "@turf/random" "^3.10.0"
+    "@turf/sample" "^3.10.5"
+    "@turf/simplify" "^3.10.0"
+    "@turf/square" "^3.10.5"
+    "@turf/square-grid" "^3.10.5"
+    "@turf/tag" "^3.10.5"
+    "@turf/tesselate" "^3.10.5"
+    "@turf/tin" "^3.10.5"
+    "@turf/triangle-grid" "^3.10.5"
+    "@turf/truncate" "^3.11.7"
+    "@turf/union" "^3.11.6"
+    "@turf/within" "^3.10.5"
+
+"@turf/union@^3.11.6":
+  version "3.11.6"
+  resolved "https://registry.yarnpkg.com/@turf/union/-/union-3.11.6.tgz#4c32f834c1bd0309c5cc44a0d6c5fa580bc454ed"
+  dependencies:
+    jsts "1.3.0"
+
+"@turf/within@^3.10.5":
+  version "3.10.5"
+  resolved "https://registry.yarnpkg.com/@turf/within/-/within-3.10.5.tgz#2308ea8a09fea310c90ce958bbeb91684f14d206"
+  dependencies:
+    "@turf/helpers" "^3.10.5"
+    "@turf/inside" "^3.10.5"
 
 "JSV@>= 4.0.x":
   version "4.0.2"
@@ -62,6 +525,12 @@ acorn@^2.1.0, acorn@^2.4.0:
 acorn@^3.0.0, acorn@^3.0.4, acorn@^3.1.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-3.3.0.tgz#45e37fb39e8da3f25baee3ff5369e2bb5f22017a"
+
+affine-hull@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/affine-hull/-/affine-hull-1.0.0.tgz#763ff1d38d063ceb7e272f17ee4d7bbcaf905c5d"
+  dependencies:
+    robust-orientation "^1.1.3"
 
 ajv-keywords@^1.0.0:
   version "1.5.0"
@@ -1068,6 +1537,10 @@ binary-extensions@^1.0.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.8.0.tgz#48ec8d16df4377eae5fa5884682480af4d95c774"
 
+bit-twiddle@^1.0.0:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/bit-twiddle/-/bit-twiddle-1.0.2.tgz#0c6c1fabe2b23d17173d9a61b7b7093eb9e1769e"
+
 block-stream@*:
   version "0.0.9"
   resolved "https://registry.yarnpkg.com/block-stream/-/block-stream-0.0.9.tgz#13ebfe778a03205cfe03751481ebb4b3300c126a"
@@ -1290,6 +1763,13 @@ cardinal@^1.0.0:
   dependencies:
     ansicolors "~0.2.1"
     redeyed "~1.0.0"
+
+cardinal@~0.4.2:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/cardinal/-/cardinal-0.4.4.tgz#ca5bb68a5b511b90fe93b9acea49bdee5c32bfe2"
+  dependencies:
+    ansicolors "~0.2.1"
+    redeyed "~0.4.0"
 
 case-sensitive-paths-webpack-plugin@1.1.4:
   version "1.1.4"
@@ -1567,6 +2047,14 @@ content-type@~1.0.2:
 convert-source-map@^1.1.0, convert-source-map@^1.1.1:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/convert-source-map/-/convert-source-map-1.3.0.tgz#e9f3e9c6e2728efc2676696a70eb382f73106a67"
+
+convex-hull@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/convex-hull/-/convex-hull-1.0.3.tgz#20a3aa6ce87f4adea2ff7d17971c9fc1c67e1fff"
+  dependencies:
+    affine-hull "^1.0.0"
+    incremental-convex-hull "^1.0.1"
+    monotone-convex-hull-2d "^1.0.1"
 
 cookie-signature@1.0.6:
   version "1.0.6"
@@ -1928,7 +2416,7 @@ duplexer@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
 
-earcut@^2.0.3:
+earcut@^2.0.0, earcut@^2.0.3:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/earcut/-/earcut-2.1.1.tgz#157634e5f3ebb42224e475016e86a5b6ce556b45"
 
@@ -2227,7 +2715,7 @@ esprima@2.7.x, esprima@^2.6.0, esprima@^2.7.1:
   version "2.7.3"
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-2.7.3.tgz#96e3b70d5779f6ad49cd032673d1c312767ba581"
 
-esprima@~1.0.2:
+esprima@~1.0.2, esprima@~1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-1.0.4.tgz#9f557e08fc3b4d26ece9dd34f8fbf476b62585ad"
 
@@ -2336,6 +2824,10 @@ expand-tilde@^1.2.1, expand-tilde@^1.2.2:
   resolved "https://registry.yarnpkg.com/expand-tilde/-/expand-tilde-1.2.2.tgz#0b81eba897e5a3d31d1c3d102f8f01441e559449"
   dependencies:
     os-homedir "^1.0.1"
+
+expect.js@~0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/expect.js/-/expect.js-0.2.0.tgz#1028533d2c1c363f74a6796ff57ec0520ded2be1"
 
 express@^4.13.3:
   version "4.14.0"
@@ -2711,6 +3203,18 @@ geojson-area@0.1.0:
   dependencies:
     wgs84 "0.0.0"
 
+geojson-flatten@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/geojson-flatten/-/geojson-flatten-0.1.0.tgz#c1c6f96bbb5713114c9b14a0b4ba80f47e4622cb"
+  dependencies:
+    concat-stream "~1.2.1"
+    minimist "0.0.5"
+    sharkdown "~0.1.0"
+
+geojson-random@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/geojson-random/-/geojson-random-0.2.2.tgz#ab4838f126adc5e16f8f94e655def820f9119dbc"
+
 geojson-rewind@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/geojson-rewind/-/geojson-rewind-0.1.0.tgz#57022a054b196660d755354fe5d26684d90cd019"
@@ -2719,6 +3223,10 @@ geojson-rewind@^0.1.0:
     geojson-area "0.1.0"
     minimist "0.0.5"
 
+geojson-utils@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/geojson-utils/-/geojson-utils-1.1.0.tgz#e8ffb4c81c0a75b3e306f5187265d6f23040f50b"
+
 geojson-vt@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/geojson-vt/-/geojson-vt-2.4.0.tgz#3c1cf44493f35eb4d2c70c95da6550de66072c05"
@@ -2726,6 +3234,10 @@ geojson-vt@^2.4.0:
 get-caller-file@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-1.0.2.tgz#f702e63127e7e231c160a80c1554acb70d5047e5"
+
+get-closest@0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/get-closest/-/get-closest-0.0.3.tgz#9fa5a030a87a069399e6ed440090cac8f7647777"
 
 get-stdin@^4.0.1:
   version "4.0.1"
@@ -3057,6 +3569,13 @@ imurmurhash@^0.1.4:
 in-publish@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/in-publish/-/in-publish-2.0.0.tgz#e20ff5e3a2afc2690320b6dc552682a9c7fadf51"
+
+incremental-convex-hull@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/incremental-convex-hull/-/incremental-convex-hull-1.0.1.tgz#51428c14cb9d9a6144bfe69b2851fb377334be1e"
+  dependencies:
+    robust-orientation "^1.1.2"
+    simplicial-complex "^1.0.0"
 
 indent-string@^2.1.0:
   version "2.1.0"
@@ -3753,6 +4272,10 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.3.6"
 
+jsts@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/jsts/-/jsts-1.3.0.tgz#e93a76f97ac9bda7d4625d9d6470f0d60ac80e45"
+
 jsx-ast-utils@^1.0.0, jsx-ast-utils@^1.3.4:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/jsx-ast-utils/-/jsx-ast-utils-1.3.5.tgz#9ba6297198d9f754594d62e59496ffb923778dd4"
@@ -4268,6 +4791,12 @@ mkdirp@0.5.x, mkdirp@0.x.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdi
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   dependencies:
     minimist "0.0.8"
+
+monotone-convex-hull-2d@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/monotone-convex-hull-2d/-/monotone-convex-hull-2d-1.0.1.tgz#47f5daeadf3c4afd37764baa1aa8787a40eee08c"
+  dependencies:
+    robust-orientation "^1.1.3"
 
 ms@0.7.1:
   version "0.7.1"
@@ -5196,6 +5725,12 @@ range-parser@^1.0.3, range-parser@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
 
+rbush@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/rbush/-/rbush-2.0.1.tgz#4cfaca28c3064bc0ee75431a1b79990e875eefa9"
+  dependencies:
+    quickselect "^1.0.0"
+
 rc@~1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/rc/-/rc-1.1.6.tgz#43651b76b6ae53b5c802f1151fa3fc3b059969c9"
@@ -5381,7 +5916,7 @@ readable-stream@1.0, readable-stream@~1.0.0, readable-stream@~1.0.17, readable-s
     string_decoder "~0.10.x"
     util-deprecate "~1.0.1"
 
-readable-stream@~1.1.9:
+readable-stream@~1.1.0, readable-stream@~1.1.9:
   version "1.1.14"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-1.1.14.tgz#7cf4c54ef648e3813084c636dd2079e166c081d9"
   dependencies:
@@ -5446,6 +5981,12 @@ redent@^1.0.0:
   dependencies:
     indent-string "^2.1.0"
     strip-indent "^1.0.1"
+
+redeyed@~0.4.0:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/redeyed/-/redeyed-0.4.4.tgz#37e990a6f2b21b2a11c2e6a48fd4135698cba97f"
+  dependencies:
+    esprima "~1.0.4"
 
 redeyed@~1.0.0:
   version "1.0.1"
@@ -5675,6 +6216,30 @@ ripemd160@0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/ripemd160/-/ripemd160-0.2.0.tgz#2bf198bde167cacfa51c0a928e84b68bbe171fce"
 
+robust-orientation@^1.1.2, robust-orientation@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/robust-orientation/-/robust-orientation-1.1.3.tgz#daff5b00d3be4e60722f0e9c0156ef967f1c2049"
+  dependencies:
+    robust-scale "^1.0.2"
+    robust-subtract "^1.0.0"
+    robust-sum "^1.0.0"
+    two-product "^1.0.2"
+
+robust-scale@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/robust-scale/-/robust-scale-1.0.2.tgz#775132ed09542d028e58b2cc79c06290bcf78c32"
+  dependencies:
+    two-product "^1.0.2"
+    two-sum "^1.0.0"
+
+robust-subtract@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/robust-subtract/-/robust-subtract-1.0.0.tgz#e0b164e1ed8ba4e3a5dda45a12038348dbed3e9a"
+
+robust-sum@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/robust-sum/-/robust-sum-1.0.0.tgz#16646e525292b4d25d82757a286955e0bbfa53d9"
+
 run-async@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/run-async/-/run-async-0.1.0.tgz#c8ad4a5e110661e402a7d21b530e009f25f8e389"
@@ -5798,6 +6363,17 @@ shallowequal@^0.2.2:
   dependencies:
     lodash.keys "^3.1.2"
 
+sharkdown@~0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/sharkdown/-/sharkdown-0.1.0.tgz#61d4fe529e75d02442127cc9234362265099214f"
+  dependencies:
+    cardinal "~0.4.2"
+    expect.js "~0.2.0"
+    minimist "0.0.5"
+    split "~0.2.10"
+    stream-spigot "~2.1.2"
+    through "~2.3.4"
+
 shebang-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
@@ -5825,6 +6401,17 @@ signal-exit@^3.0.0:
 simple-assign@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/simple-assign/-/simple-assign-0.1.0.tgz#17fd3066a5f3d7738f50321bb0f14ca281cc4baa"
+
+simplicial-complex@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/simplicial-complex/-/simplicial-complex-1.0.0.tgz#6c33a4ed69fcd4d91b7bcadd3b30b63683eae241"
+  dependencies:
+    bit-twiddle "^1.0.0"
+    union-find "^1.0.0"
+
+simplify-js@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/simplify-js/-/simplify-js-1.2.1.tgz#fa216b40454f48175450e0fea1bd1e6ab39fcbc0"
 
 slash@^1.0.0:
   version "1.0.0"
@@ -5925,6 +6512,12 @@ spdx-license-ids@^1.0.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/spdx-license-ids/-/spdx-license-ids-1.2.2.tgz#c9df7a3424594ade6bd11900d596696dc06bac57"
 
+split@~0.2.10:
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/split/-/split-0.2.10.tgz#67097c601d697ce1368f418f06cd201cf0521a57"
+  dependencies:
+    through "2"
+
 sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
@@ -6015,6 +6608,12 @@ stream-http@^2.3.1:
     readable-stream "^2.1.0"
     to-arraybuffer "^1.0.0"
     xtend "^4.0.0"
+
+stream-spigot@~2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/stream-spigot/-/stream-spigot-2.1.2.tgz#7de145e819f8dd0db45090d13dcf73a8ed3cc035"
+  dependencies:
+    readable-stream "~1.1.0"
 
 streamsearch@~0.1.2:
   version "0.1.2"
@@ -6203,7 +6802,7 @@ through2@~0.4.1:
     readable-stream "~1.0.17"
     xtend "~2.1.1"
 
-through@^2.3.6, through@^2.3.7, through@^2.3.8:
+through@2, through@^2.3.6, through@^2.3.7, through@^2.3.8, through@~2.3.4:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
@@ -6263,9 +6862,27 @@ tunnel-agent@~0.4.1:
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/tunnel-agent/-/tunnel-agent-0.4.3.tgz#6373db76909fe570e08d73583365ed828a74eeeb"
 
+turf-is-clockwise@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/turf-is-clockwise/-/turf-is-clockwise-1.0.0.tgz#dc22e5ffd4cf10934683aa004627cff87a6dfe91"
+
+turf-overlaps@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/turf-overlaps/-/turf-overlaps-1.0.3.tgz#4711c91466853af03b3ce962585aeca9fc2325f5"
+  dependencies:
+    turf-is-clockwise "^1.0.0"
+
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
+
+two-product@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/two-product/-/two-product-1.0.2.tgz#67d95d4b257a921e2cb4bd7af9511f9088522eaa"
+
+two-sum@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/two-sum/-/two-sum-1.0.0.tgz#31d3f32239e4f731eca9df9155e2b297f008ab64"
 
 type-check@~0.3.2:
   version "0.3.2"
@@ -6342,6 +6959,10 @@ unflowify@^1.0.0:
   dependencies:
     flow-remove-types "^1.1.2"
     through "^2.3.8"
+
+union-find@^1.0.0:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/union-find/-/union-find-1.0.2.tgz#292bac415e6ad3a89535d237010db4a536284e58"
 
 uniq@^1.0.1:
   version "1.0.1"

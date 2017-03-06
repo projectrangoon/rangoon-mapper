@@ -1,29 +1,37 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import ReactMapboxGl, { Layer, Feature } from 'react-mapbox-gl';
+// eslint-disable-next-line
+import  * as MapboxGl from 'mapbox-gl/dist/mapbox-gl';
 import { MAPBOX_TOKEN } from '../../constants/lib';
 // import { map } from 'lodash';
 
 class WebGLMap extends Component {
-  constructor() {
-    super();
-    this.state = {
-      busService: null,
-      busStops: null,
-    };
-  }
-  componentDidMount() {
+  constructor(props) {
+    super(props);
+
     const { serviceName } = this.props.params;
     if (serviceName) {
       const busService = this.props.busServices[serviceName];
       const busStops = busService.stops.reduce((acc, stop) =>
-        acc.concat([[stop.lng, stop.lat]]) , []);
-      this.setState({
+        acc.concat([[stop.lng, stop.lat]]), []);
+      const bounds = busStops.reduce((bounds, coord) => bounds.extend(coord),
+        new MapboxGl.LngLatBounds(busStops[0], busStops[0]));
+      this.state = {
         busService,
         busStops,
-      });
+        bounds,
+      };
     }
   }
+
+  onStyleLoad = (map) => {
+    map.fitBounds(this.state.bounds, {
+      padding: 20,
+      easing: t => t - 0.01,
+    });
+  }
+
   render() {
     const { center, pitch, zoom, bearing, minZoom } = this.props.map;
     const { busService } = this.state;
@@ -31,16 +39,20 @@ class WebGLMap extends Component {
       <ReactMapboxGl
         // eslint-disable-next-line
         style="mapbox://styles/mapbox/dark-v9"
+        ref="webglmap"
         accessToken={MAPBOX_TOKEN}
         bearing={bearing}
         center={center}
         minZoom={minZoom}
         zoom={zoom}
         pitch={pitch}
+        movingMethod="flyTo"
         containerStyle={{
           height: "100%",
           width: "100%"
         }}
+        fitBoundOptions={{ padding: 50, linear: true }}
+        onStyleLoad={this.onStyleLoad}
       >
       {busService &&
         <Layer
@@ -64,6 +76,8 @@ class WebGLMap extends Component {
          {busService.stops.map(stop => <Feature key={stop.sequence} coordinates={[stop.lng, stop.lat]} />)}
        </Layer>
       }
+
+
       </ReactMapboxGl>
     );
   }

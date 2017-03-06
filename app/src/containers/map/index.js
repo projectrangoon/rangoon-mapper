@@ -37,22 +37,22 @@ class Map extends Component {
         onGoogleApiLoaded={this.props.loadMap}
       >
         {routePath && routePath.path && startStop && endStop &&
-        startStop.bus_stop_id !== routePath.path[0].bus_stop_id &&
-          <Marker color="#6c62a5" midpoint={false} {...startStop} />
+         startStop.bus_stop_id !== routePath.path[0].bus_stop_id &&
+         <Marker color="#6c62a5" midpoint={false} {...startStop} />
         }
 
         {routePath && startStop && endStop &&
-        routePath.path && routePath.path.map((marker, index) =>
-          <Marker
-            key={uniqueId('marker')}
-            color={marker.color}
-            midpoint={marker.walk || !(index === 0 || index === routePath.path.length - 1)}
-            {...marker}
-          />)}
+         routePath.path && routePath.path.map((marker, index) =>
+           <Marker
+             key={uniqueId('marker')}
+             color={marker.color}
+             midpoint={marker.walk || !(index === 0 || index === routePath.path.length - 1)}
+             {...marker}
+           />)}
 
         {routePath && routePath.path && endStop && startStop &&
-        endStop.bus_stop_id !== routePath.path[routePath.path.length - 1].bus_stop_id &&
-        <Marker color="#6c62a5" midpoint={false} {...endStop} />
+         endStop.bus_stop_id !== routePath.path[routePath.path.length - 1].bus_stop_id &&
+         <Marker color="#6c62a5" midpoint={false} {...endStop} />
         }
       </GoogleMap>
     );
