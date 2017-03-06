@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import ReactMapboxGl, { Layer, Feature } from 'react-mapbox-gl';
-// eslint-disable-next-line
-import  * as MapboxGl from 'mapbox-gl/dist/mapbox-gl';
+import ReactMapboxGl, { Layer, Feature, Source } from 'react-mapbox-gl';
+import  * as MapboxGl from 'mapbox-gl/dist/mapbox-gl'; // eslint-disable
 import { MAPBOX_TOKEN } from '../../constants/lib';
-// import { map } from 'lodash';
+import turf from '@turf/turf';
 
 class WebGLMap extends Component {
   constructor(props) {
@@ -13,28 +12,116 @@ class WebGLMap extends Component {
     const { serviceName } = this.props.params;
     if (serviceName) {
       const busService = this.props.busServices[serviceName];
-      const busStops = busService.stops.reduce((acc, stop) =>
+      const busStopsCoords = busService.stops.reduce((acc, stop) =>
         acc.concat([[stop.lng, stop.lat]]), []);
-      const bounds = busStops.reduce((bounds, coord) => bounds.extend(coord),
-        new MapboxGl.LngLatBounds(busStops[0], busStops[0]));
+      const bounds = busStopsCoords.reduce((bounds, coord) => bounds.extend(coord),
+        new MapboxGl.LngLatBounds(busStopsCoords[0], busStopsCoords[0]));
+
+      const path = turf.lineString(busStopsCoords);
+      const pathLength = turf.lineDistance(path, 'miles');
+      const point = turf.along(path, 0, 'miles');
+
       this.state = {
         busService,
-        busStops,
+        busStopsCoords,
         bounds,
+        path,
+        pathLength,
+        point,
       };
     }
   }
 
   onStyleLoad = (map) => {
+
     map.fitBounds(this.state.bounds, {
       padding: 20,
       easing: t => t - 0.01,
     });
+
+    // wait for map to finish loading, ridiculous I know
+    setTimeout(_ => {
+      let step = 0;
+      let numSteps = 500; // animation resolution
+      let timePerStep = 20; // animation speed
+      const pSource = map.getSource('point');
+      setInterval(_ => {
+        step += 1;
+        if (step > numSteps) {
+          step = 0;
+        } else {
+          const curDistance = (step / numSteps) * this.state.pathLength;
+          const point = turf.along(this.state.path, curDistance, 'miles');
+          pSource.setData(point);
+        }
+      }, timePerStep);
+    }, 1000);
+  }
+
+  renderLayers(busService, path, point) {
+
+    const pathSource = {
+      type: 'geojson',
+      data: path,
+      maxzoom: 20,
+    };
+    const pointSource = {
+      type: 'geojson',
+      data: point,
+      maxzoom: 20,
+    };
+
+    return (
+      <span>
+        <Source id="path" geoJsonSource={pathSource} />
+        <Layer
+          id="pathLayer"
+          sourceId="path"
+          type="line"
+          layout={{
+            'line-join': 'round',
+            'line-cap': 'round',
+          }}
+          paint={{
+            'line-color': busService.color,
+            'line-width': 3
+          }}
+        >
+        </Layer>
+
+        <Layer
+          type="symbol"
+          id={"symbol" + this.props.params.serviceName}
+          layout={{
+            "icon-image": "bus-11",
+          }}
+          paint={{ "icon-color": '#ff0000'}}
+        >
+          {busService.stops.map(stop => <Feature key={stop.sequence} coordinates={[stop.lng, stop.lat]} />)}
+        </Layer>
+
+
+        <Source id="point" geoJsonSource={pointSource} />
+        <Layer
+          id="pointLayer"
+          sourceId="point"
+          type="circle"
+          layout={{
+          }}
+          paint={{
+            'circle-radius': 5,
+            'circle-color': '#ffffff'
+          }}
+        >
+        </Layer>
+      </span>
+    );
   }
 
   render() {
     const { center, pitch, zoom, bearing, minZoom } = this.props.map;
-    const { busService } = this.state;
+    const { busService, path, point } = this.state;
+
     return (
       <ReactMapboxGl
         // eslint-disable-next-line
@@ -54,29 +141,7 @@ class WebGLMap extends Component {
         fitBoundOptions={{ padding: 50, linear: true }}
         onStyleLoad={this.onStyleLoad}
       >
-      {busService &&
-        <Layer
-        type="line"
-        id={"line" + this.props.params.serviceName}
-        layout={{ "line-join": "round", "line-cap": "round" }}
-        paint={{ "line-color": busService.color, "line-width": 3 }}
-        >
-        <Feature coordinates={this.state.busStops} />
-        </Layer>}
-
-      {busService &&
-       <Layer
-         type="symbol"
-         id={"point" + this.props.params.serviceName}
-          layout={{
-            "icon-image": "bus-11",
-          }}
-         paint={{ "icon-color": '#ff0000'}}
-       >
-         {busService.stops.map(stop => <Feature key={stop.sequence} coordinates={[stop.lng, stop.lat]} />)}
-       </Layer>
-      }
-
+        { this.renderLayers(busService, path, point) }
 
       </ReactMapboxGl>
     );

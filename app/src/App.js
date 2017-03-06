@@ -16,7 +16,6 @@ injectTapEventPlugin();
 
 class App extends Component {
   componentWillMount() {
-    console.log(this.props);
     this.props.loadAdjacencyList();
   }
   render() {
@@ -24,7 +23,7 @@ class App extends Component {
       <MuiThemeProvider>
         <div className="container-fluid">
           <div className="row">
-            {this.props.sidebar && 
+            {this.props.sidebar &&
             <aside className="col-sm-12 col-md-3 sidebar">
               {this.props.sidebar}
             </aside>

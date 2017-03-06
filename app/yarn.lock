@@ -400,7 +400,7 @@
   version "3.11.7"
   resolved "https://registry.yarnpkg.com/@turf/truncate/-/truncate-3.11.7.tgz#24690eada0aea3833a9a49258a0b64fb2e24416a"
 
-"@turf/turf@^3.11.7":
+"@turf/turf@^3.12.2":
   version "3.12.2"
   resolved "https://registry.yarnpkg.com/@turf/turf/-/turf-3.12.2.tgz#02ee60bb26405c37c8a06cb74fa1eee95b256282"
   dependencies:
