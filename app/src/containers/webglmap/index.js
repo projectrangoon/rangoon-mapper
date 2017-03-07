@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import ReactMapboxGl, { Layer, Feature, Source } from 'react-mapbox-gl';
+import ReactMapboxGl, { Layer, Feature, Source, Popup } from 'react-mapbox-gl';
 import  * as MapboxGl from 'mapbox-gl/dist/mapbox-gl'; // eslint-disable
 import { MAPBOX_TOKEN } from '../../constants/lib';
 import turf from '@turf/turf';
@@ -42,32 +42,53 @@ class WebGLMap extends Component {
         point,
         pathSource,
         pointSource,
+        initialPitch: false,
       };
     }
+  }
+
+  onBusStopHover = (args) => {
+  }
+
+  onEndBusStopHover = (args) => {
+  }
+
+  onBusRouteHover = (args) => {
+    args.map.setPaintProperty('pathLayer', 'line-width', 7);
+  }
+
+  onEndBusRouteHover = (args) => {
+    args.map.setPaintProperty('pathLayer', 'line-width', 3);
   }
 
   onStyleLoad = (map) => {
     map.fitBounds(this.state.bounds, { padding: 10 });
 
     let step = 0;
-    let numSteps = 1000; // animation resolution
-    let timePerStep = 30;
+    let numSteps = 1200; // animation resolution
     const pSource = map.getSource('point');
-    setInterval(_ => {
+    const animateRoute = _ => {
       step += 1;
       if (step > numSteps) {
         step = 0;
       } else {
-        const currDistance = step / numSteps * this.state.pathLength;
+        let zoomRatio = 1;
+        if (this.state.afterPitchZoom) {
+          zoomRatio = this.state.afterPitchZoom / map.getZoom();
+        }
+        const currDistance = zoomRatio * step / numSteps * this.state.pathLength;
         const point = turf.along(this.state.path, currDistance, 'kilometers');
         pSource.setData(point);
       }
-    }, timePerStep);
+      requestAnimationFrame(animateRoute);
+    }
+    animateRoute();
   }
 
   onMoveEnd = (map) => {
-    if (map.getPitch() !== 50) {
-      map.flyTo({ pitch: 50, duration: 3000 });
+    if (!this.state.initialPitch) {
+      map.easeTo({ pitch: 50, duration: 3000 });
+      this.setState({ initialPitch: true, afterPitchZoom: map.getZoom() });
     }
   }
 
@@ -76,17 +97,12 @@ class WebGLMap extends Component {
   }
 
   renderLayers(busService, path, point) {
-    const { pointSource, pathSource } = this.state;
+    const { pointSource, busStopsCoords } = this.state;
 
     return (
       <span>
-        <Source
-          id="path"
-          geoJsonSource={pathSource}
-        />
         <Layer
           id="pathLayer"
-          sourceId="path"
           type="line"
           layout={{
             'line-join': 'round',
@@ -96,18 +112,46 @@ class WebGLMap extends Component {
             'line-color': busService.color,
             'line-width': 3
           }}
-        />
+        >
+          <Feature
+            onHover={this.onBusRouteHover}
+            onEndHover={this.onEndBusRouteHover}
+            coordinates={busStopsCoords}
+          />
+        </Layer>
 
         <Layer
           type="symbol"
-          id={"symbol" + this.props.params.serviceName}
+          id={"busstops" + this.props.params.serviceName}
           layout={{
             "icon-image": "bus-11",
           }}
           paint={{ "icon-color": '#ff0000'}}
         >
-          {busService.stops.map(stop => <Feature key={stop.sequence} coordinates={[stop.lng, stop.lat]} />)}
+          {busService.stops.map(stop => <Feature
+                                          key={stop.sequence}
+                                          onHover={this.onBusStopHover}
+                                          onEndHover={this.onEndBusStopHover}
+                                          coordinates={[stop.lng, stop.lat]} />)}
         </Layer>
+
+        <Popup
+          coordinates={[busService.stops[0].lng, busService.stops[0].lat]}
+          className="popup start"
+          offset={{
+            'bottom': [0, -20]
+          }}
+        >
+          <div className="myanmar popup-content" style={{backgroundColor: busService.color }}>ဂိတ်စ</div>
+        </Popup>
+
+        <Popup
+          coordinates={[busService.stops[busService.stops.length - 1].lng, busService.stops[busService.stops.length - 1].lat]}
+          className="popup end"
+          offset={{'bottom': [0, -20] }}
+        >
+          <div className="myanmar popup-content" style={{ backgroundColor: busService.color }}>ဂိတ်ဆုံး</div>
+        </Popup>
 
         <Source
           id="point"
@@ -118,8 +162,6 @@ class WebGLMap extends Component {
           id="pointLayer"
           sourceId="point"
           type="circle"
-          layout={{
-          }}
           paint={{
             'circle-radius': 4,
             'circle-color': '#ffffff'
@@ -137,13 +179,12 @@ class WebGLMap extends Component {
       <ReactMapboxGl
         // eslint-disable-next-line
         style="mapbox://styles/mapbox/dark-v9"
-        ref="webglmap"
         accessToken={MAPBOX_TOKEN}
         bearing={bearing}
         center={center}
         minZoom={minZoom}
         zoom={zoom}
-        movingMethod="flyTo"
+        movingMethod="easeTo"
         containerStyle={{
           height: "100%",
           width: "100%"

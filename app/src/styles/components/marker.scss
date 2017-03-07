@@ -114,3 +114,21 @@
     transform: translateY(0) rotate(-45deg);
   }
 }
+
+// Pop on webglmap
+.popup {
+  border-radius: $border-radius;
+  .mapboxgl-popup-tip {
+  }
+  .mapboxgl-popup-content {
+    padding: 0;
+  }
+  .popup-content {
+    padding: 7px;
+    color: $ghostwhite;
+  }
+}
+
+.popup.start {
+  z-index: 10 !important;
+}
