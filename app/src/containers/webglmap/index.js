@@ -21,6 +21,18 @@ class WebGLMap extends Component {
       const pathLength = turf.lineDistance(path, 'kilometers');
       const point = turf.along(path, 0, 'kilometers');
 
+      const pathSource = {
+        type: 'geojson',
+        data: path,
+        maxzoom: 20,
+      };
+
+      const pointSource = {
+        type: 'geojson',
+        data: point,
+        maxzoom: 20,
+      };
+
       this.state = {
         busService,
         busStopsCoords,
@@ -28,6 +40,8 @@ class WebGLMap extends Component {
         path,
         pathLength,
         point,
+        pathSource,
+        pointSource,
       };
     }
   }
@@ -37,7 +51,6 @@ class WebGLMap extends Component {
 
     // wait for map to finish loading, ridiculous I know
     setTimeout(_ => {
-
       map.flyTo({ pitch: 50, duration: 3000 });
       let step = 0;
       let numSteps = 1000; // animation resolution
@@ -53,21 +66,11 @@ class WebGLMap extends Component {
           pSource.setData(point);
         }
       }, timePerStep);
-    }, 2500);
+    }, 1000);
   }
 
   renderLayers(busService, path, point) {
-
-    const pathSource = {
-      type: 'geojson',
-      data: path,
-      maxzoom: 20,
-    };
-    const pointSource = {
-      type: 'geojson',
-      data: point,
-      maxzoom: 20,
-    };
+    const { pointSource, pathSource } = this.state;
 
     return (
       <span>
@@ -84,8 +87,7 @@ class WebGLMap extends Component {
             'line-color': busService.color,
             'line-width': 3
           }}
-        >
-        </Layer>
+        />
 
         <Layer
           type="symbol"
@@ -98,7 +100,6 @@ class WebGLMap extends Component {
           {busService.stops.map(stop => <Feature key={stop.sequence} coordinates={[stop.lng, stop.lat]} />)}
         </Layer>
 
-
         <Source id="point" geoJsonSource={pointSource} />
         <Layer
           id="pointLayer"
@@ -110,8 +111,7 @@ class WebGLMap extends Component {
             'circle-radius': 4,
             'circle-color': '#ffffff'
           }}
-        >
-        </Layer>
+        />
       </span>
     );
   }
