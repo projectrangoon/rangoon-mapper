@@ -49,24 +49,30 @@ class WebGLMap extends Component {
   onStyleLoad = (map) => {
     map.fitBounds(this.state.bounds, { padding: 10 });
 
-    // wait for map to finish loading, ridiculous I know
-    setTimeout(_ => {
+    let step = 0;
+    let numSteps = 1000; // animation resolution
+    let timePerStep = 30;
+    const pSource = map.getSource('point');
+    setInterval(_ => {
+      step += 1;
+      if (step > numSteps) {
+        step = 0;
+      } else {
+        const currDistance = step / numSteps * this.state.pathLength;
+        const point = turf.along(this.state.path, currDistance, 'kilometers');
+        pSource.setData(point);
+      }
+    }, timePerStep);
+  }
+
+  onMoveEnd = (map) => {
+    if (map.getPitch() !== 50) {
       map.flyTo({ pitch: 50, duration: 3000 });
-      let step = 0;
-      let numSteps = 1000; // animation resolution
-      let timePerStep = 30;
-      const pSource = map.getSource('point');
-      setInterval(_ => {
-        step += 1;
-        if (step > numSteps) {
-          step = 0;
-        } else {
-          const curDistance = (step / numSteps) * this.state.pathLength;
-          const point = turf.along(this.state.path, curDistance, 'kilometers');
-          pSource.setData(point);
-        }
-      }, timePerStep);
-    }, 1000);
+    }
+  }
+
+  onPointSourceAdded = (source) => {
+    this.onStyleLoad(source.map);
   }
 
   renderLayers(busService, path, point) {
@@ -74,7 +80,10 @@ class WebGLMap extends Component {
 
     return (
       <span>
-        <Source id="path" geoJsonSource={pathSource} />
+        <Source
+          id="path"
+          geoJsonSource={pathSource}
+        />
         <Layer
           id="pathLayer"
           sourceId="path"
@@ -100,7 +109,11 @@ class WebGLMap extends Component {
           {busService.stops.map(stop => <Feature key={stop.sequence} coordinates={[stop.lng, stop.lat]} />)}
         </Layer>
 
-        <Source id="point" geoJsonSource={pointSource} />
+        <Source
+          id="point"
+          geoJsonSource={pointSource}
+          onSourceAdded={this.onPointSourceAdded}
+        />
         <Layer
           id="pointLayer"
           sourceId="point"
@@ -135,7 +148,7 @@ class WebGLMap extends Component {
           height: "100%",
           width: "100%"
         }}
-        onStyleLoad={this.onStyleLoad}
+        onMoveEnd={this.onMoveEnd}
       >
         { this.renderLayers(busService, path, point) }
 
