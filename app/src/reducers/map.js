@@ -40,6 +40,7 @@ const map = (state = initialState, action) => {
       const { startStop, routePath, calculatingRoute } = action.payload;
       return Object.assign({}, state, {
         startStop,
+        startStopValue: startStop ? `${startStop.name_en} ${startStop.name_mm}` : '',
         routePath,
         calculatingRoute,
       });
@@ -49,6 +50,7 @@ const map = (state = initialState, action) => {
       const { endStop, routePath, calculatingRoute } = action.payload;
       return Object.assign({}, state, {
         endStop,
+        endStopValue: endStop ? `${endStop.name_en} ${endStop.name_mm}` : '',
         routePath,
         calculatingRoute,
       });
@@ -113,13 +115,13 @@ const map = (state = initialState, action) => {
 
     case types.CHANGE_START_STOP_VALUE_SUCCESS: {
       return Object.assign({}, state, {
-        startStopValue: action.payload,
+        startStopValue: action.payload || '',
       });
     }
 
     case types.CHANGE_END_STOP_VALUE_SUCCESS: {
       return Object.assign({}, state, {
-        endStopValue: action.payload,
+        endStopValue: action.payload || '',
       });
     }
 

@@ -31,10 +31,8 @@ const Sidebar = (props) => {
     handleEndStopValueChange,
     handleSwap,
     map,
-    params,
   } = props;
   const {
-    busStopsMap,
     routePath,
     busServices,
     startStop,
@@ -52,7 +50,6 @@ const Sidebar = (props) => {
             source={allBusStops}
             placeholder="Start"
             onSelect={stop => handleStartSelect(stop)}
-            defaultStop={busStopsMap[params.startStop] || null}
             defaultValue={startStopValue}
             onChange={value => handleStartStopValueChange(value)}
           />
@@ -60,7 +57,6 @@ const Sidebar = (props) => {
             source={allBusStops}
             placeholder="End"
             onSelect={stop => handleEndSelect(stop)}
-            defaultStop={busStopsMap[params.endStop] || null}
             defaultValue={endStopValue}
             onChange={value => handleEndStopValueChange(value)}
           />
@@ -99,7 +95,6 @@ Sidebar.propTypes = {
   handleStartStopValueChange: React.PropTypes.func.isRequired,
   handleEndStopValueChange: React.PropTypes.func.isRequired,
   handleSwap: React.PropTypes.func.isRequired,
-  params: React.PropTypes.object,
   map: React.PropTypes.object.isRequired,
 };
 

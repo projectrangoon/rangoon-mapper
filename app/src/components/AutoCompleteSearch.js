@@ -24,25 +24,34 @@ const styles = {
 };
 
 class AutoCompleteSearch extends Component {
-  componentWillMount() {
+  constructor(props) {
+    super(props);
     const id = uniqueId();
     const source = [];
     this.props.source.forEach((obj) => {
       const found = source.some(el => el.bus_stop_id === obj.bus_stop_id);
       if (!found) { source.push(obj); }
     });
-    this.resetComponent();
-    this.setState({
+    this.state = {
       currentSelectedBusMenuLi: 0,
       source,
-      value: this.props.defaultStop ? `${this.props.defaultStop.name_en} ${this.props.defaultStop.name_mm}` : this.props.defaultValue,
+      value: this.props.defaultValue || '',
       typingTimer: 0,
       doneTypingInterval: 300,
       isLoading: false,
       isSelected: false,
-      isDefaultStop: !!this.props.defaultStop,
       id,
+    };
+  }
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      value: nextProps.defaultValue,
     });
+    if (nextProps.defaultValue !== this.state.value) {
+      this.setState({
+        results: [],
+      });
+    }
   }
 
   resetComponent = () => {
@@ -73,7 +82,6 @@ class AutoCompleteSearch extends Component {
       this.setState({
         typingTimer: setTimeout(this.searchBusStops, this.state.doneTypingInterval),
         isLoading: true,
-        isDefaultStop: false, // set false to prevent 'No stop found' on initial page load
       });
     } else {
       this.resetComponent();
@@ -126,11 +134,11 @@ class AutoCompleteSearch extends Component {
   searchBusStops = () => {
     const sortByEngName =
       (result) => {
-        result.name_en.toLowerCase().startsWith(this.state.value.toLowerCase());
+        result.name_en.toLowerCase().startsWith(this.props.defaultValue.toLowerCase());
       };
 
     const results =
-      (sortBy(searchBusStops(this.state.source, this.state.value), sortByEngName)).reverse();
+      (sortBy(searchBusStops(this.state.source, this.props.defaultValue), sortByEngName)).reverse();
 
     return this.setState({
       isLoading: false,
@@ -151,12 +159,6 @@ class AutoCompleteSearch extends Component {
     if (this.props.onChange) {
       this.props.onChange(`${payload.name_en} ${payload.name_mm}`);
     }
-  }
-
-  handleBlur = () => {
-    this.setState({
-      value: '',
-    });
   }
 
   removeInput = (e) => {
@@ -186,7 +188,6 @@ class AutoCompleteSearch extends Component {
       currentSelectedBusMenuLi,
       isLoading,
       isSelected,
-      isDefaultStop,
     } = this.state;
 
     return (
@@ -197,8 +198,7 @@ class AutoCompleteSearch extends Component {
           onChange={this.handleChange}
           onKeyDown={this.handleKeyDown}
           onKeyUp={this.handleKeyUp}
-          onBlur={this.handleBlur}
-          value={this.props.defaultValue || value}
+          value={value}
           key={id}
           fullWidth
           hintStyle={styles.hintStyle}
@@ -231,7 +231,7 @@ class AutoCompleteSearch extends Component {
           </ul>
           ) : (
             <ul className="busmenu">
-              {value && !isLoading && !isSelected && !isDefaultStop ? (
+              {value && !isLoading && !isSelected ? (
                 null // disable for now
               ) : (
                 null
@@ -245,7 +245,6 @@ class AutoCompleteSearch extends Component {
 
 
 AutoCompleteSearch.defaultProps = {
-  defaultStop: null,
   defaultValue: null,
 };
 
@@ -254,7 +253,6 @@ AutoCompleteSearch.propTypes = {
   placeholder: React.PropTypes.string.isRequired,
   onSelect: React.PropTypes.func.isRequired,
   onChange: React.PropTypes.func.isRequired,
-  defaultStop: React.PropTypes.object,
   defaultValue: React.PropTypes.string,
 };
 

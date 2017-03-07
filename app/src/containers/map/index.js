@@ -18,6 +18,14 @@ class Map extends Component {
       this.props.selectEndStop(busStopsMap[endStop]);
     }
   }
+  shouldComponentUpdate(nextProps) {
+    // To prevent re-rendering marker on changing bus stop names
+    const { startStop, endStop, calculatingRoute } = nextProps.map;
+    if (!startStop || !endStop) {
+      return true;
+    }
+    return calculatingRoute;
+  }
   render() {
     const {
       center,
