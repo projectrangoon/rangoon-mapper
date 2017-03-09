@@ -9,6 +9,10 @@ class WebGLMap extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      busService: null,
+    };
+
     const { serviceName } = this.props.params;
     if (serviceName) {
       const busService = this.props.busServices[serviceName];
@@ -86,7 +90,7 @@ class WebGLMap extends Component {
   }
 
   onMoveEnd = (map) => {
-    if (!this.state.initialPitch) {
+    if (!this.state.initialPitch && this.state.busService) {
       map.easeTo({ pitch: 50, duration: 3000 });
       this.setState({ initialPitch: true, afterPitchZoom: map.getZoom() });
     }
@@ -191,7 +195,7 @@ class WebGLMap extends Component {
         }}
         onMoveEnd={this.onMoveEnd}
       >
-        { this.renderLayers(busService, path, point) }
+        { busService && this.renderLayers(busService, path, point) }
 
       </ReactMapboxGl>
     );
