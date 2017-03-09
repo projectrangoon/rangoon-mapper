@@ -28,9 +28,21 @@ class App extends Component {
               {this.props.sidebar}
             </aside>
             }
-            <main className="col-sm-12 map">
-              {this.props.main}
-            </main>
+            {this.props.rightSidebar ?
+              <main className="col-sm-12 col-md-9 map">
+                {this.props.main}
+              </main>
+            :
+              <main clasName="col-sm-12 map">
+                {this.props.main}
+              </main>
+            }
+
+            {this.props.rightSidebar &&
+             <aside className="col-sm-12 col-md-3 right-sidebar">
+             {this.props.rightSidebar}
+             </aside>
+            }
           </div>
         </div>
       </MuiThemeProvider>
