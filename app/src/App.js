@@ -29,7 +29,7 @@ class App extends Component {
             </aside>
             }
             {this.props.rightSidebar ?
-              <main className="col-sm-12 col-md-9 map">
+              <main className="col-sm-12 col-md-10 map">
                 {this.props.main}
               </main>
             :
@@ -39,7 +39,7 @@ class App extends Component {
             }
 
             {this.props.rightSidebar &&
-             <aside className="col-sm-12 col-md-3 right-sidebar">
+             <aside className="col-sm-12 col-md-2 right-sidebar">
              {this.props.rightSidebar}
              </aside>
             }

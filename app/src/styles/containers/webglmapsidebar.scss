@@ -1,0 +1,25 @@
+.right-sidebar {
+  overflow-y: scroll;
+  height: 95vh;
+  .sidebar-list {
+    list-style: none;
+    padding-left: 0;
+    width: 100%;
+    li {
+      cursor: pointer;
+      padding: .75em;
+      border-bottom: 1px solid $border-color;
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+.busstops-list {
+  li {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
