@@ -24,7 +24,7 @@ const renderJourney = (routePath, startStop, endStop, busServices, calculatingRo
 };
 
 const Sidebar = (props) => {
-  const { handleStartSelect, handleEndSelect, map, params } = props;
+  const { handleStartSelect, handleEndSelect, map, params} = props;
   const { busStopsMap, routePath, busServices, startStop, endStop, calculatingRoute } = map;
   return (
     <div className="container-fluid">
@@ -59,7 +59,7 @@ Sidebar.defaultProps = {
   params: {
     startStop: null,
     endStop: null,
-  },
+  }
 };
 
 Sidebar.propTypes = {

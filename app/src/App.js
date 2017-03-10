@@ -22,41 +22,14 @@ class App extends Component {
     return (
       <MuiThemeProvider>
         <div className="container-fluid">
-          <div className="row">
-            {this.props.sidebar &&
-            <aside className="col-sm-12 col-md-3 sidebar">
-              {this.props.sidebar}
-            </aside>
-            }
-            {this.props.rightSidebar ?
-              <main className="col-sm-12 col-md-10 map">
-                {this.props.main}
-              </main>
-            :
-              <main clasName="col-sm-12 map">
-                {this.props.main}
-              </main>
-            }
-
-            {this.props.rightSidebar &&
-             <aside className="col-sm-12 col-md-2 right-sidebar">
-             {this.props.rightSidebar}
-             </aside>
-            }
-          </div>
+          {this.props.children}
         </div>
       </MuiThemeProvider>
     );
   }
 }
 
-App.defaultProps = {
-  sidebar: null,
-};
-
 App.propTypes = {
-  main: React.PropTypes.element.isRequired,
-  sidebar: React.PropTypes.element,
   loadAdjacencyList: React.PropTypes.func.isRequired,
 };
 
@@ -66,7 +39,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = () => ({
-
 });
 
 

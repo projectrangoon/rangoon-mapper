@@ -1,0 +1,19 @@
+import React, { Component, PropTypes } from 'react';
+
+import Map from '../../containers/map';
+import Sidebar from '../../containers/sidebar';
+
+
+const HomeScreen = (props) => (
+    <div className="row">
+      <aside className="col-sm-12 col-md-3 sidebar">
+        <Sidebar { ...props } />
+      </aside>
+
+      <main className="col-sm-12 map">
+        <Map { ...props } />
+      </main>
+    </div>
+);
+
+export default HomeScreen;

@@ -2,18 +2,17 @@ import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 
 import App from './App';
-import Map from './containers/map';
-import WebGLMap from './containers/webglmap';
-import WebGLMapSidebar from './containers/webglmapsidebar';
 import PageNotFound from './components/PageNotFound';
-import Sidebar from './containers/sidebar';
+
+import HomeScreen from './screens/HomeScreen';
+import BusScreen from './screens/BusScreen';
 
 module.exports = (
   <Route path="/" component={App} >
-    <IndexRoute components={{ main: Map, sidebar: Sidebar }} />
-    <Route path="directions/:startStop/:endStop" components={{ main: Map, sidebar: Sidebar }} />
-    <Route path="bus(/:serviceName)" components={{ main: WebGLMap, rightSidebar: WebGLMapSidebar }} />
-    <Route path="stop(/:stopId)" components={{ main:WebGLMap, rightSidebar: WebGLMapSidebar }} />
+    <IndexRoute component={HomeScreen} />
+    <Route path="directions/:startStop/:endStop" component={HomeScreen} />
+    <Route path="bus(/:serviceName)" components={BusScreen} />
+    <Route path="stop(/:stopId)" component={BusScreen} />
     <Route path="*" components={{ main: PageNotFound }} />
   </Route>
 );
