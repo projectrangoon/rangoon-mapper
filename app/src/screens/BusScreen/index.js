@@ -5,11 +5,11 @@ import WebGLMapSidebar  from '../../containers/webglmapsidebar';
 
 const BusScreen = (props) => (
   <div className="row">
-    <main className="col-sm-12 col-md-10 map">
+    <main className="col-sm-12 col-md-9 map">
       <WebGLMap {...props} />
     </main>
 
-    <aside className="col-sm-12 col-md-2 right-sidebar">
+    <aside className="col-sm-12 col-md-3 right-sidebar">
       <WebGLMapSidebar {...props} />
     </aside>
   </div>

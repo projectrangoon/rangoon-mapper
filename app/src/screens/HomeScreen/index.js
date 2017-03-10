@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
 
 import Map from '../../containers/map';
 import Sidebar from '../../containers/sidebar';

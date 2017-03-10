@@ -4,12 +4,18 @@ import { map } from  'lodash';
 
 
 class WebGLMapSidebar extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   onServiceClick = (e) => {
     console.log(e.target.name);
+  }
+
+  renderServiceName = (serviceName) => {
+    // all this trouble just to decode a HTML entity
+    const parser = new DOMParser();
+    const dom = parser.parseFromString(
+      '<!doctype html><body>' + serviceName,
+      'text/html');
+    return dom.body.textContent;
   }
 
   renderServices() {
@@ -19,7 +25,7 @@ class WebGLMapSidebar extends Component {
         {map(services, (service, key) => (
             <li key={key} onClick={this.onServiceClick}>
               <span className="logo" style={{backgroundColor: service.color}}>{key}</span>
-              <span>Bus Line: {key}</span>
+              <span className="myanmar service-name">{this.renderServiceName(service.service_name)}</span>
             </li>
         ))}
         </ul>

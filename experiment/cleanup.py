@@ -1,5 +1,8 @@
+# encoding=utf8
 import csv
 import json
+import requests
+import bs4
 from itertools import groupby
 from pprint import pprint
 from operator import itemgetter
@@ -131,11 +134,18 @@ print 'Creating bus_services.json'
 bus_services = {}
 services = groupby(all_bus_stops, key=itemgetter('service_name'))
 for service_no, stops in services:
+    # Scrape service_name from the website
+    response = requests.get('http://www.yangonbus.com/services/route%d/index.html' %  service_no)
+    soup = bs4.BeautifulSoup(response.content, 'lxml')
+    service_name = soup.select_one('h5 > span').text
+
     sorted_stops = sorted(list(stops), key=lambda x: int(x['sequence']))
     bus_services[service_no] = {
+        'service_name': service_name,
         'color': colors[service_no],
         'stops': sorted_stops
     }
+
 with open('bus_services.json', 'wb') as f:
     f.write(json.dumps(bus_services))
 

@@ -1,6 +1,7 @@
 appnope==0.1.0
 backports.shutil-get-terminal-size==1.0.0
 beautifulsoup4==4.5.3
+bs4==0.0.1
 decorator==4.0.10
 enum34==1.1.6
 ipython==5.1.0
