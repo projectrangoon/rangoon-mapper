@@ -12,6 +12,9 @@
       &:last-child {
         border-bottom: none;
       }
+      &.selected {
+        background: $selected-color;
+      }
     }
   }
 }

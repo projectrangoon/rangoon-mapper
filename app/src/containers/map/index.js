@@ -11,7 +11,6 @@ import { GOOGLE_MAPS_API_KEY } from '../../constants/lib';
 class Map extends Component {
   componentDidMount() {
     const { startStop, endStop } = this.props.params; // URL params
-    console.log(startStop, endStop);
     const { busStopsMap } = this.props.map;
     if (startStop) {
       this.props.selectStartStop(busStopsMap[startStop]);

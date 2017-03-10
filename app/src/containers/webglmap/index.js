@@ -76,11 +76,7 @@ class WebGLMap extends Component {
       if (step > numSteps) {
         step = 0;
       } else {
-        let zoomRatio = 1;
-        if (this.state.afterPitchZoom) {
-          zoomRatio = this.state.afterPitchZoom / map.getZoom();
-        }
-        const currDistance = zoomRatio * step / numSteps * this.state.pathLength;
+        const currDistance = step / numSteps * this.state.pathLength;
         const point = turf.along(this.state.path, currDistance, 'kilometers');
         pSource.setData(point);
       }
@@ -214,6 +210,7 @@ WebGLMap.defaultProps = {
   params: {
     serviceName: null,
   },
+  busServiceNo: null,
 };
 
 
@@ -221,6 +218,10 @@ WebGLMap.propTypes = {
   map: PropTypes.object.isRequired,
   busServices: PropTypes.object.isRequired,
   params: PropTypes.object,
+  busServiceNo: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
 };
 
 

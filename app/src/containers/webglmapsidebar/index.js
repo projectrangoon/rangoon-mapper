@@ -1,33 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { map } from  'lodash';
+import BusServiceListItem from '../../components/BusListItem';
+import { selectBusService } from '../../actions/webglmap';
 
 
 class WebGLMapSidebar extends Component {
-
-  onServiceClick = (e) => {
-    console.log(e.target.name);
-  }
-
-  renderServiceName = (serviceName) => {
-    // all this trouble just to decode a HTML entity
-    const parser = new DOMParser();
-    const dom = parser.parseFromString(
-      '<!doctype html><body>' + serviceName,
-      'text/html');
-    return dom.body.textContent;
-  }
 
   renderServices() {
     const services = this.props.busServices;
     return (
         <ul className="sidebar-list services-list">
-        {map(services, (service, key) => (
-            <li key={key} onClick={this.onServiceClick}>
-              <span className="logo" style={{backgroundColor: service.color}}>{key}</span>
-              <span className="myanmar service-name">{this.renderServiceName(service.service_name)}</span>
-            </li>
-        ))}
+          {map(services, (service, key) =>
+            <BusServiceListItem key={key} serviceNo={key} onClick={e => this.props.selectBusService(e, service, key)} {...service} /> )}
         </ul>
     );
   }
@@ -65,8 +50,8 @@ class WebGLMapSidebar extends Component {
 }
 
 WebGLMapSidebar.defaultProps = {
+  selectBusService: PropTypes.func.isRequired
 };
-
 
 function mapStateToProps(state) {
   const { map } = state;
@@ -75,5 +60,11 @@ function mapStateToProps(state) {
   };
 };
 
+function mapDispatchToProps(dispatch) {
+  return {
+    selectBusService: (e, busService, busServiceNo) => dispatch(selectBusService(e, busService, busServiceNo)),
+  };
+}
 
-export default connect(mapStateToProps)(WebGLMapSidebar);
+
+export default connect(mapStateToProps, mapDispatchToProps)(WebGLMapSidebar);
