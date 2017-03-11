@@ -57,7 +57,7 @@ export const updateMapCenter = () => (dispatch, getState) => {
     bounds.extend(endStop);
     google.map.fitBounds(bounds);
     if (window.innerWidth >= 768) {
-      google.map.setZoom(google.map.getZoom() - 1);
+      // google.map.setZoom(google.map.getZoom() - 1);
       google.map.panBy(-200, 0);
     }
     dispatch(updateMapCenterActions.success(map));

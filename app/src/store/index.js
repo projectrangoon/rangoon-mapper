@@ -5,11 +5,15 @@ import thunk from 'redux-thunk';
 import promise from 'redux-promise';
 import createLogger from 'redux-logger';
 
-import rootReducer from './reducers/index';
+import rootReducer from './reducers';
 
-const routeMiddleware = routerMiddleware(browserHistory);
+const router = routerMiddleware(browserHistory);
 
-const middlewares = [routeMiddleware, thunk, promise];
+const middlewares = [
+  router,
+  thunk,
+  promise,
+];
 
 let composeEnhancers = compose;
 
