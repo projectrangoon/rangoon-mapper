@@ -1,24 +1,181 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import ReactMapboxGl, { Layer, Feature, Source, Popup } from 'react-mapbox-gl';
+import ReactMapboxGl, { Layer, Feature, Source } from 'react-mapbox-gl';
 import turf from '@turf/turf';
 import  * as MapboxGl from 'mapbox-gl/dist/mapbox-gl'; // eslint-disable
 
 import { MAPBOX_TOKEN } from './constants';
 
 class WebGLMap extends Component {
-  constructor(props) {
-    super(props);
 
+  componentWillMount() {
     this.state = {
-      busService: null,
+      busServices: null,
+      initialPitch: false,
+      bounds: null,
     };
+  }
 
-    const { serviceName } = this.props.params;
-    if (serviceName) {
+  componentDidMount() {
+    // const { serviceName } = this.props.params;
+  }
+
+  //constructor(props) {
+    //super(props)
+    /* super(props);
+
+     * this.state = {
+     *   busService: null,
+     * };
+
+     * const { serviceName } = this.props.params;
+     * if (serviceName) {
+     *   const busService = this.props.busServices[serviceName];
+     *   const busStopsCoords = busService.stops.reduce((acc, stop) =>
+     *     acc.concat([[stop.lng, stop.lat]]), []);
+     *   const bounds = busStopsCoords.reduce((bounds, coord) => bounds.extend(coord),
+     *     new MapboxGl.LngLatBounds(busStopsCoords[0], busStopsCoords[0]));
+
+     *   const path = turf.lineString(busStopsCoords);
+     *   const pathLength = turf.lineDistance(path, 'kilometers');
+     *   const point = turf.along(path, 0, 'kilometers');
+
+     *   const pathSource = {
+     *     type: 'geojson',
+     *     data: path,
+     *     maxzoom: 20,
+     *   };
+
+     *   const pointSource = {
+     *     type: 'geojson',
+     *     data: point,
+     *     maxzoom: 20,
+     *   };
+
+     *   this.state = {
+     *     busService,
+     *     busStopsCoords,
+     *     bounds,
+     *     path,
+     *     pathLength,
+     *     point,
+     *     pathSource,
+     *     pointSource,
+     *     initialPitch: false,
+     *   };
+     * }*/
+//  }
+
+  onBusStopHover = (args) => {
+  }
+
+  onEndBusStopHover = (args) => {
+  }
+
+  onBusRouteHover = (args) => {
+    args.map.setPaintProperty('pathLayer', 'line-width', 7);
+  }
+
+  onEndBusRouteHover = (args) => {
+    args.map.setPaintProperty('pathLayer', 'line-width', 3);
+  }
+
+  onStyleLoad = (source, busServiceData) => {
+    // map.fitBounds(this.state.bounds, { padding: 10 });
+
+    const { busService, pathLength, path } = busServiceData
+
+    let step = 0;
+    let numSteps = 1200; // animation resolution
+    const pSource = source.map.getSource('pointSource' + busService.service_no);
+    const animateRoute = _ => {
+      step += 1;
+      if (step > numSteps) {
+        step = 0;
+      } else {
+        const currDistance = step / numSteps * pathLength;
+        const point = turf.along(path, currDistance, 'kilometers');
+        pSource.setData(point);
+      }
+      requestAnimationFrame(animateRoute);
+    }
+    animateRoute();
+  }
+
+  onMoveEnd = (map) => {
+    if (!this.state.initialPitch && this.props.busServices) {
+      map.easeTo({ pitch: 50, duration: 3000 });
+      this.setState({ initialPitch: true, afterPitchZoom: map.getZoom() });
+    }
+  }
+
+  onPointSourceAdded = (source, busServiceData) => {
+    this.onStyleLoad(source, busServiceData);
+  }
+
+  renderLayers(busServiceData, key) {
+    const { busService, pointSource, busStopsCoords } = busServiceData;
+
+    const sourceId = "pointSource" + busService.service_no;
+
+    return (
+      <span key={busService.service_no}>
+        <Layer
+          id={"buslinelayer" + busService.service_no}
+          type="line"
+          layout={{
+            'line-join': 'round',
+            'line-cap': 'round',
+          }}
+          paint={{
+            'line-color': busService.color,
+            'line-width': 3
+          }}
+        >
+          <Feature coordinates={busStopsCoords} />
+          {/* <Feature
+              onHover={this.onBusRouteHover}
+              onEndHover={this.onEndBusRouteHover}
+              coordinates={busStopsCoords}
+              /> */}
+        </Layer>
+
+      {/* <Layer
+       *   type="symbol"
+       *   id={"busstopslayer" + busService.service_no}
+       *   layout={{
+       *     "icon-image": "bus-11",
+       *   }}
+       *   paint={{ "icon-color": '#ff0000'}}
+       * >
+       *   {busService.stops.map(stop => <Feature
+       *                                   key={stop.sequence}
+       *                                   coordinates={[stop.lng, stop.lat]} />)}
+       * </Layer>*/}
+
+        <Source
+          id={sourceId}
+          geoJsonSource={pointSource}
+          onSourceAdded={source => this.onPointSourceAdded(source, busServiceData)}
+        />
+        <Layer
+          id={"pointLayer" + busService.service_no}
+          sourceId={sourceId}
+          type="circle"
+          paint={{
+            'circle-radius': 4,
+            'circle-color': '#ffffff'
+          }}
+        />
+        </span>
+    );
+  }
+
+  getBusServicesInfo(selectedBusServices) {
+    const busServices = selectedBusServices.reduce((acc, serviceName) => {
       const busService = this.props.busServices[serviceName];
       const busStopsCoords = busService.stops.reduce((acc, stop) =>
-        acc.concat([[stop.lng, stop.lat]]), []);
+        acc.concat([[stop.lng, stop.lat]]), []); 
       const bounds = busStopsCoords.reduce((bounds, coord) => bounds.extend(coord),
         new MapboxGl.LngLatBounds(busStopsCoords[0], busStopsCoords[0]));
 
@@ -38,143 +195,23 @@ class WebGLMap extends Component {
         maxzoom: 20,
       };
 
-      this.state = {
-        busService,
-        busStopsCoords,
-        bounds,
-        path,
-        pathLength,
-        point,
-        pathSource,
-        pointSource,
-        initialPitch: false,
-      };
-    }
-  }
+      return acc.concat([
+        {busService, busStopsCoords, bounds, path, pathLength, point, pathSource, pointSource}
+      ]);
+    }, []);
 
-  onBusStopHover = (args) => {
-  }
-
-  onEndBusStopHover = (args) => {
-  }
-
-  onBusRouteHover = (args) => {
-    args.map.setPaintProperty('pathLayer', 'line-width', 7);
-  }
-
-  onEndBusRouteHover = (args) => {
-    args.map.setPaintProperty('pathLayer', 'line-width', 3);
-  }
-
-  onStyleLoad = (map) => {
-    map.fitBounds(this.state.bounds, { padding: 10 });
-
-    let step = 0;
-    let numSteps = 1200; // animation resolution
-    const pSource = map.getSource('point');
-    const animateRoute = _ => {
-      step += 1;
-      if (step > numSteps) {
-        step = 0;
-      } else {
-        const currDistance = step / numSteps * this.state.pathLength;
-        const point = turf.along(this.state.path, currDistance, 'kilometers');
-        pSource.setData(point);
-      }
-      requestAnimationFrame(animateRoute);
-    }
-    animateRoute();
-  }
-
-  onMoveEnd = (map) => {
-    if (!this.state.initialPitch && this.state.busService) {
-      map.easeTo({ pitch: 50, duration: 3000 });
-      this.setState({ initialPitch: true, afterPitchZoom: map.getZoom() });
-    }
-  }
-
-  onPointSourceAdded = (source) => {
-    this.onStyleLoad(source.map);
-  }
-
-  renderLayers(busService, path, point) {
-    const { pointSource, busStopsCoords } = this.state;
-
-    return (
-      <span>
-        <Layer
-          id="pathLayer"
-          type="line"
-          layout={{
-            'line-join': 'round',
-            'line-cap': 'round',
-          }}
-          paint={{
-            'line-color': busService.color,
-            'line-width': 3
-          }}
-        >
-          <Feature
-            onHover={this.onBusRouteHover}
-            onEndHover={this.onEndBusRouteHover}
-            coordinates={busStopsCoords}
-          />
-        </Layer>
-
-        <Layer
-          type="symbol"
-          id={"busstops" + this.props.params.serviceName}
-          layout={{
-            "icon-image": "bus-11",
-          }}
-          paint={{ "icon-color": '#ff0000'}}
-        >
-          {busService.stops.map(stop => <Feature
-                                          key={stop.sequence}
-                                          onHover={this.onBusStopHover}
-                                          onEndHover={this.onEndBusStopHover}
-                                          coordinates={[stop.lng, stop.lat]} />)}
-        </Layer>
-
-        <Popup
-          coordinates={[busService.stops[0].lng, busService.stops[0].lat]}
-          className="popup start"
-          offset={{
-            'bottom': [0, -20]
-          }}
-        >
-          <div className="myanmar popup-content" style={{backgroundColor: busService.color }}>ဂိတ်စ</div>
-        </Popup>
-
-        <Popup
-          coordinates={[busService.stops[busService.stops.length - 1].lng, busService.stops[busService.stops.length - 1].lat]}
-          className="popup end"
-          offset={{'bottom': [0, -20] }}
-        >
-          <div className="myanmar popup-content" style={{ backgroundColor: busService.color }}>ဂိတ်ဆုံး</div>
-        </Popup>
-
-        <Source
-          id="point"
-          geoJsonSource={pointSource}
-          onSourceAdded={this.onPointSourceAdded}
-        />
-        <Layer
-          id="pointLayer"
-          sourceId="point"
-          type="circle"
-          paint={{
-            'circle-radius': 4,
-            'circle-color': '#ffffff'
-          }}
-        />
-      </span>
-    );
+    return busServices;
   }
 
   render() {
     const { center, zoom, bearing, minZoom } = this.props.map;
-    const { busService, path, point } = this.state;
+    const { selectedBusServices } = this.props.sidebar;
+    let busServices = null;
+    if (selectedBusServices.length > 0) {
+      busServices = this.getBusServicesInfo(selectedBusServices);
+    }
+
+    console.log(selectedBusServices.length, busServices);
 
     return (
       <ReactMapboxGl
@@ -192,7 +229,8 @@ class WebGLMap extends Component {
         }}
         onMoveEnd={this.onMoveEnd}
       >
-        { busService && this.renderLayers(busService, path, point) }
+
+        { selectedBusServices && busServices && busServices.map(service => this.renderLayers(service))}
 
       </ReactMapboxGl>
     );
@@ -200,10 +238,11 @@ class WebGLMap extends Component {
 }
 
 function mapStateToProps(state) {
-  const { webglmap, map } = state;
+  const { webglmap, map, busServicesSidebar } = state;
   return {
     busServices: map.busServices,
     map: webglmap,
+    sidebar: busServicesSidebar,
   };
 }
 
@@ -212,6 +251,7 @@ WebGLMap.defaultProps = {
     serviceName: null,
   },
   busServiceNo: null,
+  sidebar: null,
 };
 
 
@@ -223,6 +263,7 @@ WebGLMap.propTypes = {
     PropTypes.string,
     PropTypes.number,
   ]),
+  sidebar: PropTypes.object,
 };
 
 

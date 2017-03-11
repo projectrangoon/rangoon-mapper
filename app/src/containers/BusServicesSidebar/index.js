@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { map } from  'lodash';
 
 import BusServiceListItem from '../../components/BusListItem';
-import { selectBusService } from './actions';
+import { selectBusService, toggleBusService } from './actions';
 
 
 class BusServicesSidebar extends Component {
@@ -13,7 +13,13 @@ class BusServicesSidebar extends Component {
     return (
         <ul className="sidebar-list services-list">
           {map(services, (service, key) =>
-            <BusServiceListItem key={key} serviceNo={key} onClick={e => this.props.selectBusService(e, service, key)} {...service} /> )}
+            <BusServiceListItem
+              key={key}
+              serviceNo={key}
+              onSelectItem={key => this.props.selectBusService(key)}
+              onToggle={key => this.props.toggleBusService(key)}
+              {...service}
+            />)}
         </ul>
     );
   }
@@ -63,7 +69,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    selectBusService: (e, busService, busServiceNo) => dispatch(selectBusService(e, busService, busServiceNo)),
+    selectBusService: busServiceNo => dispatch(selectBusService(busServiceNo)),
+    toggleBusService: (busService, busServiceNo) => dispatch(toggleBusService(busService, busServiceNo)),
   };
 }
 

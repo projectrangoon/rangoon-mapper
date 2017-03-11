@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 
 class BusServiceListItem extends Component {
-  constructor(props) {
-    super(props);
+  componentWillMount() {
     this.state = {
-      isSelected: false,
-    }
+      isToggled: false,
+    };
   }
 
   renderServiceName(serviceName) {
@@ -17,21 +16,40 @@ class BusServiceListItem extends Component {
     return dom.body.textContent;
   }
 
+  handleClick = (e, serviceNo) => {
+    e.preventDefault();
+    if (this.props.onSelectItem) {
+      this.props.onSelectItem(serviceNo);
+    }
+  }
+
+  handleToggleLine = (e, serviceNo) => {
+    e.preventDefault();
+    this.setState({ isToggled: !this.state.isToggled });
+    if (this.props.onToggle) {
+      this.props.onToggle(serviceNo);
+    }
+  }
+
   render() {
-    const isSelectedClass = this.state.isSelected ? 'selected' : '';
+    const isToggledClass = this.state.isToggled ? 'selected' : '';
     return (
-      <li className={isSelectedClass} onClick={this.props.onClick}>
+      <li className={isToggledClass} onClick={e => this.handleToggleLine(e, this.props.serviceNo)}>
         <span
           className="logo"
           style={{ backgroundColor: this.props.color }}
         >
-        { this.props.serviceNo }
+          {this.props.serviceNo}
         </span>
-        <span
-          className="myanmar service-name"
-        >
+        <span className="myanmar service-name">
           {this.renderServiceName(this.props.service_name)}
         </span>
+        <i
+          className="material-icons"
+          onClick={e => this.handleClick(e, this.props.serviceNo)}
+        >
+          forward
+        </i>
       </li>
     );
   }

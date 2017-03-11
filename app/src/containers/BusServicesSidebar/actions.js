@@ -9,18 +9,35 @@ const selectBusServiceActions = createActions([
   types.SELECT_BUS_SERVICE_FAIL,
 ]);
 
+const toggleBusServiceActions = createActions([
+  types.TOGGLE_BUS_SERVICE_REQUEST,
+  types.TOGGLE_BUS_SERVICE_SUCCESS,
+  types.TOGGLE_BUS_SERVICE_FAIL,
+]);
 
-export const selectBusService = (e, busService, busServiceNo) =>
+
+export const selectBusService = (busServiceNo) =>
   (dispatch, getState) => {
 
-    dispatch(selectBusServiceActions.request({ busService, busServiceNo }));
+    dispatch(selectBusServiceActions.request({ busServiceNo }));
 
     const { webglmap } = getState();
 
-    if (busService && busServiceNo) {
-      dispatch(selectBusServiceActions.success({ webglmap, busService, busServiceNo }));
+    if (busServiceNo) {
+      dispatch(selectBusServiceActions.success({ webglmap, busServiceNo }));
       dispatch(push(`/bus/${busServiceNo}`));
     } else {
-      dispatch(selectBusServiceActions.fail({ webglmap, busService, busServiceNo }));
+      dispatch(selectBusServiceActions.fail({ webglmap, busServiceNo }));
+    }
+  }
+
+export const toggleBusService = (busServiceNo) =>
+  (dispatch, getState) => {
+    dispatch(toggleBusServiceActions.request({ busServiceNo }));
+
+    if(busServiceNo) {
+      dispatch(toggleBusServiceActions.success({ busServiceNo }));
+    } else {
+      dispatch(toggleBusServiceActions.fail({ busServiceNo }));
     }
   }
