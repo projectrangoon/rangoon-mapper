@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Map from '../../containers/map';
-import Sidebar from '../../containers/sidebar';
+import Map from '../../containers/Map';
+import Sidebar from '../../containers/Sidebar';
 
 
 const HomeScreen = (props) => (

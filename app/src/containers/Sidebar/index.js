@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { selectStartStop, selectEndStop } from '../../actions/map';
+import { selectStartStop, selectEndStop } from './actions';
 import AutoCompleteSearch from '../../components/AutoCompleteSearch';
 import Journey from '../../components/Journey';
 import LoadingJourney from '../../components/LoadingJourney';

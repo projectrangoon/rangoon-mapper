@@ -1,7 +1,7 @@
 import React from 'react';
 
-import WebGLMap from '../../containers/webglmap';
-import WebGLMapSidebar  from '../../containers/webglmapsidebar';
+import WebGLMap from '../../containers/WebGLMap';
+import BusServicesSidebar from '../../containers/BusServicesSidebar';
 
 const BusScreen = (props) => (
   <div className="row">
@@ -10,7 +10,7 @@ const BusScreen = (props) => (
     </main>
 
     <aside className="col-sm-12 col-md-3 right-sidebar">
-      <WebGLMapSidebar {...props} />
+      <BusServicesSidebar {...props} />
     </aside>
   </div>
 );

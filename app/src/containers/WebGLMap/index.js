@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import ReactMapboxGl, { Layer, Feature, Source, Popup } from 'react-mapbox-gl';
-import  * as MapboxGl from 'mapbox-gl/dist/mapbox-gl'; // eslint-disable
-import { MAPBOX_TOKEN } from '../../constants/lib';
 import turf from '@turf/turf';
+import  * as MapboxGl from 'mapbox-gl/dist/mapbox-gl'; // eslint-disable
+
+import { MAPBOX_TOKEN } from './constants';
 
 class WebGLMap extends Component {
   constructor(props) {

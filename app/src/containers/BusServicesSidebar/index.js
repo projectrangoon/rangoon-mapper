@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { map } from  'lodash';
+
 import BusServiceListItem from '../../components/BusListItem';
-import { selectBusService } from '../../actions/webglmap';
+import { selectBusService } from './actions';
 
 
-class WebGLMapSidebar extends Component {
+class BusServicesSidebar extends Component {
 
   renderServices() {
     const services = this.props.busServices;
@@ -49,7 +50,7 @@ class WebGLMapSidebar extends Component {
   }
 }
 
-WebGLMapSidebar.defaultProps = {
+BusServicesSidebar.defaultProps = {
   selectBusService: PropTypes.func.isRequired
 };
 
@@ -67,4 +68,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(WebGLMapSidebar);
+export default connect(mapStateToProps, mapDispatchToProps)(BusServicesSidebar);

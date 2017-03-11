@@ -1,4 +1,4 @@
-import types from '../constants/ActionTypes';
+import types from '../../constants/ActionTypes';
 
 const initialState = {
   center: [ 96.1587996, 16.7849606 ],

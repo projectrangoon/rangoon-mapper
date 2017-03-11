@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import GoogleMap from 'google-map-react';
 import { uniqueId } from 'lodash';
 
-import { loadMap, selectStartStop, selectEndStop, calculateRoute } from '../../actions/map';
-import customMapStyles from '../../constants/CustomMapStyles.json';
+import { loadMap, calculateRoute } from './actions';
+import { selectStartStop, selectEndStop } from '../Sidebar/actions';
+import customMapStyles from './CustomMapStyles.json';
 import Marker from '../../components/Marker';
-import { GOOGLE_MAPS_API_KEY } from '../../constants/lib';
+import { GOOGLE_MAPS_API_KEY } from './constants';
 
 class Map extends Component {
   componentDidMount() {

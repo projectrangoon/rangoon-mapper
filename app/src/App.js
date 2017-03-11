@@ -5,7 +5,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import graph from '../../experiment/adjancencyList.json';
 import busStopsMap from '../../experiment/stops_map.json';
 import busServices from '../../experiment/bus_services.json';
-import { loadAdjacencyList } from './actions/map';
+import { loadAdjacencyList } from './containers/Map/actions';
 import './styles/main.scss';
 // import { distance } from './utils';
 

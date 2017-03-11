@@ -1,4 +1,4 @@
-import types from '../constants/ActionTypes';
+import types from '../../constants/ActionTypes';
 
 const initialState = {
   center: { lat: 16.7943528, lng: 96.1518985 },
