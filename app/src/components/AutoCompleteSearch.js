@@ -40,6 +40,7 @@ class AutoCompleteSearch extends Component {
       doneTypingInterval: 300,
       isLoading: false,
       isSelected: false,
+      inputFocus: true,
       id,
     };
   }
@@ -73,6 +74,7 @@ class AutoCompleteSearch extends Component {
     }
     this.setState({
       value: e.target.value,
+      currentSelectedBusMenuLi: 0,
     });
   }
 
@@ -91,37 +93,61 @@ class AutoCompleteSearch extends Component {
     }
   }
 
+  scrollIntoView = (li, ul) => {
+    if (li.getBoundingClientRect().top > ul.clientHeight * 1.3 ||
+      li.getBoundingClientRect().top < 110) {
+      li.scrollIntoView();
+    }
+  }
+
   handleKeyDown = (e) => {
     const { currentSelectedBusMenuLi, results, value } = this.state;
     clearTimeout(this.state.typingTimer);
 
-    // When Key down
     switch (e.keyCode) {
-      case 40:
-        e.preventDefault();
+      case 40: // Key down
         if (currentSelectedBusMenuLi === results.length - 1) {
           this.setState({
-            currentSelectedBusMenuLi: 0,
+            currentSelectedBusMenuLi: results.length - 1,
+          }, () => {
+            const li =
+              this.refs[this.state.currentSelectedBusMenuLi]; // eslint-disable-line 
+            const ul = this.resultUl;
+            this.scrollIntoView(li, ul);
           });
         } else {
           this.setState({
             currentSelectedBusMenuLi: currentSelectedBusMenuLi + 1,
+          }, () => {
+            const li =
+              this.refs[this.state.currentSelectedBusMenuLi]; // eslint-disable-line 
+            const ul = this.resultUl;
+            this.scrollIntoView(li, ul);
           });
         }
         break;
-      case 38:
-        e.preventDefault();
+      case 38: // key up
         if (currentSelectedBusMenuLi === 0) {
           this.setState({
-            currentSelectedBusMenuLi: results.length - 1,
+            currentSelectedBusMenuLi: 0,
+          }, () => {
+            const li =
+              this.refs[this.state.currentSelectedBusMenuLi]; // eslint-disable-line 
+            const ul = this.resultUl;
+            this.scrollIntoView(li, ul);
           });
         } else {
           this.setState({
             currentSelectedBusMenuLi: currentSelectedBusMenuLi - 1,
+          }, () => {
+            const li =
+              this.refs[this.state.currentSelectedBusMenuLi]; // eslint-disable-line 
+            const ul = this.resultUl;
+            this.scrollIntoView(li, ul);
           });
         }
         break;
-      case 13:
+      case 13: // enter key
         if (value) {
           this.handleResultSelect(e, results[currentSelectedBusMenuLi]);
         }
@@ -163,9 +189,7 @@ class AutoCompleteSearch extends Component {
 
   removeInput = (e) => {
     e.preventDefault();
-    this.setState({
-      value: '',
-    });
+    this.resetComponent();
     if (this.props.onSelect) {
       this.props.onSelect(null);
     }
@@ -177,6 +201,12 @@ class AutoCompleteSearch extends Component {
   handleLiMouseEnter = (index) => {
     this.setState({
       currentSelectedBusMenuLi: index,
+    });
+  }
+
+  handleFocus = () => {
+    this.setState({
+      inputFocus: true,
     });
   }
 
@@ -197,6 +227,7 @@ class AutoCompleteSearch extends Component {
           floatingLabelText={this.props.placeholder}
           onChange={this.handleChange}
           onKeyDown={this.handleKeyDown}
+          onFocus={this.handleFocus}
           onKeyUp={this.handleKeyUp}
           value={value}
           key={id}
@@ -215,20 +246,23 @@ class AutoCompleteSearch extends Component {
           null
         )}
         {results && results.length > 0 ? (
-          <ul className="busmenu">
-            {results.map((r, i) => (
-              <li
-                key={r.bus_stop_id}
-                onMouseEnter={() => this.handleLiMouseEnter(i)}
-                className={currentSelectedBusMenuLi === i ? 'selected' : null}
-              >
-                <a href="" onClick={e => this.handleResultSelect(e, r)}>
-                  <strong>{r.name_en} - <span className="myanmar">{r.name_mm}</span></strong>
-                  <small>{r.road_en} - <span className="myanmar">{r.road_mm}</span></small>
-                </a>
-              </li>
-            ))}
-          </ul>
+          <div>
+            <ul className="busmenu" ref={(resultUl) => { this.resultUl = resultUl; }}>
+              {results.map((r, i) => (
+                <li
+                  key={r.bus_stop_id}
+                  onMouseEnter={() => this.handleLiMouseEnter(i)}
+                  className={currentSelectedBusMenuLi === i ? 'selected' : null}
+                  ref={i}
+                >
+                  <a href="" onClick={e => this.handleResultSelect(e, r)}>
+                    <strong>{r.name_en} - <span className="myanmar">{r.name_mm}</span></strong>
+                    <small>{r.road_en} - <span className="myanmar">{r.road_mm}</span></small>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
           ) : (
             <ul className="busmenu">
               {value && !isLoading && !isSelected ? (
@@ -238,6 +272,9 @@ class AutoCompleteSearch extends Component {
               )}
             </ul>
           )}
+
+        <div />
+
       </div>
     );
   }

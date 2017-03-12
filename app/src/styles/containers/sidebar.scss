@@ -29,12 +29,12 @@
     align-self: center;
     color: $orange;
     margin: 0 $grid-gutter-width-base / 3 ;
+    transition: all .5s linear;
     // cursor: pointer;
   }
 
   .rotate {
     transform: rotate(180deg);
-    transition: transform 300s ease-in;
   }
 
   .out {

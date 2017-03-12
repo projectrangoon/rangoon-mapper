@@ -63,7 +63,7 @@ const Sidebar = (props) => {
         </form>
         {swappingStops || !startStop || !endStop ? (
           <button className="disabled">
-            <i className="material-icons swap">swap_vert</i>
+            <i className="material-icons swap rotate">swap_vert</i>
           </button>
         ) : (
           <button onClick={handleSwap}>
@@ -111,7 +111,9 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  handleSwap: () => dispatch(swapStops()),
+  handleSwap: () => {
+    dispatch(swapStops());
+  },
   handleStartSelect: startStop => dispatch(selectStartStop(startStop)),
   handleEndSelect: endStop => dispatch(selectEndStop(endStop)),
   handleStartStopValueChange: value => dispatch(changeStartStopValue(value)),
