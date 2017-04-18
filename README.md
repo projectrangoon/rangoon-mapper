@@ -22,7 +22,7 @@ Everything else is [MIT](http://cheeaun.mit-license.org/)
 
 # Contribution
 
-Contributions are welcome. Take a look at issues section. Adhere to [contribution guidlines](https://github.com/projectrangoon/rangoon-mapper/CONTRIBUTING.md)
+Contributions are welcome. Take a look at issues section. Adhere to [contribution guidlines](./CONTRIBUTING.md)
 
 
 # Badges
