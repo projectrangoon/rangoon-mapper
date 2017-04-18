@@ -32,4 +32,4 @@ Contributions are welcome. Take a look at issues section. Adhere to [contributio
 ---
 > [kaunghtet.xyz](http://kaunghtet.xyz) &nbsp;&middot;&nbsp;
 > GitHub [@khzaw](https://github.com/khzaw) &nbsp;&middot;&nbsp;
-> Twitter [@khzaw] (https://twitter.com/khzaw)
+> Twitter [@khzaw](https://twitter.com/khzaw)
