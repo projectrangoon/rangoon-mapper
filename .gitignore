@@ -1,4 +1,5 @@
 node_modules
+.pnpm-store
 .npm
 .eslintcache
 .yarn-integrity
@@ -7,3 +8,6 @@ npm-debug.log*
 *.DS_Store
 .wercker/
 TAGS
+dist
+coverage
+*.tsbuildinfo
