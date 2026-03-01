@@ -141,6 +141,7 @@ for service_no, stops in services:
 
     sorted_stops = sorted(list(stops), key=lambda x: int(x['sequence']))
     bus_services[service_no] = {
+        'service_no': service_no,
         'service_name': service_name,
         'color': colors[service_no],
         'stops': sorted_stops

@@ -6,6 +6,10 @@
     padding-left: 0;
     width: 100%;
     li {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
       cursor: pointer;
       padding: .75em;
       border-bottom: 1px solid $border-color;
