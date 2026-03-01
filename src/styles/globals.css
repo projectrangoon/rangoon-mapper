@@ -74,3 +74,146 @@ body {
   margin: 0;
   color: var(--ink-dim);
 }
+
+.layout-root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.layout-map {
+  position: absolute;
+  inset: 0;
+}
+
+.layout-top {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(640px, calc(100% - 2rem));
+  z-index: 20;
+}
+
+.layout-left {
+  position: absolute;
+  top: 5rem;
+  left: 1rem;
+  width: min(420px, calc(100% - 2rem));
+  max-height: calc(100dvh - 6rem);
+  overflow: auto;
+  z-index: 20;
+}
+
+.layout-controls {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 20;
+}
+
+.map-shell,
+.panel-shell,
+.search-island-shell,
+.controls-shell {
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  background: var(--panel-bg);
+  backdrop-filter: blur(14px);
+}
+
+.map-shell {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  color: var(--ink-dim);
+  font-family: 'Space Mono', monospace;
+}
+
+.search-island-shell {
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+}
+
+.search-island-input {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  font-size: 1rem;
+}
+
+.search-island-input:focus {
+  outline: none;
+}
+
+.search-island-kbd {
+  border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+  color: var(--ink-dim);
+  font-size: 0.75rem;
+  font-family: 'Space Mono', monospace;
+}
+
+.panel-shell {
+  border-radius: 24px;
+  padding: 1rem;
+}
+
+.panel-shell h2 {
+  margin: 0.75rem 0 0.5rem;
+}
+
+.panel-shell p {
+  margin: 0.35rem 0;
+  color: var(--ink-dim);
+}
+
+.mode-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.mode-toggle button {
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  background: color-mix(in srgb, var(--surface) 75%, transparent);
+  color: var(--ink-dim);
+  font-weight: 600;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.mode-toggle button.active {
+  background: color-mix(in srgb, var(--ink) 12%, transparent);
+  color: var(--ink);
+}
+
+.controls-shell {
+  border-radius: 16px;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.controls-shell button {
+  border: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  color: var(--ink);
+  padding: 0.5rem 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .layout-left {
+    top: auto;
+    bottom: 1rem;
+    max-height: 50dvh;
+  }
+}
