@@ -1,12 +1,23 @@
-import { useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useMemo, useRef } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import type { MapRef } from 'react-map-gl/maplibre';
 
+import BusLinesPanel from '@/components/bus/BusLinesPanel';
+import AppLayout from '@/components/layout/AppLayout';
+import ControlCluster from '@/components/layout/ControlCluster';
+import ModeToggle from '@/components/layout/ModeToggle';
+import MapView from '@/components/map/MapView';
+import RoutePanel from '@/components/route/RoutePanel';
+import HalftoneOverlay from '@/components/ui/HalftoneOverlay';
+import SearchIsland from '@/components/ui/SearchIsland';
+import { useSearch } from '@/hooks/useSearch';
 import { useRouteCalculation } from '@/hooks/useRouteCalculation';
 import { useTheme } from '@/hooks/useTheme';
-import AppLayout from '@/components/layout/AppLayout';
 import { useAppStore } from '@/stores/useAppStore';
 import { useBusStore } from '@/stores/useBusStore';
 import { useMapStore } from '@/stores/useMapStore';
+import type { AppMode, UniqueStop } from '@/types';
 
 const parseStopId = (value: string | undefined): number | null => {
   if (!value) {
@@ -22,139 +33,252 @@ export default function MainPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const mapRef = useRef<MapRef | null>(null);
+
   const mode = useAppStore((state) => state.mode);
+  const panelOpen = useAppStore((state) => state.panelOpen);
+  const searchQuery = useAppStore((state) => state.searchQuery);
   const setMode = useAppStore((state) => state.setMode);
-  const uniqueStops = useMapStore((state) => state.uniqueStops);
-  const isDataReady = useMapStore((state) => state.isDataReady);
-  const getStopById = useMapStore((state) => state.getStopById);
+  const setPanelOpen = useAppStore((state) => state.setPanelOpen);
+  const setSearchQuery = useAppStore((state) => state.setSearchQuery);
+
+  const center = useMapStore((state) => state.center);
+  const zoom = useMapStore((state) => state.zoom);
+  const routePath = useMapStore((state) => state.routePath);
   const startStop = useMapStore((state) => state.startStop);
   const endStop = useMapStore((state) => state.endStop);
-  const routePath = useMapStore((state) => state.routePath);
+  const uniqueStops = useMapStore((state) => state.uniqueStops);
+  const busServices = useMapStore((state) => state.busServices);
+  const isDataReady = useMapStore((state) => state.isDataReady);
+  const setViewport = useMapStore((state) => state.setViewport);
   const setStartStop = useMapStore((state) => state.setStartStop);
   const setEndStop = useMapStore((state) => state.setEndStop);
+  const clearRoute = useMapStore((state) => state.clearRoute);
+  const getStopById = useMapStore((state) => state.getStopById);
+
   const selectedServices = useBusStore((state) => state.selectedServices);
+  const expandedService = useBusStore((state) => state.expandedService);
+  const toggleService = useBusStore((state) => state.toggleService);
+  const setExpandedService = useBusStore((state) => state.setExpandedService);
   const selectOnly = useBusStore((state) => state.selectOnly);
 
-  const { preference, setPreference, toggleTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   const { isCalculating } = useRouteCalculation();
 
-  useEffect(() => {
-    if (location.pathname.startsWith('/bus')) {
-      setMode('lines');
-      return;
-    }
+  const selectedServicesKey = useMemo(
+    () => Array.from(selectedServices).sort((a, b) => Number(a) - Number(b)).join(','),
+    [selectedServices],
+  );
 
-    setMode('route');
-  }, [location.pathname, setMode]);
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   useEffect(() => {
     if (!isDataReady) {
       return;
     }
 
-    const startId = parseStopId(startStopParam);
-    const endId = parseStopId(endStopParam);
-    if (!startId || !endId) {
-      return;
-    }
-
-    const start = getStopById(startId);
-    const end = getStopById(endId);
-
-    if (start) {
-      setStartStop(start);
-    }
-    if (end) {
-      setEndStop(end);
-    }
-  }, [startStopParam, endStopParam, getStopById, isDataReady, setStartStop, setEndStop]);
-
-  useEffect(() => {
-    if (!serviceName) {
-      return;
-    }
-
-    selectOnly(serviceName);
-  }, [serviceName, selectOnly]);
-
-  const handleModeChange = (nextMode: 'route' | 'lines') => {
-    setMode(nextMode);
-    if (nextMode === 'route') {
-      if (startStop && endStop) {
-        navigate(`/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}`);
-      } else {
-        navigate('/');
+    if (location.pathname.startsWith('/bus')) {
+      setMode('lines');
+      if (serviceName) {
+        selectOnly(serviceName);
       }
       return;
     }
 
-    const firstSelected = Array.from(selectedServices.values())[0];
-    navigate(firstSelected ? `/bus/${firstSelected}` : '/bus');
+    setMode('route');
+    const startId = parseStopId(startStopParam);
+    const endId = parseStopId(endStopParam);
+
+    if (!startId || !endId) {
+      return;
+    }
+
+    const deepStart = getStopById(startId);
+    const deepEnd = getStopById(endId);
+
+    if (deepStart) {
+      setStartStop(deepStart);
+    }
+
+    if (deepEnd) {
+      setEndStop(deepEnd);
+    }
+  }, [
+    location.pathname,
+    serviceName,
+    startStopParam,
+    endStopParam,
+    getStopById,
+    setMode,
+    setStartStop,
+    setEndStop,
+    selectOnly,
+    isDataReady,
+  ]);
+
+  useEffect(() => {
+    if (!isDataReady) {
+      return;
+    }
+
+    if (mode === 'route') {
+      if (startStop && endStop) {
+        const target = `/directions/${startStop.bus_stop_id}/${endStop.bus_stop_id}`;
+        if (location.pathname !== target) {
+          navigate(target, { replace: true });
+        }
+        return;
+      }
+
+      if (location.pathname.startsWith('/directions/')) {
+        navigate('/', { replace: true });
+      }
+      return;
+    }
+
+    const firstService = selectedServicesKey.split(',').find(Boolean);
+    const target = firstService ? `/bus/${firstService}` : '/bus';
+    if (location.pathname !== target) {
+      navigate(target, { replace: true });
+    }
+  }, [
+    mode,
+    startStop,
+    endStop,
+    selectedServicesKey,
+    location.pathname,
+    navigate,
+    isDataReady,
+  ]);
+
+  const { results: searchResults } = useSearch(uniqueStops, searchQuery, 180);
+
+  const handleModeChange = (nextMode: AppMode) => {
+    setMode(nextMode);
+    if (nextMode === 'route') {
+      return;
+    }
+
+    clearRoute();
   };
 
-  const mapArea = <div className="map-shell">Map integration in progress...</div>;
+  const applySearchSelection = (stop: UniqueStop) => {
+    if (mode === 'lines') {
+      setMode('route');
+      setStartStop(stop);
+      setEndStop(null);
+      setSearchQuery('');
+      return;
+    }
+
+    if (!startStop || (startStop && endStop)) {
+      setStartStop(stop);
+      setEndStop(null);
+      setSearchQuery('');
+      return;
+    }
+
+    setEndStop(stop);
+    setSearchQuery('');
+  };
 
   const topSearch = (
-    <div className="search-island-shell">
-      <input
-        className="search-island-input"
-        placeholder="Search bus stop (EN/MM)"
-        aria-label="Global Search"
-      />
-      <kbd className="search-island-kbd">CMD+K</kbd>
-    </div>
+    <SearchIsland
+      ref={searchInputRef}
+      query={searchQuery}
+      results={searchResults}
+      onQueryChange={setSearchQuery}
+      onSelect={applySearchSelection}
+    />
   );
 
-  const leftPanel = (
-    <div className="panel-shell">
-      <div className="mode-toggle">
-        <button
-          type="button"
-          className={mode === 'route' ? 'active' : ''}
-          onClick={() => handleModeChange('route')}
-        >
-          Route
-        </button>
-        <button
-          type="button"
-          className={mode === 'lines' ? 'active' : ''}
-          onClick={() => handleModeChange('lines')}
-        >
-          Lines
-        </button>
-      </div>
+  const panelBody =
+    mode === 'route' ? (
+      <RoutePanel
+        uniqueStops={uniqueStops}
+        startStop={startStop}
+        endStop={endStop}
+        routePath={routePath}
+        isCalculating={isCalculating}
+        onSelectStart={(stop) => {
+          setStartStop(stop);
+          if (!stop) {
+            clearRoute();
+          }
+        }}
+        onSelectEnd={(stop) => {
+          setEndStop(stop);
+          if (!stop) {
+            clearRoute();
+          }
+        }}
+      />
+    ) : (
+      <BusLinesPanel
+        busServices={busServices ?? {}}
+        selectedServices={selectedServices}
+        expandedService={expandedService}
+        onToggleService={toggleService}
+        onExpandService={setExpandedService}
+      />
+    );
 
-      {mode === 'route' ? (
-        <div>
-          <h2>Route Planner</h2>
-          <p>{isCalculating ? 'Calculating route...' : 'Pick two stops to calculate journey.'}</p>
-          <p>Loaded stops: {uniqueStops.length.toLocaleString()}</p>
-          <p>
-            Start: {startStop ? `${startStop.name_en} (${startStop.bus_stop_id})` : 'Not selected'}
-          </p>
-          <p>
-            End: {endStop ? `${endStop.name_en} (${endStop.bus_stop_id})` : 'Not selected'}
-          </p>
-          <p>Segments: {routePath?.path.length ?? 0}</p>
-        </div>
-      ) : (
-        <div>
-          <h2>Bus Lines</h2>
-          <p>Selected services: {selectedServices.size}</p>
-        </div>
+  const leftPanel = (
+    <AnimatePresence mode="wait">
+      {panelOpen && (
+        <motion.div
+          key={mode}
+          initial={{ x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: -20, opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <ModeToggle mode={mode} onChange={handleModeChange} />
+          {panelBody}
+        </motion.div>
       )}
-    </div>
+    </AnimatePresence>
+  );
+
+  const mapArea = (
+    <>
+      <MapView
+        theme={theme}
+        center={center}
+        zoom={zoom}
+        routePath={routePath}
+        startStop={startStop}
+        endStop={endStop}
+        busServices={busServices ?? {}}
+        selectedServices={selectedServices}
+        onMove={setViewport}
+        onReady={(instance) => {
+          mapRef.current = instance;
+        }}
+      />
+      <HalftoneOverlay />
+    </>
   );
 
   const controls = (
-    <div className="controls-shell">
-      <button type="button" onClick={toggleTheme}>
-        Toggle Theme ({preference})
-      </button>
-      <button type="button" onClick={() => setPreference('system')}>
-        Use System
-      </button>
-    </div>
+    <ControlCluster
+      theme={theme}
+      onToggleTheme={toggleTheme}
+      onTogglePanel={() => setPanelOpen(!panelOpen)}
+      onResetBearing={() => mapRef.current?.easeTo({ bearing: 0, pitch: 0, duration: 500 })}
+      onResetView={() => mapRef.current?.flyTo({ center: [96.1518985, 16.7943528], zoom: 13, duration: 1200 })}
+    />
   );
 
   return <AppLayout mapArea={mapArea} topSearch={topSearch} leftPanel={leftPanel} controls={controls} />;

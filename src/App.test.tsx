@@ -3,6 +3,10 @@ import { render, screen, waitFor } from '@testing-library/react';
 import App from '@/App';
 import { useMapStore } from '@/stores/useMapStore';
 
+vi.mock('@/components/map/MapView', () => ({
+  default: () => <div>MapView Mock</div>,
+}));
+
 const fixtureStop = {
   bus_stop_id: 1,
   lat: 16.8,
@@ -56,7 +60,7 @@ describe('App bootstrap', () => {
     expect(screen.getByRole('heading', { name: 'Rangoon Mapper' })).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByText('Map integration in progress...')).toBeInTheDocument();
+      expect(screen.getByText('MapView Mock')).toBeInTheDocument();
     });
   });
 });

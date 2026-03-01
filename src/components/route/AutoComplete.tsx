@@ -1,0 +1,94 @@
+import { X } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+
+import { useSearch } from '@/hooks/useSearch';
+import type { BusStop, UniqueStop } from '@/types';
+
+interface AutoCompleteProps {
+  label: string;
+  stops: UniqueStop[];
+  selectedStop: BusStop | null;
+  onSelect: (stop: BusStop | null) => void;
+}
+
+export default function AutoComplete({ label, stops, selectedStop, onSelect }: AutoCompleteProps) {
+  const [query, setQuery] = useState('');
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!selectedStop) {
+      return;
+    }
+
+    setQuery(`${selectedStop.name_en} (${selectedStop.bus_stop_id})`);
+  }, [selectedStop]);
+
+  const { results } = useSearch(stops, query);
+  const shownResults = useMemo(() => results.slice(0, 8), [results]);
+
+  const selectStop = (stop: UniqueStop) => {
+    onSelect(stop);
+    setQuery(`${stop.name_en} (${stop.bus_stop_id})`);
+    setOpen(false);
+    setActiveIndex(0);
+  };
+
+  return (
+    <div className="autocomplete" onFocus={() => setOpen(true)} onBlur={() => setTimeout(() => setOpen(false), 100)}>
+      <label>{label}</label>
+      <div className="autocomplete-input-wrap">
+        <input
+          value={query}
+          onChange={(event) => {
+            setQuery(event.target.value);
+            setActiveIndex(0);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'ArrowDown') {
+              event.preventDefault();
+              setActiveIndex((index) => (index >= shownResults.length - 1 ? 0 : index + 1));
+              return;
+            }
+            if (event.key === 'ArrowUp') {
+              event.preventDefault();
+              setActiveIndex((index) => (index <= 0 ? shownResults.length - 1 : index - 1));
+              return;
+            }
+            if (event.key === 'Enter' && shownResults[activeIndex]) {
+              event.preventDefault();
+              selectStop(shownResults[activeIndex]);
+            }
+          }}
+          placeholder="Search bus stop"
+        />
+        {query && (
+          <button
+            type="button"
+            aria-label={`Clear ${label}`}
+            onClick={() => {
+              setQuery('');
+              onSelect(null);
+            }}
+          >
+            <X size={14} />
+          </button>
+        )}
+      </div>
+
+      {open && query.trim().length > 0 && (
+        <ul className="autocomplete-results">
+          {shownResults.length === 0 && <li className="empty">No stop found</li>}
+          {shownResults.map((stop, index) => (
+            <li key={`${stop.bus_stop_id}-${stop.name_en}`} className={index === activeIndex ? 'active' : ''}>
+              <button type="button" onClick={() => selectStop(stop)}>
+                <strong>{stop.name_en}</strong>
+                <small>{stop.name_mm}</small>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
