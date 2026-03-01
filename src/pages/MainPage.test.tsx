@@ -1,0 +1,131 @@
+import { render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
+
+import MainPage from '@/pages/MainPage';
+import { useAppStore } from '@/stores/useAppStore';
+import { useBusStore } from '@/stores/useBusStore';
+import { useMapStore } from '@/stores/useMapStore';
+import type { AdjacencyList, BusServicesMap, BusStop, BusStopsMap, UniqueStop } from '@/types';
+
+vi.mock('@/components/map/MapView', () => ({
+  default: () => <div>MapView Mock</div>,
+}));
+
+const stop1: BusStop = {
+  bus_stop_id: 1,
+  lat: 16.8,
+  lng: 96.1,
+  name_en: 'Start Stop',
+  name_mm: 'အစ',
+  road_en: 'Road 1',
+  road_mm: 'လမ်း ၁',
+  township_en: 'Township',
+  township_mm: 'မြို့နယ်',
+  services: [{ service_name: 1, color: '#3a8', sequence: 1 }],
+};
+
+const stop2: BusStop = {
+  ...stop1,
+  bus_stop_id: 2,
+  lat: 16.95,
+  lng: 96.25,
+  name_en: 'End Stop',
+  name_mm: 'အဆုံး',
+  services: [{ service_name: 1, color: '#3a8', sequence: 2 }],
+};
+
+const busStopsMap: BusStopsMap = { 1: stop1, 2: stop2 };
+const uniqueStops: UniqueStop[] = [stop1, stop2];
+const busServices: BusServicesMap = {
+  '1': {
+    color: '#3a8',
+    service_name: 'Service One',
+    service_no: 1,
+    stops: [
+      {
+        ...stop1,
+        service_name: 1,
+        color: '#3a8',
+        sequence: 1,
+        distance: 0.5,
+      },
+      {
+        ...stop2,
+        service_name: 1,
+        color: '#3a8',
+        sequence: 2,
+        distance: 0.5,
+      },
+    ],
+  },
+};
+const graph: AdjacencyList = {
+  '1': [
+    {
+      ...stop2,
+      service_name: 1,
+      color: '#3a8',
+      sequence: 2,
+      distance: 0.5,
+    },
+  ],
+  '2': [],
+};
+
+const renderWithRoute = (route: string) => {
+  return render(
+    <MemoryRouter initialEntries={[route]}>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/directions/:startStop/:endStop" element={<MainPage />} />
+        <Route path="/bus" element={<MainPage />} />
+        <Route path="/bus/:serviceName" element={<MainPage />} />
+      </Routes>
+    </MemoryRouter>,
+  );
+};
+
+describe('MainPage routing behavior', () => {
+  beforeEach(() => {
+    useMapStore.setState({
+      center: { lat: 16.7943528, lng: 96.1518985 },
+      zoom: 13,
+      graph,
+      busStopsMap,
+      busServices,
+      uniqueStops,
+      startStop: null,
+      endStop: null,
+      routePath: null,
+      isCalculating: false,
+      isDataReady: true,
+    });
+
+    useBusStore.setState({ selectedServices: new Set<string>(), expandedService: null });
+    useAppStore.setState({
+      mode: 'route',
+      panelOpen: true,
+      searchQuery: '',
+      isSearchFocused: false,
+    });
+  });
+
+  it('loads directions deep link into route mode', async () => {
+    renderWithRoute('/directions/1/2');
+
+    expect(screen.getByText('Route Planner')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByDisplayValue('Start Stop (1)')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('End Stop (2)')).toBeInTheDocument();
+    });
+  });
+
+  it('loads bus deep link into lines mode', async () => {
+    renderWithRoute('/bus/1');
+
+    await waitFor(() => {
+      expect(screen.getByText('Bus Lines')).toBeInTheDocument();
+      expect(screen.getByText('Service One')).toBeInTheDocument();
+    });
+  });
+});
