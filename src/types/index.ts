@@ -48,11 +48,17 @@ export interface AdjacencyNode {
   distance: number;
 }
 
+export interface RouteShapePoint {
+  lat: number;
+  lng: number;
+}
+
 export interface BusService {
   color: string;
   service_name: string;
   service_no: number;
   stops: AdjacencyNode[];
+  shape?: RouteShapePoint[];
 }
 
 export type BusStopsMap = Record<number, BusStop>;

@@ -1,4 +1,4 @@
-import type { AdjacencyList, BusService, BusServicesMap, BusStop, BusStopsMap, UniqueStop } from '@/types';
+import type { AdjacencyList, BusService, BusServicesMap, BusStop, BusStopsMap, RouteShapePoint, UniqueStop } from '@/types';
 
 interface RawDataPayload {
   adjancencyList: AdjacencyList;
@@ -6,6 +6,8 @@ interface RawDataPayload {
   busServices: Record<string, BusService>;
   uniqueStops: UniqueStop[];
 }
+
+type RawRouteShapes = Record<string, RouteShapePoint[]>;
 
 export interface LoadedData {
   graph: AdjacencyList;
@@ -29,28 +31,33 @@ const normalizeStopsMap = (rawStopsMap: Record<string, BusStop>): BusStopsMap =>
   }, {});
 };
 
-const normalizeBusServices = (rawBusServices: Record<string, BusService>): BusServicesMap => {
+const normalizeBusServices = (
+  rawBusServices: Record<string, BusService>,
+  rawRouteShapes: RawRouteShapes,
+): BusServicesMap => {
   return Object.entries(rawBusServices).reduce<BusServicesMap>((accumulator, [key, service]) => {
     accumulator[key] = {
       ...service,
       service_no: Number(service.service_no),
+      shape: rawRouteShapes[String(service.service_no)] ?? rawRouteShapes[key],
     };
     return accumulator;
   }, {});
 };
 
 export const loadStaticData = async (): Promise<LoadedData> => {
-  const [adjancencyList, stopsMap, busServices, uniqueStops] = await Promise.all([
+  const [adjancencyList, stopsMap, busServices, uniqueStops, routeShapes] = await Promise.all([
     fetchJson<RawDataPayload['adjancencyList']>('/data/adjancencyList.json'),
     fetchJson<RawDataPayload['stopsMap']>('/data/stops_map.json'),
     fetchJson<RawDataPayload['busServices']>('/data/bus_services.json'),
     fetchJson<RawDataPayload['uniqueStops']>('/data/unique_stops.json'),
+    fetchJson<RawRouteShapes>('/data/route_shapes.json'),
   ]);
 
   return {
     graph: adjancencyList,
     busStopsMap: normalizeStopsMap(stopsMap),
-    busServices: normalizeBusServices(busServices),
+    busServices: normalizeBusServices(busServices, routeShapes),
     uniqueStops,
   };
 };

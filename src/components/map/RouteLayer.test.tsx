@@ -64,7 +64,46 @@ const busServices: BusServicesMap = {
 };
 
 describe('buildRouteFeatures', () => {
-  it('uses the service stop sequence for bus legs instead of straight stop-to-stop lines', () => {
+  it('uses the service shape geometry when available for bus legs', () => {
+    const routePath: RoutePath = {
+      currCost: 1,
+      currDistance: 2,
+      currTransfers: 0,
+      path: [
+        { bus_stop_id: 1, service_name: 1, lat: startStop.lat, lng: startStop.lng, color: '#44ccaa' },
+        { bus_stop_id: 3, service_name: 1, lat: endStop.lat, lng: endStop.lng, color: '#44ccaa' },
+      ],
+    };
+
+    const shapedServices: BusServicesMap = {
+      '1': {
+        color: '#44ccaa',
+        service_name: 'Service One',
+        service_no: 1,
+        stops: busServices['1']!.stops,
+        shape: [
+          { lat: 16.799, lng: 96.099 },
+          { lat: 16.81, lng: 96.115 },
+          { lat: 16.822, lng: 96.135 },
+          { lat: 16.84, lng: 96.155 },
+          { lat: 16.852, lng: 96.181 },
+        ],
+      },
+    };
+
+    const features = buildRouteFeatures(routePath, startStop, endStop, shapedServices);
+    const busFeature = features.features.find((feature) => feature.properties.walk === false);
+
+    expect(busFeature?.geometry.coordinates).toEqual([
+      [96.099, 16.799],
+      [96.115, 16.81],
+      [96.135, 16.822],
+      [96.155, 16.84],
+      [96.181, 16.852],
+    ]);
+  });
+
+  it('falls back to the service stop sequence when no shape geometry exists', () => {
     const routePath: RoutePath = {
       currCost: 1,
       currDistance: 2,

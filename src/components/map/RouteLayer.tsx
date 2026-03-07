@@ -1,6 +1,7 @@
 import type { Feature, FeatureCollection, LineString } from 'geojson';
 import { Layer, Source } from 'react-map-gl/maplibre';
 
+import { getDistance } from '@/lib/geo';
 import type { BusService, BusServicesMap, BusStop, RoutePath, RouteStep } from '@/types';
 
 interface RouteLayerProps {
@@ -16,6 +17,7 @@ interface RouteProperties {
 }
 
 const WALK_COLOR = '#2f343d';
+const SHAPE_MATCH_DISTANCE_KM = 1.5;
 
 const toFeature = (coords: [number, number][], color: string, walk: boolean): Feature<LineString, RouteProperties> => ({
   type: 'Feature',
@@ -39,10 +41,73 @@ const getCoordinatesFromSteps = (steps: RouteStep[]): [number, number][] => {
   });
 };
 
+const findNearestShapePointIndex = (
+  shapeCoordinates: [number, number][],
+  step: RouteStep | undefined,
+): { index: number; distanceKm: number } | null => {
+  if (!step || typeof step.lng !== 'number' || typeof step.lat !== 'number' || shapeCoordinates.length === 0) {
+    return null;
+  }
+
+  let bestIndex = -1;
+  let bestDistance = Number.POSITIVE_INFINITY;
+
+  shapeCoordinates.forEach(([lng, lat], index) => {
+    const distance = getDistance(step.lat!, step.lng!, lat, lng);
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      bestIndex = index;
+    }
+  });
+
+  if (bestIndex === -1) {
+    return null;
+  }
+
+  return { index: bestIndex, distanceKm: bestDistance };
+};
+
+const getShapeRunCoordinates = (
+  service: BusService | undefined,
+  runSteps: RouteStep[],
+): [number, number][] | null => {
+  const shapeCoordinates = service?.shape?.map((point) => [point.lng, point.lat] as [number, number]) ?? [];
+  const first = runSteps[0];
+  const last = runSteps[runSteps.length - 1];
+
+  if (!service || !first || !last || shapeCoordinates.length < 2) {
+    return null;
+  }
+
+  const startMatch = findNearestShapePointIndex(shapeCoordinates, first);
+  const endMatch = findNearestShapePointIndex(shapeCoordinates, last);
+
+  if (
+    !startMatch ||
+    !endMatch ||
+    startMatch.distanceKm > SHAPE_MATCH_DISTANCE_KM ||
+    endMatch.distanceKm > SHAPE_MATCH_DISTANCE_KM ||
+    startMatch.index === endMatch.index
+  ) {
+    return null;
+  }
+
+  const lowerIndex = Math.min(startMatch.index, endMatch.index);
+  const upperIndex = Math.max(startMatch.index, endMatch.index);
+  const slicedShape = shapeCoordinates.slice(lowerIndex, upperIndex + 1);
+
+  return startMatch.index <= endMatch.index ? slicedShape : slicedShape.reverse();
+};
+
 const getServiceRunCoordinates = (
   service: BusService | undefined,
   runSteps: RouteStep[],
 ): [number, number][] => {
+  const shapeCoordinates = getShapeRunCoordinates(service, runSteps);
+  if (shapeCoordinates && shapeCoordinates.length >= 2) {
+    return shapeCoordinates;
+  }
+
   const fallbackCoordinates = getCoordinatesFromSteps(runSteps);
   const first = runSteps[0];
   const last = runSteps[runSteps.length - 1];
