@@ -17,9 +17,9 @@ export default function StopMarker({ lat, lng, label, color, variant }: StopMark
         style={{ '--marker-color': color } as CSSProperties}
         title={label}
       >
-        <div className="stop-marker-bubble">
-          <small>{variant === 'start' ? 'Start' : 'Destination'}</small>
-          <strong>{label}</strong>
+        <div className={`stop-marker-label stop-marker-label-${variant}`}>
+          <span className="stop-marker-chip stop-marker-chip-role">{variant === 'start' ? 'YOU' : 'TARGET'}</span>
+          <span className="stop-marker-chip stop-marker-chip-name">{label}</span>
         </div>
         <span className="stop-marker-pin" />
       </div>

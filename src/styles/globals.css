@@ -918,28 +918,14 @@ a {
   left: 50%;
   bottom: calc(100% + 0.7rem);
   transform: translateX(-50%);
-  min-width: 7.8rem;
-  max-width: 12rem;
-  padding: 0.45rem 0.6rem;
-  border-radius: 12px;
-  border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
-  background: color-mix(in srgb, var(--panel-bg) 98%, transparent);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(12px);
+  min-width: 6rem;
+  max-width: 9.5rem;
+  padding: 0.24rem 0.42rem;
+  border-radius: 0.24rem;
+  border: 0;
+  background: #111;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.14);
   pointer-events: none;
-}
-
-.route-stop-label::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  width: 0.58rem;
-  height: 0.58rem;
-  background: color-mix(in srgb, var(--panel-bg) 98%, transparent);
-  border-right: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
-  transform: translateX(-50%) rotate(45deg);
 }
 
 .route-stop-label small,
@@ -948,9 +934,9 @@ a {
 }
 
 .route-stop-label small {
-  margin-bottom: 0.14rem;
-  color: var(--ink-dim);
-  font-size: 0.62rem;
+  margin-bottom: 0.08rem;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 0.58rem;
   font-family: 'Space Mono', monospace;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -961,24 +947,15 @@ a {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 0.79rem;
+  color: #fff;
+  font-size: 0.76rem;
   line-height: 1.2;
 }
 
 .route-stop-label-transfer {
-  min-width: 6.5rem;
-  max-width: 9rem;
-  padding: 0.32rem 0.48rem;
-  border-radius: 10px;
-  border-color: color-mix(in srgb, var(--ink) 8%, transparent);
-  background: color-mix(in srgb, var(--panel-bg) 94%, transparent);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
-  opacity: 0.9;
-}
-
-.route-stop-label-transfer::after {
-  width: 0.46rem;
-  height: 0.46rem;
+  min-width: 5.3rem;
+  max-width: 8rem;
+  opacity: 0.96;
 }
 
 .route-stop-label-transfer small {
@@ -994,14 +971,14 @@ a {
 
 .stop-marker {
   position: relative;
-  width: 1rem;
-  height: 1rem;
+  width: 1.1rem;
+  height: 1.1rem;
 }
 
 .stop-marker-pin {
   display: block;
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 1rem;
+  height: 1rem;
   border-radius: 999px;
   background: var(--marker-color);
   border: 2px solid color-mix(in srgb, var(--bg) 85%, white);
@@ -1017,54 +994,66 @@ a {
     0 0 0 0 color-mix(in srgb, var(--marker-color) 65%, transparent);
 }
 
-.stop-marker-bubble {
+.stop-marker-end .stop-marker-pin {
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--bg) 88%, transparent),
+    0 0 0 0 color-mix(in srgb, var(--marker-color) 65%, transparent);
+}
+
+.stop-marker-label {
   position: absolute;
   left: 50%;
-  bottom: calc(100% + 0.6rem);
-  transform: translateX(-50%);
-  min-width: 7.5rem;
-  max-width: 12rem;
-  padding: 0.4rem 0.6rem;
-  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--panel-bg) 98%, transparent);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(14px);
-  text-align: left;
+  display: grid;
+  justify-items: center;
+  gap: 0.22rem;
   pointer-events: none;
 }
 
-.stop-marker-bubble::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  width: 0.6rem;
-  height: 0.6rem;
-  background: color-mix(in srgb, var(--panel-bg) 98%, transparent);
-  border-right: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
-  transform: translateX(-50%) rotate(45deg);
+.stop-marker-label-start {
+  right: calc(100% + 0.55rem);
+  left: auto;
+  top: -0.05rem;
+  transform: none;
+  justify-items: end;
 }
 
-.stop-marker-bubble small,
-.stop-marker-bubble strong {
-  display: block;
+.stop-marker-label-end {
+  top: calc(100% + 0.55rem);
+  transform: translateX(-50%);
 }
 
-.stop-marker-bubble small {
-  margin-bottom: 0.12rem;
-  font-size: 0.64rem;
-  color: var(--ink-dim);
-  text-transform: uppercase;
+.stop-marker-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.2rem;
+  padding: 0.16rem 0.45rem;
+  border-radius: 0.22rem;
+  background: #111;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
+  max-width: 11rem;
+}
+
+.stop-marker-chip-role {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem;
+  font-weight: 700;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.stop-marker-bubble strong {
+.stop-marker-chip-name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  max-width: 100%;
+}
+
+.stop-marker-label-start .stop-marker-chip-name {
+  text-align: right;
 }
 
 @keyframes marker-pulse {
