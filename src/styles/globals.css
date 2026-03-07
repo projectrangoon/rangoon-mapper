@@ -873,6 +873,13 @@ a {
   transform: translateY(-2px);
 }
 
+.fab-locale span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
 .fab-active {
   background: color-mix(in srgb, var(--ink) 10%, transparent);
 }

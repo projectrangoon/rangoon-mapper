@@ -2,9 +2,16 @@ import type { CSSProperties } from 'react';
 import { Marker } from 'react-map-gl/maplibre';
 
 import { getDistance } from '@/lib/geo';
-import type { BusStop, RoutePath } from '@/types';
+import {
+  formatBoardLabel,
+  formatExitLabel,
+  formatTransferLabel,
+  getLocalizedName,
+} from '@/lib/i18n';
+import type { AppLocale, BusStop, RoutePath } from '@/types';
 
 interface RouteStopMarkersProps {
+  locale: AppLocale;
   routePath: RoutePath | null;
   startStop: BusStop | null;
   endStop: BusStop | null;
@@ -18,7 +25,8 @@ interface RouteStopPoint {
   busStopId: number;
   lat: number;
   lng: number;
-  name: string;
+  nameEn: string;
+  nameMm: string;
   serviceName: number;
   nextServiceName?: number;
   kind: RouteStopKind;
@@ -64,7 +72,8 @@ const collapseConsecutiveStops = (routePath: RoutePath): RouteStopPoint[] => {
       busStopId: step.bus_stop_id,
       lat: step.lat,
       lng: step.lng,
-      name: step.name_en ?? String(step.bus_stop_id),
+      nameEn: step.name_en ?? String(step.bus_stop_id),
+      nameMm: step.name_mm ?? step.name_en ?? String(step.bus_stop_id),
       serviceName: step.service_name,
       kind,
       color: step.color ?? '#d65252',
@@ -119,7 +128,7 @@ export const getVisibleRouteStopPoints = (
       return true;
     }
 
-    if (point.name !== stop.name_en) {
+    if (point.nameEn !== stop.name_en && point.nameMm !== stop.name_mm) {
       return false;
     }
 
@@ -141,20 +150,20 @@ export const getVisibleRouteStopPoints = (
   return points.filter((point) => point.kind === 'transfer');
 };
 
-const checkpointLabel = (point: RouteStopPoint): string | null => {
+const checkpointLabel = (locale: AppLocale, point: RouteStopPoint): string | null => {
   if (point.kind === 'board') {
-    return `Board YBS ${point.serviceName}`;
+    return formatBoardLabel(locale, point.serviceName);
   }
   if (point.kind === 'transfer' && point.nextServiceName) {
-    return `Transfer ${point.serviceName} → ${point.nextServiceName}`;
+    return formatTransferLabel(locale, point.serviceName, point.nextServiceName);
   }
   if (point.kind === 'alight') {
-    return `Exit YBS ${point.serviceName}`;
+    return formatExitLabel(locale, point.serviceName);
   }
   return null;
 };
 
-export default function RouteStopMarkers({ routePath, startStop, endStop, zoom }: RouteStopMarkersProps) {
+export default function RouteStopMarkers({ locale, routePath, startStop, endStop, zoom }: RouteStopMarkersProps) {
   const points = getVisibleRouteStopPoints(routePath, startStop, endStop, zoom);
 
   if (points.length === 0) {
@@ -164,7 +173,7 @@ export default function RouteStopMarkers({ routePath, startStop, endStop, zoom }
   return (
     <>
       {points.map((point) => {
-        const label = checkpointLabel(point);
+        const label = checkpointLabel(locale, point);
         const emphasized = point.kind !== 'pass';
 
         return (
@@ -181,7 +190,7 @@ export default function RouteStopMarkers({ routePath, startStop, endStop, zoom }
               {label && (
                 <div className={`route-stop-label route-stop-label-${point.kind}`}>
                   <small>{label}</small>
-                  <strong>{point.name}</strong>
+                  <strong>{getLocalizedName({ name_en: point.nameEn, name_mm: point.nameMm }, locale)}</strong>
                 </div>
               )}
               <span className={emphasized ? 'route-stop-dot route-stop-dot-emphasis' : 'route-stop-dot'} />

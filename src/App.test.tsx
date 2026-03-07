@@ -25,6 +25,7 @@ const responses = {
   '/data/stops_map.json': { '1': fixtureStop },
   '/data/bus_services.json': { '1': { color: '#000', service_name: 'A', service_no: 1, stops: [fixtureStop] } },
   '/data/unique_stops.json': [fixtureStop],
+  '/data/route_shapes.json': { '1': [{ lat: fixtureStop.lat, lng: fixtureStop.lng }] },
 };
 
 describe('App bootstrap', () => {

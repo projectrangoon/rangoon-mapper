@@ -1,7 +1,10 @@
+import { t } from '@/lib/i18n';
 import type { RoutePath } from '@/types';
+import type { AppLocale } from '@/types';
 import { formatImperialDistance } from '@/lib/units';
 
 interface MetricsGridProps {
+  locale: AppLocale;
   routePath: RoutePath | null;
 }
 
@@ -12,20 +15,20 @@ const estimateMinutes = (routePath: RoutePath): number => {
   return Math.max(1, Math.round(distanceTime + transferPenalty + base));
 };
 
-export default function MetricsGrid({ routePath }: MetricsGridProps) {
+export default function MetricsGrid({ locale, routePath }: MetricsGridProps) {
   if (!routePath) {
     return (
       <div className="metrics-grid">
         <article className="metric-card">
-          <h4>ETA</h4>
+          <h4>{t(locale, 'eta')}</h4>
           <p>--</p>
         </article>
         <article className="metric-card">
-          <h4>Distance</h4>
+          <h4>{t(locale, 'distance')}</h4>
           <p>--</p>
         </article>
         <article className="metric-card">
-          <h4>Transfers</h4>
+          <h4>{t(locale, 'transfers')}</h4>
           <p>--</p>
         </article>
       </div>
@@ -35,15 +38,15 @@ export default function MetricsGrid({ routePath }: MetricsGridProps) {
   return (
     <div className="metrics-grid">
       <article className="metric-card metric-card-highlight">
-        <h4>ETA</h4>
+        <h4>{t(locale, 'eta')}</h4>
         <p>{estimateMinutes(routePath)} min</p>
       </article>
       <article className="metric-card">
-        <h4>Distance</h4>
+        <h4>{t(locale, 'distance')}</h4>
         <p>{formatImperialDistance(routePath.currDistance)}</p>
       </article>
       <article className="metric-card">
-        <h4>Transfers</h4>
+        <h4>{t(locale, 'transfers')}</h4>
         <p>{routePath.currTransfers}</p>
       </article>
     </div>

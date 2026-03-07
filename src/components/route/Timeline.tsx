@@ -1,10 +1,12 @@
 import { useMemo } from 'react';
 
 import TimelineStep from '@/components/route/TimelineStep';
+import { formatRideService, formatWalkTo, getLocalizedStopName, t } from '@/lib/i18n';
 import { formatImperialWalkDistance } from '@/lib/units';
-import type { BusStop, RoutePath } from '@/types';
+import type { AppLocale, BusStop, RoutePath } from '@/types';
 
 interface TimelineProps {
+  locale: AppLocale;
   routePath: RoutePath | null;
   startStop: BusStop | null;
   endStop: BusStop | null;
@@ -16,17 +18,20 @@ interface RouteSegment {
   subtitle: string;
   color?: string;
   stops?: string[];
+  locale: AppLocale;
 }
 
-const getStopLabel = (busStopId?: number, nameEn?: string): string => nameEn ?? String(busStopId ?? '');
+const getStopLabel = (locale: AppLocale, step: RoutePath['path'][number]): string =>
+  getLocalizedStopName(step, locale) || String(step.bus_stop_id ?? '');
 
-const getIntermediateStops = (steps: RoutePath['path']): string[] => {
-  const stopNames = steps.map((step) => getStopLabel(step.bus_stop_id, step.name_en));
+const getIntermediateStops = (steps: RoutePath['path'], locale: AppLocale): string[] => {
+  const stopNames = steps.map((step) => getStopLabel(locale, step));
   const dedupedStopNames = stopNames.filter((stopName, index) => stopName !== stopNames[index - 1]);
   return dedupedStopNames.slice(1, -1);
 };
 
 export const buildTimeline = (
+  locale: AppLocale,
   routePath: RoutePath | null,
   startStop: BusStop | null,
   endStop: BusStop | null,
@@ -42,9 +47,10 @@ export const buildTimeline = (
   if (first && startStop && startStop.bus_stop_id !== first.bus_stop_id) {
     segments.push({
       kind: 'walk',
-      title: `Walk to ${first.name_en ?? first.bus_stop_id}`,
+      title: formatWalkTo(locale, getStopLabel(locale, first)),
       subtitle: formatImperialWalkDistance(first.distance ?? 0),
       color: '#d8d8d8',
+      locale,
     });
   }
 
@@ -58,7 +64,7 @@ export const buildTimeline = (
 
     if (currentService !== stop.service_name) {
       currentService = stop.service_name;
-      from = getStopLabel(stop.bus_stop_id, stop.name_en);
+      from = getStopLabel(locale, stop);
       runStartIndex = index;
     }
 
@@ -67,10 +73,11 @@ export const buildTimeline = (
       const runStops = routePath.path.slice(runStartIndex, index + 1);
       segments.push({
         kind: 'bus',
-        title: `Take YBS ${currentService}`,
-        subtitle: `${from} → ${getStopLabel(stop.bus_stop_id, stop.name_en)}`,
+        title: formatRideService(locale, currentService),
+        subtitle: `${from} → ${getStopLabel(locale, stop)}`,
         color: stop.color,
-        stops: getIntermediateStops(runStops),
+        stops: getIntermediateStops(runStops, locale),
+        locale,
       });
     }
   });
@@ -78,20 +85,21 @@ export const buildTimeline = (
   if (last && endStop && endStop.bus_stop_id !== last.bus_stop_id) {
     segments.push({
       kind: 'walk',
-      title: `Walk to ${endStop.name_en}`,
+      title: formatWalkTo(locale, getLocalizedStopName(endStop, locale)),
       subtitle: formatImperialWalkDistance(last.distance ?? 0),
       color: '#d8d8d8',
+      locale,
     });
   }
 
   return segments;
 };
 
-export default function Timeline({ routePath, startStop, endStop }: TimelineProps) {
-  const segments = useMemo(() => buildTimeline(routePath, startStop, endStop), [routePath, startStop, endStop]);
+export default function Timeline({ locale, routePath, startStop, endStop }: TimelineProps) {
+  const segments = useMemo(() => buildTimeline(locale, routePath, startStop, endStop), [locale, routePath, startStop, endStop]);
 
   if (segments.length === 0) {
-    return <p className="timeline-empty">Select start and end stops to get route details.</p>;
+    return <p className="timeline-empty">{t(locale, 'timelineEmpty')}</p>;
   }
 
   return (

@@ -43,7 +43,7 @@ const routePath: RoutePath = {
 
 describe('buildTimeline', () => {
   it('includes intermediate stops for each transit leg', () => {
-    const segments = buildTimeline(routePath, startStop, endStop);
+    const segments = buildTimeline('en', routePath, startStop, endStop);
 
     expect(segments[0]).toMatchObject({
       kind: 'bus',
@@ -83,7 +83,7 @@ describe('buildTimeline', () => {
       name_en: 'Walk End',
     };
 
-    const segments = buildTimeline(walkingRoutePath, walkingStartStop, walkingEndStop);
+    const segments = buildTimeline('en', walkingRoutePath, walkingStartStop, walkingEndStop);
 
     expect(segments[0]).toMatchObject({ kind: 'walk', subtitle: '151 ft' });
     expect(segments[2]).toMatchObject({ kind: 'walk', subtitle: '0.24 mi' });
@@ -94,7 +94,7 @@ describe('Timeline', () => {
   it('renders the intermediate transit stops in a collapsible transit leg', async () => {
     const user = userEvent.setup();
 
-    render(<Timeline routePath={routePath} startStop={startStop} endStop={endStop} />);
+    render(<Timeline locale="en" routePath={routePath} startStop={startStop} endStop={endStop} />);
 
     const expandedLegs = document.querySelectorAll('.timeline-leg-details-connect-next');
     expect(expandedLegs).toHaveLength(1);

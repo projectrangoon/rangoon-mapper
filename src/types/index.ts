@@ -1,4 +1,5 @@
 export type ServiceNumber = number;
+export type AppLocale = 'en' | 'my';
 
 export interface BusServiceRef {
   color: string;

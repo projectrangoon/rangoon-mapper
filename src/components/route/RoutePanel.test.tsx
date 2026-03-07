@@ -40,6 +40,7 @@ describe('RoutePanel', () => {
   it('shows a compact waypoint editor without duplicating the planned route summary', () => {
     render(
       <RoutePanel
+        locale="en"
         uniqueStops={[startStop as UniqueStop, endStop as UniqueStop]}
         startStop={startStop}
         endStop={endStop}
@@ -63,6 +64,7 @@ describe('RoutePanel', () => {
 
     render(
       <RoutePanel
+        locale="en"
         uniqueStops={[startStop as UniqueStop, endStop as UniqueStop]}
         startStop={startStop}
         endStop={endStop}
@@ -77,5 +79,24 @@ describe('RoutePanel', () => {
     await user.click(screen.getByRole('button', { name: 'Reverse route' }));
 
     expect(onSwapStops).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders localized stop names and labels in Burmese mode', () => {
+    render(
+      <RoutePanel
+        locale="my"
+        uniqueStops={[startStop as UniqueStop, endStop as UniqueStop]}
+        startStop={startStop}
+        endStop={endStop}
+        routePath={routePath}
+        isCalculating={false}
+        onSelectStart={() => undefined}
+        onSelectEnd={() => undefined}
+        onSwapStops={() => undefined}
+      />,
+    );
+
+    expect(screen.getByText('မှတ်တိုင်များ')).toBeInTheDocument();
+    expect(screen.getAllByDisplayValue('ဆူးလေ')).toHaveLength(2);
   });
 });

@@ -22,6 +22,7 @@ describe('AutoComplete', () => {
     const { rerender } = render(
       <AutoComplete
         label="From"
+        locale="en"
         variant="start"
         stops={[stop as UniqueStop]}
         selectedStop={stop}
@@ -35,6 +36,7 @@ describe('AutoComplete', () => {
     rerender(
       <AutoComplete
         label="From"
+        locale="en"
         variant="start"
         stops={[stop as UniqueStop]}
         selectedStop={null}
@@ -53,6 +55,7 @@ describe('AutoComplete', () => {
     render(
       <AutoComplete
         label="From"
+        locale="en"
         variant="start"
         stops={[stop as UniqueStop]}
         selectedStop={stop}
@@ -74,6 +77,7 @@ describe('AutoComplete', () => {
     render(
       <AutoComplete
         label="From"
+        locale="en"
         variant="start"
         stops={[stop as UniqueStop]}
         selectedStop={stop}
@@ -102,6 +106,7 @@ describe('AutoComplete', () => {
     render(
       <AutoComplete
         label="From"
+        locale="en"
         variant="start"
         stops={[stop as UniqueStop, alternativeStop]}
         selectedStop={stop}

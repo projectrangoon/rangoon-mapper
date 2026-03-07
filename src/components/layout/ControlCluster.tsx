@@ -2,10 +2,14 @@ import { Crosshair, Maximize2, Star } from 'lucide-react';
 
 import Compass from '@/components/ui/Compass';
 import Fab from '@/components/ui/Fab';
+import LocaleToggle from '@/components/ui/LocaleToggle';
 import ThemeToggle from '@/components/ui/ThemeToggle';
+import type { AppLocale } from '@/types';
 
 interface ControlClusterProps {
+  locale: AppLocale;
   theme: 'dark' | 'light';
+  onToggleLocale: () => void;
   onToggleTheme: () => void;
   onResetBearing: () => void;
   onResetView: () => void;
@@ -13,7 +17,9 @@ interface ControlClusterProps {
 }
 
 export default function ControlCluster({
+  locale,
   theme,
+  onToggleLocale,
   onToggleTheme,
   onResetBearing,
   onResetView,
@@ -31,6 +37,7 @@ export default function ControlCluster({
         <Fab onClick={onResetBearing} aria-label="Reset Bearing">
           <Crosshair size={18} />
         </Fab>
+        <LocaleToggle locale={locale} onToggle={onToggleLocale} />
         <ThemeToggle theme={theme} onToggle={onToggleTheme} />
       </div>
       <Compass />

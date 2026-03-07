@@ -1,9 +1,12 @@
 import { Command, Search } from 'lucide-react';
 import { forwardRef, useMemo, useState } from 'react';
 
+import { formatStopMeta, getLocalizedStopName, t } from '@/lib/i18n';
+import type { AppLocale } from '@/types';
 import type { UniqueStop } from '@/types';
 
 interface SearchIslandProps {
+  locale: AppLocale;
   query: string;
   results: UniqueStop[];
   onQueryChange: (value: string) => void;
@@ -11,7 +14,7 @@ interface SearchIslandProps {
 }
 
 const SearchIsland = forwardRef<HTMLInputElement, SearchIslandProps>(function SearchIsland(
-  { query, results, onQueryChange, onSelect },
+  { locale, query, results, onQueryChange, onSelect },
   ref,
 ) {
   const [open, setOpen] = useState(false);
@@ -27,8 +30,8 @@ const SearchIsland = forwardRef<HTMLInputElement, SearchIslandProps>(function Se
         ref={ref}
         value={query}
         onChange={(event) => onQueryChange(event.target.value)}
-        placeholder="Search stops, roads, townships"
-        aria-label="Search Stops"
+        placeholder={t(locale, 'searchStopsPlaceholder')}
+        aria-label={t(locale, 'searchStopsAria')}
       />
       <div className="search-kbd">
         <Command size={12} />K
@@ -36,14 +39,12 @@ const SearchIsland = forwardRef<HTMLInputElement, SearchIslandProps>(function Se
 
       {open && query.trim().length > 0 && (
         <ul className="search-results">
-          {shownResults.length === 0 && <li className="empty">No matching stops</li>}
+          {shownResults.length === 0 && <li className="empty">{t(locale, 'searchNoMatch')}</li>}
           {shownResults.map((stop) => (
             <li key={stop.bus_stop_id}>
               <button type="button" onClick={() => onSelect(stop)}>
-                <strong>{stop.name_en}</strong>
-                <small>
-                  {stop.name_mm} · {stop.road_en}
-                </small>
+                <strong>{getLocalizedStopName(stop, locale)}</strong>
+                <small>{formatStopMeta(stop, locale)}</small>
               </button>
             </li>
           ))}

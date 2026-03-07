@@ -2,10 +2,12 @@ import { X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useSearch } from '@/hooks/useSearch';
-import type { BusStop, UniqueStop } from '@/types';
+import { formatStopMeta, getLocalizedStopName, t } from '@/lib/i18n';
+import type { AppLocale, BusStop, UniqueStop } from '@/types';
 
 interface AutoCompleteProps {
   label: string;
+  locale: AppLocale;
   variant: 'start' | 'end';
   stops: UniqueStop[];
   selectedStop: BusStop | null;
@@ -15,6 +17,7 @@ interface AutoCompleteProps {
 
 export default function AutoComplete({
   label,
+  locale,
   variant,
   stops,
   selectedStop,
@@ -45,15 +48,15 @@ export default function AutoComplete({
       return;
     }
 
-    setQuery(selectedStop.name_en);
-  }, [selectedStop]);
+    setQuery(getLocalizedStopName(selectedStop, locale));
+  }, [locale, selectedStop]);
 
   const { results } = useSearch(stops, query);
   const shownResults = useMemo(() => results.slice(0, 8), [results]);
 
   const selectStop = (stop: UniqueStop) => {
     onSelect(stop);
-    setQuery(stop.name_en);
+    setQuery(getLocalizedStopName(stop, locale));
     setOpen(false);
     setActiveIndex(0);
   };
@@ -90,7 +93,7 @@ export default function AutoComplete({
               selectStop(shownResults[activeIndex]);
             }
           }}
-          placeholder="Search bus stop"
+          placeholder={t(locale, 'searchBusStopPlaceholder')}
         />
         {query && (
           <button
@@ -114,13 +117,13 @@ export default function AutoComplete({
       </div>
       {routePlanned && selectedStop && (
         <p className="autocomplete-meta">
-          {selectedStop.road_en} · {selectedStop.township_en}
+          {formatStopMeta(selectedStop, locale)}
         </p>
       )}
 
       {open && query.trim().length > 0 && (
         <ul className="autocomplete-results">
-          {shownResults.length === 0 && <li className="empty">No stop found</li>}
+          {shownResults.length === 0 && <li className="empty">{t(locale, 'searchNoStop')}</li>}
           {shownResults.map((stop, index) => (
             <li key={`${stop.bus_stop_id}-${stop.name_en}`} className={index === activeIndex ? 'active' : ''}>
               <button
@@ -130,8 +133,8 @@ export default function AutoComplete({
                 }}
                 onClick={() => selectStop(stop)}
               >
-                <strong>{stop.name_en}</strong>
-                <small>{stop.road_en} · {stop.township_en}</small>
+                <strong>{getLocalizedStopName(stop, locale)}</strong>
+                <small>{formatStopMeta(stop, locale)}</small>
               </button>
             </li>
           ))}

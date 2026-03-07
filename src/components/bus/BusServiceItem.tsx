@@ -1,9 +1,10 @@
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
 import ServiceStops from '@/components/bus/ServiceStops';
-import type { BusService } from '@/types';
+import type { AppLocale, BusService } from '@/types';
 
 interface BusServiceItemProps {
+  locale: AppLocale;
   serviceId: string;
   service: BusService;
   checked: boolean;
@@ -13,6 +14,7 @@ interface BusServiceItemProps {
 }
 
 export default function BusServiceItem({
+  locale,
   serviceId,
   service,
   checked,
@@ -37,7 +39,7 @@ export default function BusServiceItem({
         </button>
       </div>
 
-      {expanded && <ServiceStops stops={service.stops} />}
+      {expanded && <ServiceStops locale={locale} stops={service.stops} />}
     </li>
   );
 }

@@ -1,6 +1,9 @@
 import { useState, type CSSProperties } from 'react';
 import { Bus, ChevronDown, ChevronRight, Footprints } from 'lucide-react';
 
+import { formatStopCount, t } from '@/lib/i18n';
+import type { AppLocale } from '@/types';
+
 interface TimelineStepProps {
   kind: 'bus' | 'walk';
   title: string;
@@ -8,6 +11,7 @@ interface TimelineStepProps {
   color?: string;
   stops?: string[];
   connectToNext?: boolean;
+  locale: AppLocale;
 }
 
 export default function TimelineStep({
@@ -17,6 +21,7 @@ export default function TimelineStep({
   color,
   stops = [],
   connectToNext = false,
+  locale,
 }: TimelineStepProps) {
   const [expanded, setExpanded] = useState(true);
   const isBusLeg = kind === 'bus';
@@ -35,7 +40,7 @@ export default function TimelineStep({
         {isBusLeg ? <Bus size={12} /> : <Footprints size={12} />}
       </span>
       <div className="content">
-        <span className="timeline-eyebrow">{isBusLeg ? 'Transit leg' : 'Walk leg'}</span>
+        <span className="timeline-eyebrow">{isBusLeg ? t(locale, 'transitLeg') : t(locale, 'walkLeg')}</span>
         <strong>{title}</strong>
         <small>{subtitle}</small>
         {hasIntermediateStops && (
@@ -48,7 +53,7 @@ export default function TimelineStep({
               onClick={() => setExpanded((current) => !current)}
             >
               {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-              <span>{stops.length} stop{stops.length === 1 ? '' : 's'}</span>
+              <span>{formatStopCount(locale, stops.length)}</span>
             </button>
           </div>
         )}

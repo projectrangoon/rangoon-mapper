@@ -2,10 +2,12 @@ import AutoComplete from '@/components/route/AutoComplete';
 import MetricsGrid from '@/components/route/MetricsGrid';
 import Timeline from '@/components/route/Timeline';
 import Panel from '@/components/ui/Panel';
+import { getLocalizedStopName, t } from '@/lib/i18n';
 import { ArrowLeftRight } from 'lucide-react';
-import type { BusStop, RoutePath, UniqueStop } from '@/types';
+import type { AppLocale, BusStop, RoutePath, UniqueStop } from '@/types';
 
 interface RoutePanelProps {
+  locale: AppLocale;
   uniqueStops: UniqueStop[];
   startStop: BusStop | null;
   endStop: BusStop | null;
@@ -17,6 +19,7 @@ interface RoutePanelProps {
 }
 
 export default function RoutePanel({
+  locale,
   uniqueStops,
   startStop,
   endStop,
@@ -27,23 +30,23 @@ export default function RoutePanel({
   onSwapStops,
 }: RoutePanelProps) {
   const routePlanned = Boolean(routePath && startStop && endStop);
-  const destinationLabel = routePlanned && endStop ? endStop.name_en : 'Choose destination';
+  const destinationLabel = routePlanned && endStop ? getLocalizedStopName(endStop, locale) : t(locale, 'chooseDestination');
 
   return (
     <Panel className="route-panel">
       <header className="route-panel-header">
         <div>
-          <p className="route-panel-kicker">Routing To</p>
+          <p className="route-panel-kicker">{t(locale, 'routingTo')}</p>
           <h2>{destinationLabel}</h2>
           {!routePlanned && (
-            <p className="panel-caption">Find the quickest Yangon bus journey across connected services.</p>
+            <p className="panel-caption">{t(locale, 'quickestJourneyCaption')}</p>
           )}
         </div>
-        <div className="route-live-badge">Live</div>
+        <div className="route-live-badge">{t(locale, 'live')}</div>
       </header>
 
       <div className="route-inputs-header">
-        <span>Waypoints</span>
+        <span>{t(locale, 'waypoints')}</span>
         {startStop && endStop && (
           <button
             type="button"
@@ -58,7 +61,8 @@ export default function RoutePanel({
 
       <div className="route-inputs">
         <AutoComplete
-          label="From"
+          label={t(locale, 'from')}
+          locale={locale}
           variant="start"
           stops={uniqueStops}
           selectedStop={startStop}
@@ -66,7 +70,8 @@ export default function RoutePanel({
           onSelect={onSelectStart}
         />
         <AutoComplete
-          label="To"
+          label={t(locale, 'to')}
+          locale={locale}
           variant="end"
           stops={uniqueStops}
           selectedStop={endStop}
@@ -75,13 +80,13 @@ export default function RoutePanel({
         />
       </div>
 
-      {isCalculating && <p className="calculating">Calculating shortest path...</p>}
+      {isCalculating && <p className="calculating">{t(locale, 'calculating')}</p>}
 
-      <MetricsGrid routePath={routePath} />
+      <MetricsGrid locale={locale} routePath={routePath} />
       <div className="timeline-header">
-        <span>Guidance</span>
+        <span>{t(locale, 'guidance')}</span>
       </div>
-      <Timeline routePath={routePath} startStop={startStop} endStop={endStop} />
+      <Timeline locale={locale} routePath={routePath} startStop={startStop} endStop={endStop} />
     </Panel>
   );
 }

@@ -5,9 +5,11 @@ import BusLineLayer from '@/components/map/BusLineLayer';
 import RouteLayer from '@/components/map/RouteLayer';
 import RouteStopMarkers from '@/components/map/RouteStopMarkers';
 import StopMarker from '@/components/map/StopMarker';
-import type { BusServicesMap, BusStop, RoutePath } from '@/types';
+import { getLocalizedStopName } from '@/lib/i18n';
+import type { AppLocale, BusServicesMap, BusStop, RoutePath } from '@/types';
 
 interface MapViewProps {
+  locale: AppLocale;
   theme: 'dark' | 'light';
   center: { lat: number; lng: number };
   zoom: number;
@@ -24,6 +26,7 @@ const DARK_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.
 const LIGHT_STYLE = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
 
 export default function MapView({
+  locale,
   theme,
   center,
   zoom,
@@ -61,11 +64,11 @@ export default function MapView({
       <NavigationControl position="bottom-right" />
 
       <RouteLayer routePath={routePath} startStop={startStop} endStop={endStop} busServices={busServices} />
-      <RouteStopMarkers routePath={routePath} startStop={startStop} endStop={endStop} zoom={zoom} />
+      <RouteStopMarkers locale={locale} routePath={routePath} startStop={startStop} endStop={endStop} zoom={zoom} />
       <BusLineLayer busServices={busServices} selectedServices={selectedServices} />
 
-      {startStop && <StopMarker lat={startStop.lat} lng={startStop.lng} label={startStop.name_en} color="#245dff" variant="start" />}
-      {endStop && <StopMarker lat={endStop.lat} lng={endStop.lng} label={endStop.name_en} color="#161616" variant="end" />}
+      {startStop && <StopMarker lat={startStop.lat} lng={startStop.lng} label={getLocalizedStopName(startStop, locale)} color="#245dff" locale={locale} variant="start" />}
+      {endStop && <StopMarker lat={endStop.lat} lng={endStop.lng} label={getLocalizedStopName(endStop, locale)} color="#161616" locale={locale} variant="end" />}
     </Map>
   );
 }

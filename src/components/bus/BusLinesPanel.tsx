@@ -1,8 +1,10 @@
 import BusServiceItem from '@/components/bus/BusServiceItem';
 import Panel from '@/components/ui/Panel';
-import type { BusServicesMap } from '@/types';
+import { t } from '@/lib/i18n';
+import type { AppLocale, BusServicesMap } from '@/types';
 
 interface BusLinesPanelProps {
+  locale: AppLocale;
   busServices: BusServicesMap;
   selectedServices: Set<string>;
   expandedService: string | null;
@@ -11,6 +13,7 @@ interface BusLinesPanelProps {
 }
 
 export default function BusLinesPanel({
+  locale,
   busServices,
   selectedServices,
   expandedService,
@@ -21,8 +24,8 @@ export default function BusLinesPanel({
 
   return (
     <Panel className="lines-panel">
-      <h2>Bus Lines</h2>
-      <p className="panel-caption">Toggle services to draw lines and animate vehicles on the map.</p>
+      <h2>{t(locale, 'busLines')}</h2>
+      <p className="panel-caption">{t(locale, 'busLinesCaption')}</p>
 
       <ul className="services-list">
         {serviceIds.map((serviceId) => {
@@ -34,6 +37,7 @@ export default function BusLinesPanel({
           return (
             <BusServiceItem
               key={serviceId}
+              locale={locale}
               serviceId={serviceId}
               service={service}
               checked={selectedServices.has(serviceId)}

@@ -11,6 +11,7 @@ import MapView from '@/components/map/MapView';
 import RoutePanel from '@/components/route/RoutePanel';
 import HalftoneOverlay from '@/components/ui/HalftoneOverlay';
 import SearchIsland from '@/components/ui/SearchIsland';
+import { useLocale } from '@/hooks/useLocale';
 import { useSearch } from '@/hooks/useSearch';
 import { useRouteCalculation } from '@/hooks/useRouteCalculation';
 import { useTheme } from '@/hooks/useTheme';
@@ -65,6 +66,7 @@ export default function MainPage() {
   const clearServices = useBusStore((state) => state.clearServices);
 
   const { theme, toggleTheme } = useTheme();
+  const { locale, toggleLocale } = useLocale();
   const { isCalculating } = useRouteCalculation();
 
   const selectedServicesKey = useMemo(
@@ -202,6 +204,7 @@ export default function MainPage() {
   const topSearch = (
     <SearchIsland
       ref={searchInputRef}
+      locale={locale}
       query={searchQuery}
       results={searchResults}
       onQueryChange={setSearchQuery}
@@ -212,6 +215,7 @@ export default function MainPage() {
   const panelBody =
     mode === 'route' ? (
       <RoutePanel
+        locale={locale}
         uniqueStops={uniqueStops}
         startStop={startStop}
         endStop={endStop}
@@ -240,6 +244,7 @@ export default function MainPage() {
       />
     ) : (
       <BusLinesPanel
+        locale={locale}
         busServices={busServices ?? {}}
         selectedServices={selectedServices}
         expandedService={expandedService}
@@ -268,6 +273,7 @@ export default function MainPage() {
   const mapArea = (
     <>
       <MapView
+        locale={locale}
         theme={theme}
         center={center}
         zoom={zoom}
@@ -287,7 +293,9 @@ export default function MainPage() {
 
   const controls = (
     <ControlCluster
+      locale={locale}
       theme={theme}
+      onToggleLocale={toggleLocale}
       onToggleTheme={toggleTheme}
       onTogglePanel={() => setPanelOpen(!panelOpen)}
       onResetBearing={() => mapRef.current?.easeTo({ bearing: 0, pitch: 0, duration: 500 })}

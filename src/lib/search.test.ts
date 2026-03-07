@@ -24,4 +24,9 @@ describe('search utilities', () => {
     expect(results.length).toBeGreaterThan(0);
     expect(results.some((stop) => stop.name_mm.includes('ဈေး'))).toBe(true);
   });
+
+  it('finds roads and townships in both locales', () => {
+    expect(searchBusStops(uniqueStops, 'Lanmadaw').some((stop) => stop.township_en === 'Lanmadaw')).toBe(true);
+    expect(searchBusStops(uniqueStops, 'လမ်းမတော်').some((stop) => stop.township_mm === 'လမ်းမတော်')).toBe(true);
+  });
 });

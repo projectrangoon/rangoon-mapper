@@ -17,8 +17,17 @@ export const searchBusStops = (allStops: UniqueStop[], rawSearchString: string):
 
   return allStops.filter((stop) => {
     if (isEnglish(searchString)) {
-      return pattern.test(stop.name_en);
+      return (
+        pattern.test(stop.name_en) ||
+        pattern.test(stop.road_en) ||
+        pattern.test(stop.township_en)
+      );
     }
-    return pattern.test(stop.name_mm);
+
+    return (
+      pattern.test(stop.name_mm) ||
+      pattern.test(stop.road_mm) ||
+      pattern.test(stop.township_mm)
+    );
   });
 };
