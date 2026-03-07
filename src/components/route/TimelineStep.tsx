@@ -7,9 +7,17 @@ interface TimelineStepProps {
   subtitle: string;
   color?: string;
   stops?: string[];
+  connectToNext?: boolean;
 }
 
-export default function TimelineStep({ kind, title, subtitle, color, stops = [] }: TimelineStepProps) {
+export default function TimelineStep({
+  kind,
+  title,
+  subtitle,
+  color,
+  stops = [],
+  connectToNext = false,
+}: TimelineStepProps) {
   const [expanded, setExpanded] = useState(true);
   const isBusLeg = kind === 'bus';
   const hasIntermediateStops = isBusLeg && stops.length > 0;
@@ -48,7 +56,7 @@ export default function TimelineStep({ kind, title, subtitle, color, stops = [] 
       {hasIntermediateStops && expanded && (
         <div
           id={stopsId}
-          className="timeline-leg-details"
+          className={`timeline-leg-details${connectToNext ? ' timeline-leg-details-connect-next' : ''}`}
         >
           <span className="timeline-leg-line" aria-hidden="true" />
           <span className="timeline-leg-icon-spacer" aria-hidden="true" />

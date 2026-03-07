@@ -697,6 +697,10 @@ a {
   z-index: 0;
 }
 
+.timeline-leg-details-connect-next .timeline-leg-line {
+  bottom: -4rem;
+}
+
 .timeline-leg-icon-spacer {
   grid-column: 2;
   grid-row: 1;

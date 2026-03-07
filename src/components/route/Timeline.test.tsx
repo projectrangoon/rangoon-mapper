@@ -66,6 +66,9 @@ describe('Timeline', () => {
 
     render(<Timeline routePath={routePath} startStop={startStop} endStop={endStop} />);
 
+    const expandedLegs = document.querySelectorAll('.timeline-leg-details-connect-next');
+    expect(expandedLegs).toHaveLength(1);
+
     expect(screen.getByLabelText('Take YBS 18 stops')).toBeInTheDocument();
     expect(screen.getByText('Stop A')).toBeInTheDocument();
     expect(screen.getByText('Stop B')).toBeInTheDocument();

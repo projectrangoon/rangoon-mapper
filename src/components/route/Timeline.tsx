@@ -98,7 +98,11 @@ export default function Timeline({ routePath, startStop, endStop }: TimelineProp
       <div className="timeline-guide" aria-hidden="true" />
       <ol className="timeline">
       {segments.map((segment, index) => (
-        <TimelineStep key={`${segment.title}-${index}`} {...segment} />
+        <TimelineStep
+          key={`${segment.title}-${index}`}
+          {...segment}
+          connectToNext={segment.kind === 'bus' && segments[index + 1]?.kind === 'bus'}
+        />
       ))}
       </ol>
     </div>
