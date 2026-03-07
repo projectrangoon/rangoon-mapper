@@ -11,15 +11,15 @@ interface StopMarkerProps {
 
 export default function StopMarker({ lat, lng, label, color, variant }: StopMarkerProps) {
   return (
-    <Marker latitude={lat} longitude={lng} anchor="bottom">
+    <Marker latitude={lat} longitude={lng} anchor="center">
       <div
         className={`stop-marker stop-marker-${variant}`}
         style={{ '--marker-color': color } as CSSProperties}
         title={label}
+        aria-label={`${variant === 'start' ? 'Start' : 'Destination'}: ${label}`}
       >
         <div className={`stop-marker-label stop-marker-label-${variant}`}>
           <span className="stop-marker-chip stop-marker-chip-role">{variant === 'start' ? 'YOU' : 'TARGET'}</span>
-          <span className="stop-marker-chip stop-marker-chip-name">{label}</span>
         </div>
         <span className="stop-marker-pin" />
       </div>

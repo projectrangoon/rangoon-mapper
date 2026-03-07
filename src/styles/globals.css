@@ -971,101 +971,70 @@ a {
 
 .stop-marker {
   position: relative;
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 0.95rem;
+  height: 0.95rem;
 }
 
 .stop-marker-pin {
   display: block;
-  width: 1rem;
-  height: 1rem;
+  width: 0.95rem;
+  height: 0.95rem;
   border-radius: 999px;
   background: var(--marker-color);
-  border: 2px solid color-mix(in srgb, var(--bg) 85%, white);
-  box-shadow: 0 0 0 0 color-mix(in srgb, var(--marker-color) 65%, transparent);
-  animation: marker-pulse 1.8s infinite;
+  border: 2px solid color-mix(in srgb, var(--bg) 88%, white);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--bg) 92%, transparent);
 }
 
 .stop-marker-start .stop-marker-pin {
   background: transparent;
   border-color: var(--marker-color);
   box-shadow:
-    0 0 0 3px color-mix(in srgb, var(--bg) 85%, transparent),
-    0 0 0 0 color-mix(in srgb, var(--marker-color) 65%, transparent);
+    0 0 0 2px color-mix(in srgb, var(--bg) 92%, transparent),
+    inset 0 0 0 2px color-mix(in srgb, var(--bg) 92%, transparent);
 }
 
 .stop-marker-end .stop-marker-pin {
-  box-shadow:
-    0 0 0 2px color-mix(in srgb, var(--bg) 88%, transparent),
-    0 0 0 0 color-mix(in srgb, var(--marker-color) 65%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--bg) 92%, transparent);
 }
 
 .stop-marker-label {
   position: absolute;
-  left: 50%;
-  display: grid;
-  justify-items: center;
-  gap: 0.22rem;
+  top: 50%;
+  display: flex;
+  align-items: center;
   pointer-events: none;
 }
 
 .stop-marker-label-start {
-  right: calc(100% + 0.55rem);
-  left: auto;
-  top: -0.05rem;
-  transform: none;
-  justify-items: end;
+  right: calc(100% + 0.35rem);
+  transform: translateY(-65%);
 }
 
 .stop-marker-label-end {
-  top: calc(100% + 0.55rem);
-  transform: translateX(-50%);
+  left: calc(100% + 0.35rem);
+  transform: translateY(-65%);
 }
 
 .stop-marker-chip {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 1.2rem;
-  padding: 0.16rem 0.45rem;
-  border-radius: 0.22rem;
+  min-height: 1rem;
+  padding: 0.08rem 0.38rem;
+  border-radius: 0.18rem;
   background: #111;
   color: #fff;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
-  max-width: 11rem;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
+  white-space: nowrap;
 }
 
 .stop-marker-chip-role {
   font-family: 'Space Mono', monospace;
-  font-size: 0.58rem;
+  font-size: 0.54rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-}
-
-.stop-marker-chip-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 0.78rem;
-  font-weight: 600;
-  max-width: 100%;
-}
-
-.stop-marker-label-start .stop-marker-chip-name {
-  text-align: right;
-}
-
-@keyframes marker-pulse {
-  0% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--marker-color) 65%, transparent);
-  }
-  70% {
-    box-shadow: 0 0 0 12px color-mix(in srgb, var(--marker-color) 0%, transparent);
-  }
-  100% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--marker-color) 0%, transparent);
-  }
 }
 
 .bus-point {
