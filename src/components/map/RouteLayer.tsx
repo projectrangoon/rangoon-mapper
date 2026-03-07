@@ -109,36 +109,36 @@ const getAnchoredShapeRunCoordinates = (
     searchStartIndex = match.index;
   }
 
-  const startIndex = matches[0]!.index;
-  const endIndex = matches[matches.length - 1]!.index;
-  if (startIndex === endIndex) {
+  if (matches.length < 2) {
     return null;
   }
 
   const anchoredShape: [number, number][] = [];
-  const matchedStopsByIndex = matches.reduce<Map<number, [number, number][]>>((accumulator, { index, step }) => {
-    if (typeof step.lng !== 'number' || typeof step.lat !== 'number') {
-      return accumulator;
+  const firstStep = matches[0]!.step;
+  if (typeof firstStep.lng !== 'number' || typeof firstStep.lat !== 'number') {
+    return null;
+  }
+
+  appendCoordinate(anchoredShape, [firstStep.lng, firstStep.lat]);
+
+  for (let index = 1; index < matches.length; index += 1) {
+    const previousMatch = matches[index - 1]!;
+    const currentMatch = matches[index]!;
+
+    if (currentMatch.index > previousMatch.index) {
+      shapeCoordinates
+        .slice(previousMatch.index + 1, currentMatch.index)
+        .forEach((shapeCoordinate) => appendCoordinate(anchoredShape, shapeCoordinate));
     }
 
-    const localIndex = index - startIndex;
-    const stopsAtIndex = accumulator.get(localIndex) ?? [];
-    stopsAtIndex.push([step.lng, step.lat]);
-    accumulator.set(localIndex, stopsAtIndex);
-    return accumulator;
-  }, new Map<number, [number, number][]>());
-
-  shapeCoordinates.slice(startIndex, endIndex + 1).forEach((shapeCoordinate, localIndex) => {
-    const anchoredStops = matchedStopsByIndex.get(localIndex);
-    if (anchoredStops && anchoredStops.length > 0) {
-      anchoredStops.forEach((stopCoordinate) => appendCoordinate(anchoredShape, stopCoordinate));
-      return;
+    if (typeof currentMatch.step.lng !== 'number' || typeof currentMatch.step.lat !== 'number') {
+      return null;
     }
 
-    appendCoordinate(anchoredShape, shapeCoordinate);
-  });
+    appendCoordinate(anchoredShape, [currentMatch.step.lng, currentMatch.step.lat]);
+  }
 
-  return anchoredShape;
+  return anchoredShape.length >= 2 ? anchoredShape : null;
 };
 
 const getServiceRunCoordinates = (
