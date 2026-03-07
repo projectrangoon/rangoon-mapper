@@ -307,6 +307,7 @@ a {
 .route-inputs {
   display: grid;
   gap: 0.7rem;
+  isolation: isolate;
 }
 
 .route-inputs-header {
@@ -366,6 +367,11 @@ a {
 
 .autocomplete {
   position: relative;
+  z-index: 0;
+}
+
+.autocomplete:focus-within {
+  z-index: 20;
 }
 
 .autocomplete label {

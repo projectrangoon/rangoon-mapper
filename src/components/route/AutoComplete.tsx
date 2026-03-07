@@ -108,7 +108,13 @@ export default function AutoComplete({
           {shownResults.length === 0 && <li className="empty">No stop found</li>}
           {shownResults.map((stop, index) => (
             <li key={`${stop.bus_stop_id}-${stop.name_en}`} className={index === activeIndex ? 'active' : ''}>
-              <button type="button" onClick={() => selectStop(stop)}>
+              <button
+                type="button"
+                onMouseDown={(event) => {
+                  event.preventDefault();
+                }}
+                onClick={() => selectStop(stop)}
+              >
                 <strong>{stop.name_en}</strong>
                 <small>{stop.road_en} · {stop.township_en}</small>
               </button>

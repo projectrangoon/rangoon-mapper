@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import AutoComplete from '@/components/route/AutoComplete';
@@ -65,5 +65,36 @@ describe('AutoComplete', () => {
 
     expect(screen.getByPlaceholderText('Search bus stop')).toHaveValue('');
     expect(onSelect).toHaveBeenCalledWith(null);
+  });
+
+  it('selects a shown result by click without losing the interaction to blur', async () => {
+    const user = userEvent.setup();
+    const onSelect = vi.fn();
+    const alternativeStop: UniqueStop = {
+      ...stop,
+      bus_stop_id: 2,
+      name_en: 'Kone Zay Tan',
+      road_en: 'Anawrahta Road',
+    };
+
+    render(
+      <AutoComplete
+        label="From"
+        variant="start"
+        stops={[stop as UniqueStop, alternativeStop]}
+        selectedStop={stop}
+        routePlanned={false}
+        onSelect={onSelect}
+      />,
+    );
+
+    await user.clear(screen.getByPlaceholderText('Search bus stop'));
+    await user.type(screen.getByPlaceholderText('Search bus stop'), 'kone');
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /Kone Zay Tan/i })).toBeInTheDocument();
+    });
+    await user.click(screen.getByRole('button', { name: /Kone Zay Tan/i }));
+
+    expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ bus_stop_id: 2, name_en: 'Kone Zay Tan' }));
   });
 });
