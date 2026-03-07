@@ -19,6 +19,7 @@ interface RouteProperties {
 const WALK_COLOR = '#2f343d';
 const SHAPE_MATCH_DISTANCE_KM = 1.5;
 const MAX_SHAPE_START_CANDIDATES = 12;
+const CLOSED_SHAPE_DISTANCE_KM = 0.5;
 
 interface ShapeMatch {
   coordinates: [number, number][];
@@ -119,6 +120,30 @@ const appendCoordinate = (
   }
 
   coordinates.push(coordinate);
+};
+
+const getMaxAdjacentDistanceKm = (coordinates: [number, number][]): number => {
+  let maxDistance = 0;
+
+  for (let index = 1; index < coordinates.length; index += 1) {
+    const [previousLng, previousLat] = coordinates[index - 1]!;
+    const [currentLng, currentLat] = coordinates[index]!;
+    const distance = getDistance(previousLat, previousLng, currentLat, currentLng);
+    maxDistance = Math.max(maxDistance, distance);
+  }
+
+  return maxDistance;
+};
+
+const isShapeClosed = (shapeCoordinates: [number, number][]): boolean => {
+  if (shapeCoordinates.length < 2) {
+    return false;
+  }
+
+  const [firstLng, firstLat] = shapeCoordinates[0]!;
+  const [lastLng, lastLat] = shapeCoordinates[shapeCoordinates.length - 1]!;
+
+  return getDistance(firstLat, firstLng, lastLat, lastLng) <= CLOSED_SHAPE_DISTANCE_KM;
 };
 
 const getShapePointCandidates = (
@@ -287,18 +312,38 @@ const matchShapeRun = (
     for (let index = 1; index < matches.length; index += 1) {
       const previousMatch = matches[index - 1]!;
       const currentMatch = matches[index]!;
+      const segmentCoordinates: [number, number][] = [];
+
+      if (typeof previousMatch.step.lng !== 'number' || typeof previousMatch.step.lat !== 'number') {
+        return;
+      }
+
+      appendCoordinate(segmentCoordinates, [previousMatch.step.lng, previousMatch.step.lat]);
 
       if (currentMatch.index > previousMatch.index) {
         shapeCoordinates
           .slice(previousMatch.index + 1, currentMatch.index)
-          .forEach((shapeCoordinate) => appendCoordinate(anchoredShape, shapeCoordinate));
+          .forEach((shapeCoordinate) => appendCoordinate(segmentCoordinates, shapeCoordinate));
       }
 
       if (typeof currentMatch.step.lng !== 'number' || typeof currentMatch.step.lat !== 'number') {
         return;
       }
 
-      appendCoordinate(anchoredShape, [currentMatch.step.lng, currentMatch.step.lat]);
+      appendCoordinate(segmentCoordinates, [currentMatch.step.lng, currentMatch.step.lat]);
+
+      const directStepDistanceKm = getDistance(
+        previousMatch.step.lat,
+        previousMatch.step.lng,
+        currentMatch.step.lat,
+        currentMatch.step.lng,
+      );
+      const allowedSegmentGapKm = Math.max(0.75, directStepDistanceKm * 4 + 0.35);
+      if (getMaxAdjacentDistanceKm(segmentCoordinates) > allowedSegmentGapKm) {
+        return;
+      }
+
+      segmentCoordinates.forEach((coordinate) => appendCoordinate(anchoredShape, coordinate));
     }
 
     if (anchoredShape.length < 2) {
@@ -338,13 +383,14 @@ const getAnchoredShapeRunCoordinates = (
 
   const reversedShapeCoordinates = [...shapeCoordinates].reverse();
   const isCircularService = service.stops[0]?.bus_stop_id === service.stops[service.stops.length - 1]?.bus_stop_id;
+  const hasClosedShape = isShapeClosed(shapeCoordinates);
   const constrainedSpanLimit = getRunSpanLimit(service, runSteps);
   const variants: Array<{ coordinates: [number, number][]; maxSpan?: number }> = [
     { coordinates: shapeCoordinates },
     { coordinates: reversedShapeCoordinates },
   ];
 
-  if (isCircularService) {
+  if (isCircularService && hasClosedShape) {
     variants.push({
       coordinates: shapeCoordinates.concat(shapeCoordinates),
       maxSpan: shapeCoordinates.length,
@@ -387,6 +433,93 @@ const getAnchoredShapeRunCoordinates = (
   return bestMatch?.coordinates ?? null;
 };
 
+interface ServiceStopMatch {
+  coordinates: [number, number][];
+  span: number;
+}
+
+const matchServiceRunCoordinates = (
+  service: BusService | undefined,
+  runSteps: RouteStep[],
+): [number, number][] | null => {
+  if (!service || runSteps.length === 0 || service.stops.length === 0) {
+    return null;
+  }
+
+  const isCircularService = service.stops[0]?.bus_stop_id === service.stops[service.stops.length - 1]?.bus_stop_id;
+  const variants: Array<{ stops: BusService['stops']; maxSpan?: number }> = [{ stops: service.stops }];
+
+  if (isCircularService) {
+    variants.push({
+      stops: service.stops.concat(service.stops.slice(1)),
+      maxSpan: service.stops.length,
+    });
+  }
+
+  const bestMatch = variants.reduce<ServiceStopMatch | null>((currentBest, variant) => {
+    const startCandidates = variant.stops
+      .map((stop, index) => (stop.bus_stop_id === runSteps[0]?.bus_stop_id ? index : -1))
+      .filter((index) => index !== -1);
+
+    startCandidates.forEach((startIndex) => {
+      let states = [startIndex];
+
+      for (let stepIndex = 1; stepIndex < runSteps.length; stepIndex += 1) {
+        const step = runSteps[stepIndex];
+        const nextStates = new Set<number>();
+
+        states.forEach((stateIndex) => {
+          for (let index = stateIndex + 1; index < variant.stops.length; index += 1) {
+            if (variant.stops[index]?.bus_stop_id !== step?.bus_stop_id) {
+              continue;
+            }
+
+            const span = index - startIndex;
+            if (typeof variant.maxSpan === 'number' && span > variant.maxSpan) {
+              break;
+            }
+
+            nextStates.add(index);
+          }
+        });
+
+        states = Array.from(nextStates.values()).sort((left, right) => left - right);
+        if (states.length === 0) {
+          return;
+        }
+      }
+
+      const endIndex = states[0];
+      if (typeof endIndex !== 'number') {
+        return;
+      }
+
+      const span = endIndex - startIndex;
+      if (typeof variant.maxSpan === 'number' && span > variant.maxSpan) {
+        return;
+      }
+
+      const coordinates: [number, number][] = [];
+      variant.stops
+        .slice(startIndex, endIndex + 1)
+        .forEach((stop) => appendCoordinate(coordinates, [stop.lng, stop.lat]));
+
+      if (coordinates.length < 2) {
+        return;
+      }
+
+      const candidate: ServiceStopMatch = { coordinates, span };
+      if (!currentBest || candidate.span < currentBest.span) {
+        currentBest = candidate;
+      }
+    });
+
+    return currentBest;
+  }, null);
+
+  return bestMatch?.coordinates ?? null;
+};
+
 const getServiceRunCoordinates = (
   service: BusService | undefined,
   runSteps: RouteStep[],
@@ -396,24 +529,13 @@ const getServiceRunCoordinates = (
     return shapeCoordinates;
   }
 
+  const matchedServiceCoordinates = matchServiceRunCoordinates(service, runSteps);
+  if (matchedServiceCoordinates && matchedServiceCoordinates.length >= 2) {
+    return matchedServiceCoordinates;
+  }
+
   const fallbackCoordinates = getCoordinatesFromSteps(runSteps);
-  const first = runSteps[0];
-  const last = runSteps[runSteps.length - 1];
-  if (!service || !first || !last) {
-    return fallbackCoordinates;
-  }
-
-  const startIndex = service.stops.findIndex((stop) => stop.bus_stop_id === first.bus_stop_id);
-  const endIndex = service.stops.findIndex((stop) => stop.bus_stop_id === last.bus_stop_id);
-  if (startIndex === -1 || endIndex === -1) {
-    return fallbackCoordinates;
-  }
-
-  const lowerIndex = Math.min(startIndex, endIndex);
-  const upperIndex = Math.max(startIndex, endIndex);
-  const slicedStops = service.stops.slice(lowerIndex, upperIndex + 1);
-  const coordinates = slicedStops.map((stop) => [stop.lng, stop.lat] as [number, number]);
-  return startIndex <= endIndex ? coordinates : coordinates.reverse();
+  return fallbackCoordinates;
 };
 
 export const buildRouteFeatures = (

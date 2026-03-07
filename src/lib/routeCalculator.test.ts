@@ -208,4 +208,94 @@ describe('calculateRoute', () => {
     expect(route?.path.map((step) => step.bus_stop_id)).toEqual([1, 2, 3]);
     expect(route?.path.at(-1)?.walk).toBe(true);
   });
+
+  it('prefers a meaningfully shorter trip even when it needs one extra transfer', () => {
+    const weightedBusStopsMap: BusStopsMap = {
+      1: makeStop(1, [
+        { service_name: 7, color: '#ff0000', sequence: 1 },
+        { service_name: 8, color: '#00aa00', sequence: 1 },
+      ]),
+      2: makeStop(2, [{ service_name: 7, color: '#ff0000', sequence: 2 }]),
+      3: makeStop(3, [{ service_name: 7, color: '#ff0000', sequence: 3 }]),
+      4: makeStop(4, [
+        { service_name: 7, color: '#ff0000', sequence: 4 },
+        { service_name: 9, color: '#0000ff', sequence: 2 },
+      ]),
+      5: makeStop(5, [{ service_name: 8, color: '#00aa00', sequence: 2 }]),
+      6: makeStop(6, [
+        { service_name: 8, color: '#00aa00', sequence: 3 },
+        { service_name: 9, color: '#0000ff', sequence: 1 },
+      ]),
+    };
+
+    const weightedGraph: AdjacencyList = {
+      '1': [
+        {
+          ...weightedBusStopsMap[2]!,
+          service_name: 7,
+          color: '#ff0000',
+          sequence: 2,
+          distance: 7,
+        },
+        {
+          ...weightedBusStopsMap[5]!,
+          service_name: 8,
+          color: '#00aa00',
+          sequence: 2,
+          distance: 2,
+        },
+      ],
+      '2': [
+        {
+          ...weightedBusStopsMap[3]!,
+          service_name: 7,
+          color: '#ff0000',
+          sequence: 3,
+          distance: 7,
+        },
+      ],
+      '3': [
+        {
+          ...weightedBusStopsMap[4]!,
+          service_name: 7,
+          color: '#ff0000',
+          sequence: 4,
+          distance: 7,
+        },
+      ],
+      '4': [],
+      '5': [
+        {
+          ...weightedBusStopsMap[6]!,
+          service_name: 8,
+          color: '#00aa00',
+          sequence: 3,
+          distance: 2,
+        },
+      ],
+      '6': [
+        {
+          ...weightedBusStopsMap[4]!,
+          service_name: 9,
+          color: '#0000ff',
+          sequence: 2,
+          distance: 2,
+        },
+      ],
+    };
+
+    const route = calculateRoute(weightedGraph, weightedBusStopsMap, weightedBusStopsMap[1]!, weightedBusStopsMap[4]!, {
+      walkingDistance: 0,
+    });
+
+    expect(route?.currTransfers).toBe(1);
+    expect(route?.path.map((step) => `${step.service_name}:${step.bus_stop_id}`)).toEqual([
+      '8:1',
+      '8:5',
+      '8:6',
+      '8:4',
+      '9:4',
+    ]);
+    expect(route?.currDistance).toBeCloseTo(6, 5);
+  });
 });

@@ -13,6 +13,7 @@ interface RouteCandidate {
 
 interface RouteWeights {
   walkingDistance?: number;
+  busDistanceCost?: number;
   perStopCost?: number;
   perTransferCost?: number;
   walkingCost?: number;
@@ -52,8 +53,9 @@ export const calculateRoute = (
 ): RoutePath | null => {
   const {
     walkingDistance = 0.75,
-    perStopCost = 0.35,
-    perTransferCost = 10,
+    busDistanceCost = 0.7,
+    perStopCost = 0.25,
+    perTransferCost = 2.5,
     walkingCost = 7.5,
   } = options;
 
@@ -151,12 +153,12 @@ export const calculateRoute = (
 
       if (lastKnownServiceName !== neighbour.service_name) {
         candidate.currTransfers = top.currTransfers + 1;
-        candidate.currCost = top.currCost + perTransferCost;
+        candidate.currCost = top.currCost + (lastKnownServiceName === 0 ? 0 : perTransferCost);
       } else {
-        candidate.currCost = top.currCost + neighbour.distance * 0.005;
+        candidate.currCost = top.currCost;
       }
 
-      candidate.currCost += perStopCost;
+      candidate.currCost += neighbour.distance * busDistanceCost + perStopCost;
       queue.push(candidate);
     });
   }
