@@ -312,15 +312,15 @@ a {
 }
 
 .route-waypoint-glyph-start {
-  color: #6ce8ff;
+  color: #245dff;
   background: transparent;
-  box-shadow: 0 0 0 4px color-mix(in srgb, #6ce8ff 16%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, #245dff 14%, transparent);
 }
 
 .route-waypoint-glyph-end {
-  color: #ffd66c;
-  background: #ffd66c;
-  box-shadow: 0 0 0 4px color-mix(in srgb, #ffd66c 16%, transparent);
+  color: #161616;
+  background: #161616;
+  box-shadow: 0 0 0 4px color-mix(in srgb, #161616 12%, transparent);
 }
 
 .route-waypoint-block small,
@@ -408,13 +408,13 @@ a {
 }
 
 .waypoint-marker-start {
-  color: #6ce8ff;
+  color: #245dff;
   background: transparent;
 }
 
 .waypoint-marker-end {
-  color: #ffd66c;
-  background: #ffd66c;
+  color: #161616;
+  background: #161616;
 }
 
 .autocomplete-meta {

@@ -15,6 +15,8 @@ interface RouteProperties {
   walk: boolean;
 }
 
+const WALK_COLOR = '#2f343d';
+
 const toFeature = (coords: [number, number][], color: string, walk: boolean): Feature<LineString, RouteProperties> => ({
   type: 'Feature',
   geometry: {
@@ -115,7 +117,7 @@ export const buildRouteFeatures = (
           [startStop.lng, startStop.lat],
           [first.lng, first.lat],
         ],
-        '#f0f0f0',
+        WALK_COLOR,
         true,
       ),
     );
@@ -129,7 +131,7 @@ export const buildRouteFeatures = (
           [last.lng, last.lat],
           [endStop.lng, endStop.lat],
         ],
-        '#f0f0f0',
+        WALK_COLOR,
         true,
       ),
     );
@@ -151,13 +153,45 @@ export default function RouteLayer({ routePath, startStop, endStop, busServices 
   return (
     <Source id="route-layer" type="geojson" data={data}>
       <Layer
+        id="route-walk-casing"
+        type="line"
+        filter={['==', ['get', 'walk'], true]}
+        layout={{
+          'line-cap': 'round',
+          'line-join': 'round',
+        }}
+        paint={{
+          'line-color': 'rgba(255, 255, 255, 0.92)',
+          'line-width': 7,
+          'line-opacity': 0.95,
+        }}
+      />
+      <Layer
         id="route-walk"
         type="line"
         filter={['==', ['get', 'walk'], true]}
+        layout={{
+          'line-cap': 'round',
+          'line-join': 'round',
+        }}
         paint={{
           'line-color': ['get', 'color'],
-          'line-width': 3,
-          'line-dasharray': [1, 2],
+          'line-width': 3.4,
+          'line-dasharray': [0.8, 1.6],
+          'line-opacity': 1,
+        }}
+      />
+      <Layer
+        id="route-bus-casing"
+        type="line"
+        filter={['==', ['get', 'walk'], false]}
+        layout={{
+          'line-cap': 'round',
+          'line-join': 'round',
+        }}
+        paint={{
+          'line-color': 'rgba(255, 255, 255, 0.82)',
+          'line-width': 6,
           'line-opacity': 0.9,
         }}
       />
@@ -165,6 +199,10 @@ export default function RouteLayer({ routePath, startStop, endStop, busServices 
         id="route-bus"
         type="line"
         filter={['==', ['get', 'walk'], false]}
+        layout={{
+          'line-cap': 'round',
+          'line-join': 'round',
+        }}
         paint={{
           'line-color': ['get', 'color'],
           'line-width': 4,
