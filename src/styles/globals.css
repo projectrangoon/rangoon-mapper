@@ -111,7 +111,7 @@ a {
 .layout-controls {
   position: absolute;
   right: 1rem;
-  bottom: 1rem;
+  bottom: 6.9rem;
   z-index: 60;
 }
 
@@ -1081,7 +1081,7 @@ a {
   }
 
   .layout-controls {
-    bottom: 1rem;
+    bottom: 6.1rem;
     right: 0.65rem;
   }
 
