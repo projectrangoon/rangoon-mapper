@@ -392,6 +392,113 @@ describe('buildRouteFeatures', () => {
     ]);
   });
 
+  it('prefers the plausible nearby branch when a later loop point is only slightly closer', () => {
+    const loopBranchStop: BusStop = {
+      ...startStop,
+      bus_stop_id: 5,
+      lat: 16.83,
+      lng: 96.13,
+      name_en: 'Loop Branch',
+      services: [{ service_name: 1, color: '#44ccaa', sequence: 4 }],
+    };
+
+    const fartherEndStop: BusStop = {
+      ...endStop,
+      lat: 16.84,
+      lng: 96.14,
+    };
+
+    const routePath: RoutePath = {
+      currCost: 1,
+      currDistance: 2,
+      currTransfers: 0,
+      path: [
+        { bus_stop_id: 1, service_name: 1, lat: startStop.lat, lng: startStop.lng, color: '#44ccaa' },
+        { bus_stop_id: 2, service_name: 1, lat: 16.81, lng: 96.11, color: '#44ccaa' },
+        { bus_stop_id: 4, service_name: 1, lat: 16.82, lng: 96.12, color: '#44ccaa' },
+        { bus_stop_id: 5, service_name: 1, lat: loopBranchStop.lat, lng: loopBranchStop.lng, color: '#44ccaa' },
+        { bus_stop_id: 3, service_name: 1, lat: fartherEndStop.lat, lng: fartherEndStop.lng, color: '#44ccaa' },
+      ],
+    };
+
+    const shapedServices: BusServicesMap = {
+      '1': {
+        color: '#44ccaa',
+        service_name: 'Service One',
+        service_no: 1,
+        stops: [
+          {
+            ...startStop,
+            service_name: 1,
+            color: '#44ccaa',
+            sequence: 1,
+            distance: 0.1,
+          },
+          {
+            ...midStop,
+            lat: 16.81,
+            lng: 96.11,
+            service_name: 1,
+            color: '#44ccaa',
+            sequence: 2,
+            distance: 0.1,
+          },
+          {
+            ...midStopTwo,
+            lat: 16.82,
+            lng: 96.12,
+            service_name: 1,
+            color: '#44ccaa',
+            sequence: 3,
+            distance: 0.1,
+          },
+          {
+            ...loopBranchStop,
+            service_name: 1,
+            color: '#44ccaa',
+            sequence: 4,
+            distance: 0.1,
+          },
+          {
+            ...fartherEndStop,
+            service_name: 1,
+            color: '#44ccaa',
+            sequence: 5,
+            distance: 0.1,
+          },
+        ],
+        shape: [
+          { lat: 16.8, lng: 96.1 },
+          { lat: 16.805, lng: 96.105 },
+          { lat: 16.81, lng: 96.11 },
+          { lat: 16.82, lng: 96.12 },
+          { lat: 16.83, lng: 96.13 },
+          { lat: 16.8398, lng: 96.1398 },
+          { lat: 16.845, lng: 96.145 },
+          { lat: 16.85, lng: 96.15 },
+          { lat: 16.855, lng: 96.155 },
+          { lat: 16.86, lng: 96.16 },
+          { lat: 16.855, lng: 96.157 },
+          { lat: 16.85, lng: 96.153 },
+          { lat: 16.845, lng: 96.147 },
+          { lat: 16.84001, lng: 96.14001 },
+        ],
+      },
+    };
+
+    const features = buildRouteFeatures(routePath, startStop, fartherEndStop, shapedServices);
+    const busFeature = features.features.find((feature) => feature.properties.walk === false);
+
+    expect(busFeature?.geometry.coordinates).toEqual([
+      [96.1, 16.8],
+      [96.105, 16.805],
+      [96.11, 16.81],
+      [96.12, 16.82],
+      [96.13, 16.83],
+      [96.14, 16.84],
+    ]);
+  });
+
   it('adds dashed walking links when the planned route starts and ends at nearby stops', () => {
     const routePath: RoutePath = {
       currCost: 1,
