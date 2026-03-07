@@ -145,4 +145,67 @@ describe('calculateRoute', () => {
     expect(route?.path.map((step) => step.bus_stop_id)).toEqual([1, 2, 3, 4]);
     expect(route?.path.at(-1)?.walk).toBeUndefined();
   });
+
+  it('can still choose to walk early when that beats staying on the same bus service', () => {
+    const routedBusStopsMap: BusStopsMap = {
+      1: makeStop(1, [{ service_name: 7, color: '#ff0000', sequence: 1 }]),
+      2: {
+        ...makeStop(2, [{ service_name: 7, color: '#ff0000', sequence: 2 }]),
+        lat: 16.801,
+        lng: 96.101,
+      },
+      3: {
+        ...makeStop(3, [{ service_name: 7, color: '#ff0000', sequence: 3 }]),
+        lat: 16.804,
+        lng: 96.104,
+      },
+      4: {
+        ...makeStop(4, [{ service_name: 7, color: '#ff0000', sequence: 4 }]),
+        lat: 16.8044,
+        lng: 96.1044,
+      },
+    };
+
+    const routedGraph: AdjacencyList = {
+      '1': [
+        {
+          ...routedBusStopsMap[2]!,
+          service_name: 7,
+          color: '#ff0000',
+          sequence: 2,
+          distance: 0.2,
+        },
+      ],
+      '2': [
+        {
+          ...routedBusStopsMap[3]!,
+          service_name: 7,
+          color: '#ff0000',
+          sequence: 3,
+          distance: 0.2,
+        },
+      ],
+      '3': [
+        {
+          ...routedBusStopsMap[4]!,
+          service_name: 7,
+          color: '#ff0000',
+          sequence: 4,
+          distance: 40,
+        },
+      ],
+      '4': [],
+    };
+
+    const route = calculateRoute(
+      routedGraph,
+      routedBusStopsMap,
+      routedBusStopsMap[1]!,
+      routedBusStopsMap[4]!,
+      { walkingDistance: 0.75 },
+    );
+
+    expect(route?.path.map((step) => step.bus_stop_id)).toEqual([1, 2, 3]);
+    expect(route?.path.at(-1)?.walk).toBe(true);
+  });
 });

@@ -8,6 +8,7 @@ interface RouteCandidate {
   currDistance: number;
   currTransfers: number;
   path: RouteStep[];
+  reachesDestination?: boolean;
 }
 
 interface RouteWeights {
@@ -88,6 +89,10 @@ export const calculateRoute = (
       break;
     }
 
+    if (top.reachesDestination) {
+      return getStopsObjects(busStopsMap, normalizeResult(top));
+    }
+
     const lastKnownStop = top.path[top.path.length - 1];
     if (!lastKnownStop) {
       continue;
@@ -101,23 +106,25 @@ export const calculateRoute = (
 
     const nearbyLastKnownStops = getNearbyStops(busStopsMap, lastKnownStop, walkingDistance);
     const found = nearbyLastKnownStops.find((stop) => stop.bus_stop_id === endStop.bus_stop_id);
-    const destinationServedByCurrentService = endStop.services.some(
-      (service) => service.service_name === lastKnownServiceName,
-    );
-    if (found && !destinationServedByCurrentService) {
-      const result = normalizeResult(top);
+    if (found) {
       const distance = found.distance ?? 0;
-      const lastPathIndex = result.path.length - 1;
-      const currentLast = result.path[lastPathIndex];
+      const candidate = {
+        ...top,
+        currCost: top.currCost + distance * walkingCost,
+        reachesDestination: true,
+        path: [...top.path],
+      };
+      const lastPathIndex = candidate.path.length - 1;
+      const currentLast = candidate.path[lastPathIndex];
       if (currentLast) {
-        result.path[lastPathIndex] = {
+        candidate.path[lastPathIndex] = {
           ...currentLast,
           walk: true,
           distance,
         };
       }
 
-      return getStopsObjects(busStopsMap, result);
+      queue.push(candidate);
     }
 
     const lastStopId = getUniqueId(lastKnownStop.bus_stop_id, lastKnownServiceName);
