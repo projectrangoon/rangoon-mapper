@@ -102,6 +102,27 @@ export const buildRouteStopPoints = (routePath: RoutePath | null): RouteStopPoin
 
 export const shouldShowRouteStopMarkers = (zoom: number): boolean => zoom >= ROUTE_STOP_MARKER_ZOOM;
 
+export const getVisibleRouteStopPoints = (
+  routePath: RoutePath | null,
+  startStop: BusStop | null,
+  endStop: BusStop | null,
+  zoom: number,
+): RouteStopPoint[] => {
+  const points = buildRouteStopPoints(routePath).filter((point) => {
+    if (point.kind === 'transfer') {
+      return true;
+    }
+
+    return point.busStopId !== startStop?.bus_stop_id && point.busStopId !== endStop?.bus_stop_id;
+  });
+
+  if (shouldShowRouteStopMarkers(zoom)) {
+    return points;
+  }
+
+  return points.filter((point) => point.kind === 'transfer');
+};
+
 const checkpointLabel = (point: RouteStopPoint): string | null => {
   if (point.kind === 'board') {
     return `Board YBS ${point.serviceName}`;
@@ -116,17 +137,11 @@ const checkpointLabel = (point: RouteStopPoint): string | null => {
 };
 
 export default function RouteStopMarkers({ routePath, startStop, endStop, zoom }: RouteStopMarkersProps) {
-  if (!shouldShowRouteStopMarkers(zoom)) {
+  const points = getVisibleRouteStopPoints(routePath, startStop, endStop, zoom);
+
+  if (points.length === 0) {
     return null;
   }
-
-  const points = buildRouteStopPoints(routePath).filter((point) => {
-    if (point.kind === 'transfer') {
-      return true;
-    }
-
-    return point.busStopId !== startStop?.bus_stop_id && point.busStopId !== endStop?.bus_stop_id;
-  });
 
   return (
     <>
