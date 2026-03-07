@@ -163,6 +163,9 @@ const checkpointLabel = (locale: AppLocale, point: RouteStopPoint): string | nul
   return null;
 };
 
+const getPointName = (locale: AppLocale, point: RouteStopPoint): string =>
+  getLocalizedName({ name_en: point.nameEn, name_mm: point.nameMm }, locale);
+
 export default function RouteStopMarkers({ locale, routePath, startStop, endStop, zoom }: RouteStopMarkersProps) {
   const points = getVisibleRouteStopPoints(routePath, startStop, endStop, zoom);
 
@@ -175,6 +178,7 @@ export default function RouteStopMarkers({ locale, routePath, startStop, endStop
       {points.map((point) => {
         const label = checkpointLabel(locale, point);
         const emphasized = point.kind !== 'pass';
+        const pointName = getPointName(locale, point);
 
         return (
           <Marker
@@ -186,11 +190,15 @@ export default function RouteStopMarkers({ locale, routePath, startStop, endStop
             <div
               className={`route-stop route-stop-${point.kind}`}
               style={{ '--route-stop-accent': point.color } as CSSProperties}
+              title={point.kind === 'pass' ? pointName : undefined}
+              aria-label={pointName}
             >
-              {label && (
-                <div className={`route-stop-label route-stop-label-${point.kind}`}>
-                  <small>{label}</small>
-                  <strong>{getLocalizedName({ name_en: point.nameEn, name_mm: point.nameMm }, locale)}</strong>
+              {(label || point.kind === 'pass') && (
+                <div
+                  className={`route-stop-label route-stop-label-${point.kind}${point.kind === 'pass' ? ' route-stop-label-hover' : ''}`}
+                >
+                  {label ? <small>{label}</small> : null}
+                  <strong>{pointName}</strong>
                 </div>
               )}
               <span className={emphasized ? 'route-stop-dot route-stop-dot-emphasis' : 'route-stop-dot'} />

@@ -1007,6 +1007,26 @@ a {
   font-size: 0.7rem;
 }
 
+.route-stop-label-hover {
+  min-width: max-content;
+  max-width: 9rem;
+  opacity: 0;
+  transform: translateX(-50%) translateY(0.2rem);
+  transition:
+    opacity 0.14s ease,
+    transform 0.14s ease;
+}
+
+.route-stop-label-hover strong {
+  font-size: 0.68rem;
+}
+
+.route-stop-pass:hover .route-stop-label-hover,
+.route-stop-pass:focus-within .route-stop-label-hover {
+  opacity: 0.98;
+  transform: translateX(-50%) translateY(0);
+}
+
 .stop-marker {
   position: relative;
   width: 0.95rem;

@@ -1,10 +1,17 @@
+import type { ReactNode } from 'react';
 import {
   ROUTE_STOP_MARKER_ZOOM,
   buildRouteStopPoints,
   getVisibleRouteStopPoints,
   shouldShowRouteStopMarkers,
 } from '@/components/map/RouteStopMarkers';
+import RouteStopMarkers from '@/components/map/RouteStopMarkers';
 import type { BusStop, RoutePath } from '@/types';
+import { render, screen } from '@testing-library/react';
+
+vi.mock('react-map-gl/maplibre', () => ({
+  Marker: ({ children }: { children: ReactNode }) => <>{children}</>,
+}));
 
 const startStop: BusStop = {
   bus_stop_id: 10,
@@ -196,5 +203,31 @@ describe('buildRouteStopPoints', () => {
 
     expect(points).toHaveLength(1);
     expect(points[0]).toMatchObject({ kind: 'transfer' });
+  });
+
+  it('renders hover labels for pass-through stops using the localized stop name', () => {
+    const routePath: RoutePath = {
+      currCost: 1,
+      currDistance: 2,
+      currTransfers: 0,
+      path: [
+        { bus_stop_id: 10, service_name: 18, lat: 16.9, lng: 96.1, name_en: 'Board', name_mm: 'အစ', color: '#d65252' },
+        { bus_stop_id: 11, service_name: 18, lat: 16.901, lng: 96.101, name_en: 'Sanpya', name_mm: 'စံပြ', color: '#d65252' },
+        { bus_stop_id: 14, service_name: 18, lat: 16.904, lng: 96.104, name_en: 'Exit', name_mm: 'အဆုံး', color: '#d65252' },
+      ],
+    };
+
+    render(
+      <RouteStopMarkers
+        locale="my"
+        routePath={routePath}
+        startStop={startStop}
+        endStop={endStop}
+        zoom={ROUTE_STOP_MARKER_ZOOM + 1}
+      />,
+    );
+
+    expect(screen.getByLabelText('စံပြ')).toBeInTheDocument();
+    expect(screen.getByText('စံပြ')).toBeInTheDocument();
   });
 });
