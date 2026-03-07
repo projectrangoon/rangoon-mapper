@@ -101,7 +101,10 @@ export const calculateRoute = (
 
     const nearbyLastKnownStops = getNearbyStops(busStopsMap, lastKnownStop, walkingDistance);
     const found = nearbyLastKnownStops.find((stop) => stop.bus_stop_id === endStop.bus_stop_id);
-    if (found) {
+    const destinationServedByCurrentService = endStop.services.some(
+      (service) => service.service_name === lastKnownServiceName,
+    );
+    if (found && !destinationServedByCurrentService) {
       const result = normalizeResult(top);
       const distance = found.distance ?? 0;
       const lastPathIndex = result.path.length - 1;

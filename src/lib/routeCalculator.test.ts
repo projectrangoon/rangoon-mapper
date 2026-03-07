@@ -82,4 +82,67 @@ describe('calculateRoute', () => {
 
     expect(route).toBeNull();
   });
+
+  it('does not stop early to walk when the destination remains on the current bus service', () => {
+    const routedBusStopsMap: BusStopsMap = {
+      1: makeStop(1, [{ service_name: 7, color: '#ff0000', sequence: 1 }]),
+      2: {
+        ...makeStop(2, [{ service_name: 7, color: '#ff0000', sequence: 2 }]),
+        lat: 16.801,
+        lng: 96.101,
+      },
+      3: {
+        ...makeStop(3, [{ service_name: 7, color: '#ff0000', sequence: 3 }]),
+        lat: 16.804,
+        lng: 96.104,
+      },
+      4: {
+        ...makeStop(4, [{ service_name: 7, color: '#ff0000', sequence: 4 }]),
+        lat: 16.8044,
+        lng: 96.1044,
+      },
+    };
+
+    const routedGraph: AdjacencyList = {
+      '1': [
+        {
+          ...routedBusStopsMap[2]!,
+          service_name: 7,
+          color: '#ff0000',
+          sequence: 2,
+          distance: 0.2,
+        },
+      ],
+      '2': [
+        {
+          ...routedBusStopsMap[3]!,
+          service_name: 7,
+          color: '#ff0000',
+          sequence: 3,
+          distance: 0.2,
+        },
+      ],
+      '3': [
+        {
+          ...routedBusStopsMap[4]!,
+          service_name: 7,
+          color: '#ff0000',
+          sequence: 4,
+          distance: 0.05,
+        },
+      ],
+      '4': [],
+    };
+
+    const route = calculateRoute(
+      routedGraph,
+      routedBusStopsMap,
+      routedBusStopsMap[1]!,
+      routedBusStopsMap[4]!,
+      { walkingDistance: 0.75 },
+    );
+
+    expect(route?.path.map((step) => step.bus_stop_id)).toEqual([1, 2, 3, 4]);
+    expect(route?.path.at(-1)?.walk).toBeUndefined();
+  });
 });
