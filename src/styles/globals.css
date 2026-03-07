@@ -591,11 +591,25 @@ a {
 }
 
 .timeline-step {
+  position: relative;
   display: grid;
   grid-template-columns: auto auto 1fr;
   gap: 0.8rem;
   align-items: center;
   padding-bottom: 1rem;
+}
+
+.timeline-marker-connector {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  justify-self: center;
+  align-self: stretch;
+  width: 0.18rem;
+  margin-top: 1rem;
+  margin-bottom: 0.2rem;
+  border-radius: 999px;
+  background: var(--timeline-leg-color);
+  z-index: 0;
 }
 
 .timeline-marker {
@@ -604,6 +618,7 @@ a {
   display: grid;
   place-items: center;
   position: relative;
+  z-index: 1;
 }
 
 .timeline-dot {
@@ -677,7 +692,7 @@ a {
 .timeline-leg-details {
   grid-column: 1 / -1;
   position: relative;
-  margin-top: -0.1rem;
+  margin-top: -0.2rem;
   display: grid;
   grid-template-columns: 1rem 2rem 1fr;
   column-gap: 0.8rem;
@@ -693,6 +708,7 @@ a {
   min-height: 100%;
   border-radius: 999px;
   background: var(--timeline-leg-color);
+  opacity: 0;
 }
 
 .timeline-leg-icon-spacer {
