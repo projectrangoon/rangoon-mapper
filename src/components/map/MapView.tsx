@@ -61,7 +61,7 @@ export default function MapView({
       <NavigationControl position="bottom-right" />
 
       <RouteLayer routePath={routePath} startStop={startStop} endStop={endStop} busServices={busServices} />
-      <RouteStopMarkers routePath={routePath} startStop={startStop} endStop={endStop} />
+      <RouteStopMarkers routePath={routePath} startStop={startStop} endStop={endStop} zoom={zoom} />
       <BusLineLayer busServices={busServices} selectedServices={selectedServices} />
 
       {startStop && <StopMarker lat={startStop.lat} lng={startStop.lng} label={startStop.name_en} color="#245dff" variant="start" />}

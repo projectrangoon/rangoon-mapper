@@ -1,4 +1,8 @@
-import { buildRouteStopPoints } from '@/components/map/RouteStopMarkers';
+import {
+  ROUTE_STOP_MARKER_ZOOM,
+  buildRouteStopPoints,
+  shouldShowRouteStopMarkers,
+} from '@/components/map/RouteStopMarkers';
 import type { RoutePath } from '@/types';
 
 describe('buildRouteStopPoints', () => {
@@ -29,5 +33,11 @@ describe('buildRouteStopPoints', () => {
 
   it('returns no points for empty route data', () => {
     expect(buildRouteStopPoints(null)).toEqual([]);
+  });
+
+  it('only shows route stop markers once the map is sufficiently zoomed in', () => {
+    expect(shouldShowRouteStopMarkers(ROUTE_STOP_MARKER_ZOOM - 0.1)).toBe(false);
+    expect(shouldShowRouteStopMarkers(ROUTE_STOP_MARKER_ZOOM)).toBe(true);
+    expect(shouldShowRouteStopMarkers(15)).toBe(true);
   });
 });

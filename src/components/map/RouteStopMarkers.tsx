@@ -7,6 +7,7 @@ interface RouteStopMarkersProps {
   routePath: RoutePath | null;
   startStop: BusStop | null;
   endStop: BusStop | null;
+  zoom: number;
 }
 
 type RouteStopKind = 'pass' | 'board' | 'transfer' | 'alight';
@@ -29,6 +30,8 @@ const kindPriority: Record<RouteStopKind, number> = {
   alight: 1,
   transfer: 2,
 };
+
+export const ROUTE_STOP_MARKER_ZOOM = 13.25;
 
 const collapseConsecutiveStops = (routePath: RoutePath): RouteStopPoint[] => {
   const points: RouteStopPoint[] = [];
@@ -97,6 +100,8 @@ export const buildRouteStopPoints = (routePath: RoutePath | null): RouteStopPoin
   return collapseConsecutiveStops(routePath);
 };
 
+export const shouldShowRouteStopMarkers = (zoom: number): boolean => zoom >= ROUTE_STOP_MARKER_ZOOM;
+
 const checkpointLabel = (point: RouteStopPoint): string | null => {
   if (point.kind === 'board') {
     return `Board YBS ${point.serviceName}`;
@@ -110,7 +115,11 @@ const checkpointLabel = (point: RouteStopPoint): string | null => {
   return null;
 };
 
-export default function RouteStopMarkers({ routePath, startStop, endStop }: RouteStopMarkersProps) {
+export default function RouteStopMarkers({ routePath, startStop, endStop, zoom }: RouteStopMarkersProps) {
+  if (!shouldShowRouteStopMarkers(zoom)) {
+    return null;
+  }
+
   const points = buildRouteStopPoints(routePath).filter((point) => {
     if (point.kind === 'transfer') {
       return true;
