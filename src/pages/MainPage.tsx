@@ -174,10 +174,7 @@ export default function MainPage() {
     if (nextMode === 'route') {
       clearServices();
       setExpandedService(null);
-      return;
     }
-
-    clearRoute();
   };
 
   const applySearchSelection = (stop: UniqueStop) => {
@@ -274,9 +271,9 @@ export default function MainPage() {
         theme={theme}
         center={center}
         zoom={zoom}
-        routePath={routePath}
-        startStop={startStop}
-        endStop={endStop}
+        routePath={mode === 'route' ? routePath : null}
+        startStop={mode === 'route' ? startStop : null}
+        endStop={mode === 'route' ? endStop : null}
         busServices={busServices ?? {}}
         selectedServices={selectedServices}
         onMove={setViewport}

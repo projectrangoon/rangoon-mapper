@@ -73,6 +73,28 @@ const graph: AdjacencyList = {
   '2': [],
 };
 
+const plannedRoute = {
+  currCost: 1,
+  currDistance: 0.5,
+  currTransfers: 0,
+  path: [
+    {
+      ...stop1,
+      service_name: 1,
+      color: '#3a8',
+      sequence: 1,
+      distance: 0.5,
+    },
+    {
+      ...stop2,
+      service_name: 1,
+      color: '#3a8',
+      sequence: 2,
+      distance: 0.5,
+    },
+  ],
+};
+
 const renderWithRoute = (route: string) => {
   return render(
     <MemoryRouter initialEntries={[route]}>
@@ -148,6 +170,38 @@ describe('MainPage routing behavior', () => {
       expect(screen.getByText('Routing To')).toBeInTheDocument();
       expect(useBusStore.getState().selectedServices.size).toBe(0);
       expect(useBusStore.getState().expandedService).toBeNull();
+    });
+  });
+
+  it('preserves the planned route when switching to lines mode and back', async () => {
+    useMapStore.setState({
+      startStop: stop1,
+      endStop: stop2,
+      routePath: plannedRoute,
+    });
+
+    renderWithRoute('/directions/1/2');
+
+    await waitFor(() => {
+      expect(screen.getByDisplayValue('Start Stop')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('End Stop')).toBeInTheDocument();
+      expect(screen.getByText('0.50 km')).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Lines' }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Bus Lines')).toBeInTheDocument();
+      expect(useMapStore.getState().routePath).not.toBeNull();
+      expect(useMapStore.getState().routePath?.currDistance).toBeCloseTo(0.5);
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Route' }));
+
+    await waitFor(() => {
+      expect(screen.getByText('0.50 km')).toBeInTheDocument();
+      expect(useMapStore.getState().routePath).not.toBeNull();
+      expect(useMapStore.getState().routePath?.currDistance).toBeCloseTo(0.5);
     });
   });
 
