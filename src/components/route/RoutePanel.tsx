@@ -25,11 +25,18 @@ export default function RoutePanel({
   onSelectEnd,
 }: RoutePanelProps) {
   const routePlanned = Boolean(routePath && startStop && endStop);
+  const destinationLabel = routePlanned && endStop ? endStop.name_en : 'Choose destination';
 
   return (
     <Panel className="route-panel">
-      <h2>Route Planner</h2>
-      <p className="panel-caption">Find the quickest Yangon bus journey across connected services.</p>
+      <header className="route-panel-header">
+        <div>
+          <p className="route-panel-kicker">Routing To</p>
+          <h2>{destinationLabel}</h2>
+          <p className="panel-caption">Find the quickest Yangon bus journey across connected services.</p>
+        </div>
+        <div className="route-live-badge">Live</div>
+      </header>
 
       {routePlanned && startStop && endStop && (
         <section className="route-waypoint-card" aria-label="Planned Route Waypoints">
@@ -78,6 +85,9 @@ export default function RoutePanel({
       {isCalculating && <p className="calculating">Calculating shortest path...</p>}
 
       <MetricsGrid routePath={routePath} />
+      <div className="timeline-header">
+        <span>Guidance</span>
+      </div>
       <Timeline routePath={routePath} startStop={startStop} endStop={endStop} />
     </Panel>
   );

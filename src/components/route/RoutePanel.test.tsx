@@ -53,6 +53,6 @@ describe('RoutePanel', () => {
     expect(screen.getByText('Start')).toBeInTheDocument();
     expect(screen.getByText('Destination')).toBeInTheDocument();
     expect(screen.getByText('Sule Square')).toBeInTheDocument();
-    expect(screen.getByText('Hledan Center')).toBeInTheDocument();
+    expect(screen.getAllByText('Hledan Center')).toHaveLength(2);
   });
 });

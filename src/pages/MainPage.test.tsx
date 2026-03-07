@@ -115,7 +115,7 @@ describe('MainPage routing behavior', () => {
 
     renderWithRoute('/directions/1/2');
 
-    expect(screen.getByText('Route Planner')).toBeInTheDocument();
+    expect(screen.getByText('Routing To')).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.getByDisplayValue('Start Stop (1)')).toBeInTheDocument();
       expect(screen.getByDisplayValue('End Stop (2)')).toBeInTheDocument();
@@ -144,7 +144,7 @@ describe('MainPage routing behavior', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Route' }));
 
     await waitFor(() => {
-      expect(screen.getByText('Route Planner')).toBeInTheDocument();
+      expect(screen.getByText('Routing To')).toBeInTheDocument();
       expect(useBusStore.getState().selectedServices.size).toBe(0);
       expect(useBusStore.getState().expandedService).toBeNull();
     });

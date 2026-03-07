@@ -15,15 +15,15 @@ export default function MetricsGrid({ routePath }: MetricsGridProps) {
   if (!routePath) {
     return (
       <div className="metrics-grid">
-        <article>
+        <article className="metric-card">
           <h4>ETA</h4>
           <p>--</p>
         </article>
-        <article>
+        <article className="metric-card">
           <h4>Distance</h4>
           <p>--</p>
         </article>
-        <article>
+        <article className="metric-card">
           <h4>Transfers</h4>
           <p>--</p>
         </article>
@@ -33,15 +33,15 @@ export default function MetricsGrid({ routePath }: MetricsGridProps) {
 
   return (
     <div className="metrics-grid">
-      <article>
+      <article className="metric-card metric-card-highlight">
         <h4>ETA</h4>
         <p>{estimateMinutes(routePath)} min</p>
       </article>
-      <article>
+      <article className="metric-card">
         <h4>Distance</h4>
         <p>{routePath.currDistance.toFixed(2)} km</p>
       </article>
-      <article>
+      <article className="metric-card">
         <h4>Transfers</h4>
         <p>{routePath.currTransfers}</p>
       </article>

@@ -77,10 +77,13 @@ export default function Timeline({ routePath, startStop, endStop }: TimelineProp
   }
 
   return (
-    <ol className="timeline">
+    <div className="timeline-shell">
+      <div className="timeline-guide" aria-hidden="true" />
+      <ol className="timeline">
       {segments.map((segment, index) => (
         <TimelineStep key={`${segment.title}-${index}`} {...segment} />
       ))}
-    </ol>
+      </ol>
+    </div>
   );
 }

@@ -20,7 +20,9 @@ const SearchIsland = forwardRef<HTMLInputElement, SearchIslandProps>(function Se
 
   return (
     <div className="search-island" onFocus={() => setOpen(true)} onBlur={() => setTimeout(() => setOpen(false), 120)}>
-      <Search size={18} className="search-icon" />
+      <div className="search-icon-shell">
+        <Search size={16} className="search-icon" />
+      </div>
       <input
         ref={ref}
         value={query}

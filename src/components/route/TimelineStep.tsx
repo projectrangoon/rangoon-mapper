@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { Bus, Footprints } from 'lucide-react';
 
 interface TimelineStepProps {
@@ -10,10 +11,14 @@ interface TimelineStepProps {
 export default function TimelineStep({ kind, title, subtitle, color }: TimelineStepProps) {
   return (
     <li className="timeline-step">
-      <span className="dot" style={{ backgroundColor: color ?? '#999' }}>
+      <span className="timeline-marker" style={{ '--timeline-accent': color ?? '#999' } as CSSProperties}>
+        <span className="timeline-dot" />
+      </span>
+      <span className="timeline-icon-card">
         {kind === 'bus' ? <Bus size={12} /> : <Footprints size={12} />}
       </span>
       <div className="content">
+        <span className="timeline-eyebrow">{kind === 'bus' ? 'Transit leg' : 'Walk leg'}</span>
         <strong>{title}</strong>
         <small>{subtitle}</small>
       </div>
