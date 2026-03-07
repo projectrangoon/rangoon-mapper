@@ -1020,21 +1020,22 @@ a {
   align-items: center;
   justify-content: center;
   min-height: 1rem;
-  padding: 0.08rem 0.38rem;
+  max-width: 10rem;
+  padding: 0.12rem 0.42rem;
   border-radius: 0.18rem;
-  background: #111;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: color-mix(in srgb, var(--surface) 92%, white 8%);
+  color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
   white-space: nowrap;
 }
 
-.stop-marker-chip-role {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.54rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+.stop-marker-chip-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .bus-point {
