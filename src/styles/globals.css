@@ -540,13 +540,12 @@ a {
 
 .timeline-guide {
   position: absolute;
-  left: 0.47rem;
+  left: calc(0.5rem - 1px);
   top: 1rem;
   bottom: 1rem;
   width: 2px;
-  background-image: linear-gradient(to bottom, #111 35%, transparent 35%);
-  background-size: 100% 8px;
-  opacity: 0.15;
+  background: color-mix(in srgb, var(--ink) 18%, transparent);
+  opacity: 0.42;
 }
 
 .timeline {
@@ -577,8 +576,9 @@ a {
   width: 0.95rem;
   height: 0.95rem;
   border-radius: 999px;
-  border: 2px solid var(--timeline-accent);
-  background: var(--panel-bg);
+  border: 2px solid color-mix(in srgb, var(--timeline-accent) 84%, #111);
+  background: var(--timeline-accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--bg) 94%, transparent);
   display: block;
 }
 
