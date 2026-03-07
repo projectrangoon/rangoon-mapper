@@ -3,6 +3,7 @@ import Map, { NavigationControl, ScaleControl, type MapRef } from 'react-map-gl/
 
 import BusLineLayer from '@/components/map/BusLineLayer';
 import RouteLayer from '@/components/map/RouteLayer';
+import RouteStopMarkers from '@/components/map/RouteStopMarkers';
 import StopMarker from '@/components/map/StopMarker';
 import type { BusServicesMap, BusStop, RoutePath } from '@/types';
 
@@ -60,6 +61,7 @@ export default function MapView({
       <NavigationControl position="bottom-right" />
 
       <RouteLayer routePath={routePath} startStop={startStop} endStop={endStop} busServices={busServices} />
+      <RouteStopMarkers routePath={routePath} startStop={startStop} endStop={endStop} />
       <BusLineLayer busServices={busServices} selectedServices={selectedServices} />
 
       {startStop && <StopMarker lat={startStop.lat} lng={startStop.lng} label={startStop.name_en} color="#245dff" variant="start" />}
