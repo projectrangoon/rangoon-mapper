@@ -675,8 +675,9 @@ a {
 }
 
 .timeline-leg-details {
+  grid-column: 1 / -1;
   position: relative;
-  margin-top: 0.5rem;
+  margin-top: -0.1rem;
   display: grid;
   grid-template-columns: 1rem 2rem 1fr;
   column-gap: 0.8rem;
@@ -689,6 +690,7 @@ a {
   justify-self: center;
   align-self: stretch;
   width: 0.18rem;
+  min-height: 100%;
   border-radius: 999px;
   background: var(--timeline-leg-color);
 }

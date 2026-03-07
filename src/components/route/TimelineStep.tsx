@@ -39,28 +39,28 @@ export default function TimelineStep({ kind, title, subtitle, color, stops = [] 
               {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
               <span>{stops.length} stop{stops.length === 1 ? '' : 's'}</span>
             </button>
-            {expanded && (
-              <div
-                id={stopsId}
-                className="timeline-leg-details"
-                style={{ '--timeline-leg-color': color ?? '#999' } as CSSProperties}
-              >
-                <span className="timeline-leg-line" aria-hidden="true" />
-                <span className="timeline-leg-icon-spacer" aria-hidden="true" />
-                <ul className="timeline-stop-list" aria-label={`${title} stops`}>
-                  {stops.map((stop, index) => (
-                    <li key={`${stop}-${index}`} className="timeline-stop-item">
-                      <span className="timeline-stop-node" aria-hidden="true" />
-                      <span className="timeline-stop-icon-spacer" aria-hidden="true" />
-                      <span>{stop}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </div>
         )}
       </div>
+      {hasIntermediateStops && expanded && (
+        <div
+          id={stopsId}
+          className="timeline-leg-details"
+          style={{ '--timeline-leg-color': color ?? '#999' } as CSSProperties}
+        >
+          <span className="timeline-leg-line" aria-hidden="true" />
+          <span className="timeline-leg-icon-spacer" aria-hidden="true" />
+          <ul className="timeline-stop-list" aria-label={`${title} stops`}>
+            {stops.map((stop, index) => (
+              <li key={`${stop}-${index}`} className="timeline-stop-item">
+                <span className="timeline-stop-node" aria-hidden="true" />
+                <span className="timeline-stop-icon-spacer" aria-hidden="true" />
+                <span>{stop}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </li>
   );
 }
