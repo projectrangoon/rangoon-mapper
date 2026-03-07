@@ -26,6 +26,54 @@ interface ShapeMatch {
   span: number;
 }
 
+const getRunSpanLimit = (
+  service: BusService | undefined,
+  runSteps: RouteStep[],
+): number | null => {
+  if (!service || runSteps.length < 2 || service.stops.length < 2) {
+    return null;
+  }
+
+  const firstStopId = runSteps[0]?.bus_stop_id;
+  const lastStopId = runSteps[runSteps.length - 1]?.bus_stop_id;
+  if (typeof firstStopId !== 'number' || typeof lastStopId !== 'number') {
+    return null;
+  }
+
+  const startIndices = service.stops
+    .map((stop, index) => (stop.bus_stop_id === firstStopId ? index : -1))
+    .filter((index) => index !== -1);
+  const endIndices = service.stops
+    .map((stop, index) => (stop.bus_stop_id === lastStopId ? index : -1))
+    .filter((index) => index !== -1);
+
+  if (startIndices.length === 0 || endIndices.length === 0) {
+    return null;
+  }
+
+  const isCircularService = service.stops[0]?.bus_stop_id === service.stops[service.stops.length - 1]?.bus_stop_id;
+  let bestSpan = Number.POSITIVE_INFINITY;
+
+  startIndices.forEach((startIndex) => {
+    endIndices.forEach((endIndex) => {
+      if (endIndex >= startIndex) {
+        bestSpan = Math.min(bestSpan, endIndex - startIndex);
+        return;
+      }
+
+      if (isCircularService) {
+        bestSpan = Math.min(bestSpan, service.stops.length - startIndex + endIndex);
+      }
+    });
+  });
+
+  if (!Number.isFinite(bestSpan)) {
+    return null;
+  }
+
+  return Math.max(bestSpan * 2 + 4, runSteps.length + 4);
+};
+
 const toFeature = (coords: [number, number][], color: string, walk: boolean): Feature<LineString, RouteProperties> => ({
   type: 'Feature',
   geometry: {
@@ -226,6 +274,7 @@ const getAnchoredShapeRunCoordinates = (
 
   const reversedShapeCoordinates = [...shapeCoordinates].reverse();
   const isCircularService = service.stops[0]?.bus_stop_id === service.stops[service.stops.length - 1]?.bus_stop_id;
+  const constrainedSpanLimit = getRunSpanLimit(service, runSteps);
   const variants: Array<{ coordinates: [number, number][]; maxSpan?: number }> = [
     { coordinates: shapeCoordinates },
     { coordinates: reversedShapeCoordinates },
@@ -242,22 +291,34 @@ const getAnchoredShapeRunCoordinates = (
     });
   }
 
-  const bestMatch = variants.reduce<ShapeMatch | null>((currentBest, variant) => {
+  const pickBestMatch = (useConstrainedLimit: boolean) => variants.reduce<ShapeMatch | null>((currentBest, variant) => {
+    const maxSpan = useConstrainedLimit
+      ? Math.min(
+        variant.maxSpan ?? Number.POSITIVE_INFINITY,
+        constrainedSpanLimit ?? Number.POSITIVE_INFINITY,
+      )
+      : variant.maxSpan;
     const candidate = matchShapeRun(variant.coordinates, runSteps, variant.maxSpan);
-    if (!candidate) {
+    const constrainedCandidate = typeof maxSpan === 'number' && Number.isFinite(maxSpan)
+      ? matchShapeRun(variant.coordinates, runSteps, maxSpan)
+      : candidate;
+    const selectedCandidate = useConstrainedLimit ? constrainedCandidate : candidate;
+    if (!selectedCandidate) {
       return currentBest;
     }
 
     if (
       !currentBest ||
-      candidate.totalDistanceKm < currentBest.totalDistanceKm ||
-      (candidate.totalDistanceKm === currentBest.totalDistanceKm && candidate.span < currentBest.span)
+      selectedCandidate.totalDistanceKm < currentBest.totalDistanceKm ||
+      (selectedCandidate.totalDistanceKm === currentBest.totalDistanceKm && selectedCandidate.span < currentBest.span)
     ) {
-      return candidate;
+      return selectedCandidate;
     }
 
     return currentBest;
   }, null);
+
+  const bestMatch = pickBestMatch(true) ?? pickBestMatch(false);
 
   return bestMatch?.coordinates ?? null;
 };

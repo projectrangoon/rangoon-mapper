@@ -318,6 +318,80 @@ describe('buildRouteFeatures', () => {
     ]);
   });
 
+  it('rejects implausibly long shape slices when an end stop appears near multiple shape points', () => {
+    const routePath: RoutePath = {
+      currCost: 1,
+      currDistance: 2,
+      currTransfers: 0,
+      path: [
+        { bus_stop_id: 1, service_name: 1, lat: startStop.lat, lng: startStop.lng, color: '#44ccaa' },
+        { bus_stop_id: 2, service_name: 1, lat: midStop.lat, lng: midStop.lng, color: '#44ccaa' },
+        { bus_stop_id: 4, service_name: 1, lat: midStopTwo.lat, lng: midStopTwo.lng, color: '#44ccaa' },
+        { bus_stop_id: 3, service_name: 1, lat: endStop.lat, lng: endStop.lng, color: '#44ccaa' },
+      ],
+    };
+
+    const shapedServices: BusServicesMap = {
+      '1': {
+        color: '#44ccaa',
+        service_name: 'Service One',
+        service_no: 1,
+        stops: [
+          {
+            ...startStop,
+            service_name: 1,
+            color: '#44ccaa',
+            sequence: 1,
+            distance: 0.1,
+          },
+          {
+            ...midStop,
+            service_name: 1,
+            color: '#44ccaa',
+            sequence: 2,
+            distance: 0.1,
+          },
+          {
+            ...midStopTwo,
+            service_name: 1,
+            color: '#44ccaa',
+            sequence: 3,
+            distance: 0.1,
+          },
+          {
+            ...endStop,
+            service_name: 1,
+            color: '#44ccaa',
+            sequence: 4,
+            distance: 0.1,
+          },
+        ],
+        shape: [
+          { lat: 16.8, lng: 96.1 },
+          { lat: 16.81, lng: 96.11 },
+          { lat: 16.82, lng: 96.14 },
+          { lat: 16.821, lng: 96.141 },
+          { lat: 16.85, lng: 96.18 },
+          { lat: 16.9, lng: 96.24 },
+          { lat: 16.94, lng: 96.28 },
+          { lat: 16.96, lng: 96.31 },
+          { lat: 16.85005, lng: 96.18005 },
+        ],
+      },
+    };
+
+    const features = buildRouteFeatures(routePath, startStop, endStop, shapedServices);
+    const busFeature = features.features.find((feature) => feature.properties.walk === false);
+
+    expect(busFeature?.geometry.coordinates).toEqual([
+      [96.1, 16.8],
+      [96.11, 16.81],
+      [96.14, 16.82],
+      [96.141, 16.821],
+      [96.18, 16.85],
+    ]);
+  });
+
   it('adds dashed walking links when the planned route starts and ends at nearby stops', () => {
     const routePath: RoutePath = {
       currCost: 1,
