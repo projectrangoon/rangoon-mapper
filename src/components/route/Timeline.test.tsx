@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Timeline, { buildTimeline } from '@/components/route/Timeline';
 import type { BusStop, RoutePath } from '@/types';
@@ -60,12 +61,18 @@ describe('buildTimeline', () => {
 });
 
 describe('Timeline', () => {
-  it('renders the intermediate transit stops in the guidance panel', () => {
+  it('renders the intermediate transit stops in a collapsible transit leg', async () => {
+    const user = userEvent.setup();
+
     render(<Timeline routePath={routePath} startStop={startStop} endStop={endStop} />);
 
     expect(screen.getByLabelText('Take YBS 18 stops')).toBeInTheDocument();
     expect(screen.getByText('Stop A')).toBeInTheDocument();
     expect(screen.getByText('Stop B')).toBeInTheDocument();
     expect(screen.getByText('Stop C')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /1 stop/i }));
+
+    expect(screen.queryByText('Stop A')).not.toBeInTheDocument();
   });
 });
