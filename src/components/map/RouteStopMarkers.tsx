@@ -161,7 +161,7 @@ export default function RouteStopMarkers({ routePath, startStop, endStop, zoom }
               style={{ '--route-stop-accent': point.color } as CSSProperties}
             >
               {label && (
-                <div className="route-stop-label">
+                <div className={`route-stop-label route-stop-label-${point.kind}`}>
                   <small>{label}</small>
                   <strong>{point.name}</strong>
                 </div>

@@ -899,8 +899,8 @@ a {
   border-color: #111;
   box-shadow:
     0 0 0 2px rgba(255, 255, 255, 0.96),
-    0 0 0 5px color-mix(in srgb, var(--route-stop-accent) 26%, transparent),
-    0 6px 16px rgba(0, 0, 0, 0.24);
+    0 0 0 3px color-mix(in srgb, var(--route-stop-accent) 16%, transparent),
+    0 4px 10px rgba(0, 0, 0, 0.14);
 }
 
 .route-stop-label {
@@ -953,6 +953,33 @@ a {
   white-space: nowrap;
   font-size: 0.79rem;
   line-height: 1.2;
+}
+
+.route-stop-label-transfer {
+  min-width: 6.5rem;
+  max-width: 9rem;
+  padding: 0.32rem 0.48rem;
+  border-radius: 10px;
+  border-color: color-mix(in srgb, var(--ink) 8%, transparent);
+  background: color-mix(in srgb, var(--panel-bg) 94%, transparent);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+  opacity: 0.9;
+}
+
+.route-stop-label-transfer::after {
+  width: 0.46rem;
+  height: 0.46rem;
+}
+
+.route-stop-label-transfer small {
+  margin-bottom: 0.08rem;
+  font-size: 0.56rem;
+  letter-spacing: 0.06em;
+}
+
+.route-stop-label-transfer strong {
+  font-size: 0.72rem;
+  font-weight: 600;
 }
 
 .stop-marker {
