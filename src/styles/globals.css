@@ -346,8 +346,27 @@ a {
   border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
 }
 
-.route-waypoint-arrow-mobile {
-  display: none;
+.route-waypoint-swap {
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.route-waypoint-swap:hover {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  border-color: color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.route-waypoint-swap:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--ink) 25%, transparent);
+  outline-offset: 2px;
+}
+
+.route-waypoint-arrow-swap {
+  display: block;
 }
 
 .route-waypoint-glyph {
@@ -1120,11 +1139,7 @@ a {
     height: 1.7rem;
   }
 
-  .route-waypoint-arrow-desktop {
-    display: none;
-  }
-
-  .route-waypoint-arrow-mobile {
+  .route-waypoint-arrow-swap {
     display: block;
   }
 }

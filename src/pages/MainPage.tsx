@@ -232,6 +232,14 @@ export default function MainPage() {
             clearRoute();
           }
         }}
+        onSwapStops={() => {
+          if (!startStop || !endStop) {
+            return;
+          }
+
+          setStartStop(endStop);
+          setEndStop(startStop);
+        }}
       />
     ) : (
       <BusLinesPanel

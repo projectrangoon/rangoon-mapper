@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import RoutePanel from '@/components/route/RoutePanel';
 import type { BusStop, RoutePath, UniqueStop } from '@/types';
@@ -46,6 +47,7 @@ describe('RoutePanel', () => {
         isCalculating={false}
         onSelectStart={() => undefined}
         onSelectEnd={() => undefined}
+        onSwapStops={() => undefined}
       />,
     );
 
@@ -54,5 +56,27 @@ describe('RoutePanel', () => {
     expect(screen.getByText('Destination')).toBeInTheDocument();
     expect(screen.getByText('Sule Square')).toBeInTheDocument();
     expect(screen.getAllByText('Hledan Center')).toHaveLength(2);
+  });
+
+  it('calls the reverse handler from the planned route swap control', async () => {
+    const user = userEvent.setup();
+    const onSwapStops = vi.fn();
+
+    render(
+      <RoutePanel
+        uniqueStops={[startStop as UniqueStop, endStop as UniqueStop]}
+        startStop={startStop}
+        endStop={endStop}
+        routePath={routePath}
+        isCalculating={false}
+        onSelectStart={() => undefined}
+        onSelectEnd={() => undefined}
+        onSwapStops={onSwapStops}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Reverse route' }));
+
+    expect(onSwapStops).toHaveBeenCalledTimes(1);
   });
 });

@@ -2,7 +2,7 @@ import AutoComplete from '@/components/route/AutoComplete';
 import MetricsGrid from '@/components/route/MetricsGrid';
 import Timeline from '@/components/route/Timeline';
 import Panel from '@/components/ui/Panel';
-import { ArrowDown, ArrowRight } from 'lucide-react';
+import { ArrowLeftRight } from 'lucide-react';
 import type { BusStop, RoutePath, UniqueStop } from '@/types';
 
 interface RoutePanelProps {
@@ -13,6 +13,7 @@ interface RoutePanelProps {
   isCalculating: boolean;
   onSelectStart: (stop: BusStop | null) => void;
   onSelectEnd: (stop: BusStop | null) => void;
+  onSwapStops: () => void;
 }
 
 export default function RoutePanel({
@@ -23,6 +24,7 @@ export default function RoutePanel({
   isCalculating,
   onSelectStart,
   onSelectEnd,
+  onSwapStops,
 }: RoutePanelProps) {
   const routePlanned = Boolean(routePath && startStop && endStop);
   const destinationLabel = routePlanned && endStop ? endStop.name_en : 'Choose destination';
@@ -48,10 +50,14 @@ export default function RoutePanel({
             </div>
             <span>{startStop.road_en} · {startStop.township_en}</span>
           </div>
-          <div className="route-waypoint-arrow" aria-hidden="true">
-            <ArrowRight size={16} className="route-waypoint-arrow-desktop" />
-            <ArrowDown size={16} className="route-waypoint-arrow-mobile" />
-          </div>
+          <button
+            type="button"
+            className="route-waypoint-arrow route-waypoint-swap"
+            aria-label="Reverse route"
+            onClick={onSwapStops}
+          >
+            <ArrowLeftRight size={16} className="route-waypoint-arrow-swap" />
+          </button>
           <div className="route-waypoint-block route-waypoint-block-end">
             <small>Destination</small>
             <div className="route-waypoint-inline">
