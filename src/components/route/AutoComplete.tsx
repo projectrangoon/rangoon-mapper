@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useSearch } from '@/hooks/useSearch';
 import type { BusStop, UniqueStop } from '@/types';
@@ -24,12 +24,24 @@ export default function AutoComplete({
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
   const [open, setOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const shouldRefocusOnClear = useRef(false);
 
   useEffect(() => {
     if (!selectedStop) {
       setQuery('');
-      setOpen(false);
       setActiveIndex(0);
+
+      if (shouldRefocusOnClear.current) {
+        shouldRefocusOnClear.current = false;
+        window.requestAnimationFrame(() => {
+          inputRef.current?.focus();
+          setOpen(true);
+        });
+      } else {
+        setOpen(false);
+      }
+
       return;
     }
 
@@ -56,6 +68,7 @@ export default function AutoComplete({
       <div className="autocomplete-input-wrap">
         <span className={`waypoint-marker waypoint-marker-${variant}`} aria-hidden="true" />
         <input
+          ref={inputRef}
           value={query}
           onChange={(event) => {
             setQuery(event.target.value);
@@ -88,8 +101,10 @@ export default function AutoComplete({
             }}
             onClick={() => {
               setQuery('');
-              setOpen(false);
               setActiveIndex(0);
+              shouldRefocusOnClear.current = true;
+              inputRef.current?.focus();
+              setOpen(true);
               onSelect(null);
             }}
           >

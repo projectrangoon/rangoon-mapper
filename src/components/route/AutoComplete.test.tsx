@@ -67,6 +67,28 @@ describe('AutoComplete', () => {
     expect(onSelect).toHaveBeenCalledWith(null);
   });
 
+  it('keeps the input ready for immediate typing after clearing', async () => {
+    const user = userEvent.setup();
+    const onSelect = vi.fn();
+
+    render(
+      <AutoComplete
+        label="From"
+        variant="start"
+        stops={[stop as UniqueStop]}
+        selectedStop={stop}
+        routePlanned={false}
+        onSelect={onSelect}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Clear From' }));
+    await user.keyboard('kone');
+
+    expect(screen.getByPlaceholderText('Search bus stop')).toHaveValue('kone');
+    expect(onSelect).toHaveBeenCalledWith(null);
+  });
+
   it('selects a shown result by click without losing the interaction to blur', async () => {
     const user = userEvent.setup();
     const onSelect = vi.fn();

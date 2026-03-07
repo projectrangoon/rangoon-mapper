@@ -188,4 +188,19 @@ describe('MainPage routing behavior', () => {
       expect(screen.getAllByPlaceholderText('Search bus stop')[0]).toHaveValue('');
     });
   });
+
+  it('allows immediate typing after clearing a selected waypoint', async () => {
+    const user = userEvent.setup();
+
+    renderWithRoute('/directions/1/2');
+
+    await waitFor(() => {
+      expect(screen.getByDisplayValue('Start Stop')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Clear From' }));
+    await user.keyboard('Start');
+
+    expect(screen.getAllByPlaceholderText('Search bus stop')[0]).toHaveValue('Start');
+  });
 });
