@@ -948,11 +948,13 @@ a {
   transform: translateX(-50%);
   min-width: 6rem;
   max-width: 9.5rem;
-  padding: 0.24rem 0.42rem;
-  border-radius: 0.24rem;
-  border: 0;
-  background: #111;
-  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.14);
+  padding: 0.28rem 0.44rem 0.32rem;
+  border-radius: 0.22rem;
+  background: color-mix(in srgb, var(--surface) 94%, white 6%);
+  color: var(--ink);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--ink) 8%, transparent),
+    0 4px 10px rgba(0, 0, 0, 0.06);
   pointer-events: none;
 }
 
@@ -962,12 +964,12 @@ a {
 }
 
 .route-stop-label small {
-  margin-bottom: 0.08rem;
-  color: rgba(255, 255, 255, 0.76);
+  margin-bottom: 0.1rem;
+  color: var(--ink-dim);
   font-size: 0.58rem;
   font-family: 'Space Mono', monospace;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
 }
 
@@ -975,26 +977,26 @@ a {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: #fff;
-  font-size: 0.76rem;
+  color: var(--ink);
+  font-size: 0.72rem;
+  font-weight: 600;
   line-height: 1.2;
 }
 
 .route-stop-label-transfer {
-  min-width: 5.3rem;
-  max-width: 8rem;
-  opacity: 0.96;
+  min-width: 5.1rem;
+  max-width: 7.8rem;
+  opacity: 0.98;
 }
 
 .route-stop-label-transfer small {
-  margin-bottom: 0.08rem;
+  margin-bottom: 0.1rem;
   font-size: 0.56rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
 }
 
 .route-stop-label-transfer strong {
-  font-size: 0.72rem;
-  font-weight: 600;
+  font-size: 0.7rem;
 }
 
 .stop-marker {
