@@ -30,7 +30,7 @@ export default function AutoComplete({
       return;
     }
 
-    setQuery(`${selectedStop.name_en} (${selectedStop.bus_stop_id})`);
+    setQuery(selectedStop.name_en);
   }, [selectedStop]);
 
   const { results } = useSearch(stops, query);
@@ -38,7 +38,7 @@ export default function AutoComplete({
 
   const selectStop = (stop: UniqueStop) => {
     onSelect(stop);
-    setQuery(`${stop.name_en} (${stop.bus_stop_id})`);
+    setQuery(stop.name_en);
     setOpen(false);
     setActiveIndex(0);
   };
@@ -102,7 +102,7 @@ export default function AutoComplete({
             <li key={`${stop.bus_stop_id}-${stop.name_en}`} className={index === activeIndex ? 'active' : ''}>
               <button type="button" onClick={() => selectStop(stop)}>
                 <strong>{stop.name_en}</strong>
-                <small>{stop.name_mm}</small>
+                <small>{stop.road_en} · {stop.township_en}</small>
               </button>
             </li>
           ))}

@@ -117,8 +117,8 @@ describe('MainPage routing behavior', () => {
 
     expect(screen.getByText('Routing To')).toBeInTheDocument();
     await waitFor(() => {
-      expect(screen.getByDisplayValue('Start Stop (1)')).toBeInTheDocument();
-      expect(screen.getByDisplayValue('End Stop (2)')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('Start Stop')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('End Stop')).toBeInTheDocument();
       expect(useBusStore.getState().selectedServices.size).toBe(0);
       expect(useBusStore.getState().expandedService).toBeNull();
     });
@@ -154,15 +154,15 @@ describe('MainPage routing behavior', () => {
     renderWithRoute('/directions/1/2');
 
     await waitFor(() => {
-      expect(screen.getByDisplayValue('Start Stop (1)')).toBeInTheDocument();
-      expect(screen.getByDisplayValue('End Stop (2)')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('Start Stop')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('End Stop')).toBeInTheDocument();
     });
 
     fireEvent.click(screen.getByRole('button', { name: 'Reverse route' }));
 
     await waitFor(() => {
-      expect(screen.getByDisplayValue('End Stop (2)')).toBeInTheDocument();
-      expect(screen.getByDisplayValue('Start Stop (1)')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('End Stop')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('Start Stop')).toBeInTheDocument();
       expect(useMapStore.getState().startStop?.bus_stop_id).toBe(2);
       expect(useMapStore.getState().endStop?.bus_stop_id).toBe(1);
     });

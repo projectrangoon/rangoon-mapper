@@ -37,7 +37,7 @@ const routePath: RoutePath = {
 };
 
 describe('RoutePanel', () => {
-  it('shows a dedicated start and destination summary once a route exists', () => {
+  it('shows a compact waypoint editor without duplicating the planned route summary', () => {
     render(
       <RoutePanel
         uniqueStops={[startStop as UniqueStop, endStop as UniqueStop]}
@@ -51,11 +51,10 @@ describe('RoutePanel', () => {
       />,
     );
 
-    expect(screen.getByLabelText('Planned Route Waypoints')).toBeInTheDocument();
-    expect(screen.getByText('Start')).toBeInTheDocument();
-    expect(screen.getByText('Destination')).toBeInTheDocument();
-    expect(screen.getByText('Sule Square')).toBeInTheDocument();
-    expect(screen.getAllByText('Hledan Center')).toHaveLength(2);
+    expect(screen.queryByLabelText('Planned Route Waypoints')).not.toBeInTheDocument();
+    expect(screen.getByText('Waypoints')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Sule Square')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Hledan Center')).toBeInTheDocument();
   });
 
   it('calls the reverse handler from the planned route swap control', async () => {

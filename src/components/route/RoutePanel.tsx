@@ -35,39 +35,26 @@ export default function RoutePanel({
         <div>
           <p className="route-panel-kicker">Routing To</p>
           <h2>{destinationLabel}</h2>
-          <p className="panel-caption">Find the quickest Yangon bus journey across connected services.</p>
+          {!routePlanned && (
+            <p className="panel-caption">Find the quickest Yangon bus journey across connected services.</p>
+          )}
         </div>
         <div className="route-live-badge">Live</div>
       </header>
 
-      {routePlanned && startStop && endStop && (
-        <section className="route-waypoint-card" aria-label="Planned Route Waypoints">
-          <div className="route-waypoint-block route-waypoint-block-start">
-            <small>Start</small>
-            <div className="route-waypoint-inline">
-              <span className="route-waypoint-glyph route-waypoint-glyph-start" aria-hidden="true" />
-              <strong>{startStop.name_en}</strong>
-            </div>
-            <span>{startStop.road_en} · {startStop.township_en}</span>
-          </div>
+      <div className="route-inputs-header">
+        <span>Waypoints</span>
+        {startStop && endStop && (
           <button
             type="button"
-            className="route-waypoint-arrow route-waypoint-swap"
+            className="route-waypoint-arrow route-waypoint-swap route-waypoint-swap-inline"
             aria-label="Reverse route"
             onClick={onSwapStops}
           >
             <ArrowLeftRight size={16} className="route-waypoint-arrow-swap" />
           </button>
-          <div className="route-waypoint-block route-waypoint-block-end">
-            <small>Destination</small>
-            <div className="route-waypoint-inline">
-              <span className="route-waypoint-glyph route-waypoint-glyph-end" aria-hidden="true" />
-              <strong>{endStop.name_en}</strong>
-            </div>
-            <span>{endStop.road_en} · {endStop.township_en}</span>
-          </div>
-        </section>
-      )}
+        )}
+      </div>
 
       <div className="route-inputs">
         <AutoComplete
