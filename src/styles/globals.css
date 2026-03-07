@@ -468,12 +468,9 @@ a {
   top: calc(100% + 0.3rem);
   left: 0;
   right: 0;
-  z-index: 80;
+  z-index: 120;
   border-radius: 12px;
-  background:
-    radial-gradient(circle at top left, var(--halftone-dot) 0 1px, transparent 1px),
-    color-mix(in srgb, var(--surface) 97%, var(--bg) 3%);
-  background-size: 12px 12px, auto;
+  background: color-mix(in srgb, var(--surface) 99%, white 1%);
   list-style: none;
   margin: 0;
   padding: 0.25rem;
@@ -481,8 +478,9 @@ a {
   overflow: auto;
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--ink) 8%, transparent),
-    0 10px 20px rgba(0, 0, 0, 0.08);
+    0 16px 28px rgba(0, 0, 0, 0.12);
   isolation: isolate;
+  contain: paint;
 }
 
 .autocomplete-results li button {
