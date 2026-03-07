@@ -14,9 +14,22 @@ interface RouteSegment {
   title: string;
   subtitle: string;
   color?: string;
+  stops?: string[];
 }
 
-const buildTimeline = (routePath: RoutePath | null, startStop: BusStop | null, endStop: BusStop | null): RouteSegment[] => {
+const getStopLabel = (busStopId?: number, nameEn?: string): string => nameEn ?? String(busStopId ?? '');
+
+const getIntermediateStops = (steps: RoutePath['path']): string[] => {
+  const stopNames = steps.map((step) => getStopLabel(step.bus_stop_id, step.name_en));
+  const dedupedStopNames = stopNames.filter((stopName, index) => stopName !== stopNames[index - 1]);
+  return dedupedStopNames.slice(1, -1);
+};
+
+export const buildTimeline = (
+  routePath: RoutePath | null,
+  startStop: BusStop | null,
+  endStop: BusStop | null,
+): RouteSegment[] => {
   if (!routePath || routePath.path.length === 0) {
     return [];
   }
@@ -34,6 +47,7 @@ const buildTimeline = (routePath: RoutePath | null, startStop: BusStop | null, e
     });
   }
 
+  let runStartIndex = -1;
   let currentService = -1;
   let from = '';
   routePath.path.forEach((stop, index) => {
@@ -43,16 +57,19 @@ const buildTimeline = (routePath: RoutePath | null, startStop: BusStop | null, e
 
     if (currentService !== stop.service_name) {
       currentService = stop.service_name;
-      from = stop.name_en ?? String(stop.bus_stop_id);
+      from = getStopLabel(stop.bus_stop_id, stop.name_en);
+      runStartIndex = index;
     }
 
     const next = routePath.path[index + 1];
     if (!next || next.service_name !== currentService) {
+      const runStops = routePath.path.slice(runStartIndex, index + 1);
       segments.push({
         kind: 'bus',
         title: `Take YBS ${currentService}`,
-        subtitle: `${from} → ${stop.name_en ?? stop.bus_stop_id}`,
+        subtitle: `${from} → ${getStopLabel(stop.bus_stop_id, stop.name_en)}`,
         color: stop.color,
+        stops: getIntermediateStops(runStops),
       });
     }
   });

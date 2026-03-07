@@ -657,6 +657,20 @@ a {
   font-size: 0.74rem;
 }
 
+.timeline-stop-list {
+  margin: 0.55rem 0 0;
+  padding: 0 0 0 0.95rem;
+  display: grid;
+  gap: 0.22rem;
+  color: var(--ink-dim);
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.timeline-stop-list li::marker {
+  color: color-mix(in srgb, var(--ink) 28%, transparent);
+}
+
 .timeline-empty {
   margin: 0;
   color: var(--ink-dim);
