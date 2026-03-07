@@ -57,7 +57,7 @@ export default function MapView({
         );
       }}
     >
-      <ScaleControl position="bottom-left" />
+      <ScaleControl position="bottom-left" unit="imperial" />
       <NavigationControl position="bottom-right" />
 
       <RouteLayer routePath={routePath} startStop={startStop} endStop={endStop} busServices={busServices} />

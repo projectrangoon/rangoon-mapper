@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
 import TimelineStep from '@/components/route/TimelineStep';
+import { formatImperialWalkDistance } from '@/lib/units';
 import type { BusStop, RoutePath } from '@/types';
 
 interface TimelineProps {
@@ -42,7 +43,7 @@ export const buildTimeline = (
     segments.push({
       kind: 'walk',
       title: `Walk to ${first.name_en ?? first.bus_stop_id}`,
-      subtitle: `${Math.round((first.distance ?? 0) * 1000)} m`,
+      subtitle: formatImperialWalkDistance(first.distance ?? 0),
       color: '#d8d8d8',
     });
   }
@@ -78,7 +79,7 @@ export const buildTimeline = (
     segments.push({
       kind: 'walk',
       title: `Walk to ${endStop.name_en}`,
-      subtitle: `${Math.round((last.distance ?? 0) * 1000)} m`,
+      subtitle: formatImperialWalkDistance(last.distance ?? 0),
       color: '#d8d8d8',
     });
   }

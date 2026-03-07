@@ -185,7 +185,7 @@ describe('MainPage routing behavior', () => {
     await waitFor(() => {
       expect(screen.getByDisplayValue('Start Stop')).toBeInTheDocument();
       expect(screen.getByDisplayValue('End Stop')).toBeInTheDocument();
-      expect(screen.getByText('0.50 km')).toBeInTheDocument();
+      expect(screen.getByText('0.31 mi')).toBeInTheDocument();
     });
 
     fireEvent.click(screen.getByRole('button', { name: 'Lines' }));
@@ -199,7 +199,7 @@ describe('MainPage routing behavior', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Route' }));
 
     await waitFor(() => {
-      expect(screen.getByText('0.50 km')).toBeInTheDocument();
+      expect(screen.getByText('0.31 mi')).toBeInTheDocument();
       expect(useMapStore.getState().routePath).not.toBeNull();
       expect(useMapStore.getState().routePath?.currDistance).toBeCloseTo(0.5);
     });

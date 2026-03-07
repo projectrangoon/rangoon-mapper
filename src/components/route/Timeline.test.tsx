@@ -58,6 +58,36 @@ describe('buildTimeline', () => {
       stops: ['Stop B', 'Stop C'],
     });
   });
+
+  it('formats walk distances in imperial units', () => {
+    const walkingRoutePath: RoutePath = {
+      currCost: 1,
+      currDistance: 1,
+      currTransfers: 0,
+      path: [
+        { bus_stop_id: 2, service_name: 18, lat: 16.81, lng: 96.11, name_en: 'Board Stop', color: '#d65252', distance: 0.046 },
+        { bus_stop_id: 3, service_name: 18, lat: 16.82, lng: 96.12, name_en: 'Ride', color: '#d65252' },
+        { bus_stop_id: 4, service_name: 18, lat: 16.83, lng: 96.13, name_en: 'Alight', color: '#d65252', distance: 0.385 },
+      ],
+    };
+
+    const walkingStartStop: BusStop = {
+      ...startStop,
+      bus_stop_id: 99,
+      name_en: 'Walk Start',
+    };
+
+    const walkingEndStop: BusStop = {
+      ...endStop,
+      bus_stop_id: 100,
+      name_en: 'Walk End',
+    };
+
+    const segments = buildTimeline(walkingRoutePath, walkingStartStop, walkingEndStop);
+
+    expect(segments[0]).toMatchObject({ kind: 'walk', subtitle: '151 ft' });
+    expect(segments[2]).toMatchObject({ kind: 'walk', subtitle: '0.24 mi' });
+  });
 });
 
 describe('Timeline', () => {

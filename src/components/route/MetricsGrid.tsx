@@ -1,4 +1,5 @@
 import type { RoutePath } from '@/types';
+import { formatImperialDistance } from '@/lib/units';
 
 interface MetricsGridProps {
   routePath: RoutePath | null;
@@ -39,7 +40,7 @@ export default function MetricsGrid({ routePath }: MetricsGridProps) {
       </article>
       <article className="metric-card">
         <h4>Distance</h4>
-        <p>{routePath.currDistance.toFixed(2)} km</p>
+        <p>{formatImperialDistance(routePath.currDistance)}</p>
       </article>
       <article className="metric-card">
         <h4>Transfers</h4>
