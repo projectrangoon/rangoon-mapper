@@ -12,10 +12,14 @@ export default function ServiceStops({ locale, stops }: ServiceStopsProps) {
     <ol className="service-stops">
       {stops.map((stop) => (
         <li key={`${stop.bus_stop_id}-${stop.sequence}`}>
-          <span>{stop.sequence}.</span>
-          <div>
+          <span className="service-stop-index">{stop.sequence}</span>
+          <span className="service-stop-node" aria-hidden="true" />
+          <div className="service-stop-copy">
             <strong>{getLocalizedStopName(stop, locale)}</strong>
-            <small>{locale === 'my' ? stop.name_en : stop.name_mm}</small>
+            {((locale === 'my' ? stop.name_en : stop.name_mm) || '').trim() &&
+              (locale === 'my' ? stop.name_en : stop.name_mm) !== getLocalizedStopName(stop, locale) && (
+                <small>{locale === 'my' ? stop.name_en : stop.name_mm}</small>
+              )}
           </div>
         </li>
       ))}

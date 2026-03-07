@@ -838,25 +838,72 @@ a {
 .service-stops {
   list-style: none;
   margin: 0;
-  padding: 0.15rem 0.35rem 0.2rem 3rem;
+  padding: 0.35rem 0 0.25rem 3rem;
   display: grid;
-  gap: 0.35rem;
+  gap: 0;
+  position: relative;
+}
+
+.service-stops::before {
+  content: '';
+  position: absolute;
+  left: 2.25rem;
+  top: 0.45rem;
+  bottom: 0.55rem;
+  width: 1px;
+  background: color-mix(in srgb, var(--ink) 12%, transparent);
 }
 
 .service-stops li {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.5rem;
-  font-size: 0.85rem;
+  grid-template-columns: 2rem 0.85rem 1fr;
+  gap: 0.7rem;
+  align-items: start;
+  padding: 0.42rem 0;
+  font-size: 0.86rem;
+  line-height: 1.35;
 }
 
-.service-stops span {
+.service-stop-index {
   color: var(--ink-light);
   font-family: 'Space Mono', monospace;
+  font-size: 0.76rem;
+  text-align: right;
+  padding-top: 0.08rem;
 }
 
-.service-stops small {
+.service-stop-node {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 28%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--surface) 96%, transparent);
+  margin-top: 0.28rem;
+  position: relative;
+  z-index: 1;
+}
+
+.service-stop-copy {
+  min-width: 0;
+  padding: 0.02rem 0 0.05rem;
+}
+
+.service-stop-copy strong,
+.service-stop-copy small {
+  display: block;
+}
+
+.service-stop-copy strong {
+  color: var(--ink);
+  font-size: 0.94rem;
+  font-weight: 620;
+  line-height: 1.28;
+}
+
+.service-stop-copy small {
+  margin-top: 0.08rem;
   color: var(--ink-dim);
+  font-size: 0.77rem;
 }
 
 .control-cluster {
@@ -1144,7 +1191,8 @@ html[data-locale='my'] .mode-toggle button,
 html[data-locale='my'] .service-expand span,
 html[data-locale='my'] .route-stop-label small,
 html[data-locale='my'] .route-stop-label strong,
-html[data-locale='my'] .service-stops small {
+html[data-locale='my'] .service-stop-copy strong,
+html[data-locale='my'] .service-stop-copy small {
   font-family: 'Noto Sans Myanmar', 'Inter', sans-serif;
   letter-spacing: 0;
   text-transform: none;
@@ -1167,7 +1215,9 @@ html[data-locale='my'] .autocomplete-results small,
 html[data-locale='my'] .timeline-step small,
 html[data-locale='my'] .timeline-stop-item,
 html[data-locale='my'] .service-expand span,
-html[data-locale='my'] .service-stops li {
+html[data-locale='my'] .service-stops li,
+html[data-locale='my'] .service-stop-copy strong,
+html[data-locale='my'] .service-stop-copy small {
   line-height: 1.55;
 }
 
@@ -1181,8 +1231,12 @@ html[data-locale='my'] .timeline-leg-toggle {
 
 html[data-locale='my'] .timeline-step small,
 html[data-locale='my'] .autocomplete-meta,
-html[data-locale='my'] .service-stops small {
+html[data-locale='my'] .service-stop-copy small {
   font-size: 0.78rem;
+}
+
+html[data-locale='my'] .service-stop-index {
+  font-family: 'Space Mono', monospace;
 }
 
 @media (max-width: 768px) {
