@@ -576,8 +576,8 @@ a {
 .timeline-guide {
   position: absolute;
   left: 0.47rem;
-  top: 0.4rem;
-  bottom: 0.4rem;
+  top: 1rem;
+  bottom: 1rem;
   width: 2px;
   background-image: linear-gradient(to bottom, #111 35%, transparent 35%);
   background-size: 100% 8px;
@@ -594,7 +594,7 @@ a {
   display: grid;
   grid-template-columns: auto auto 1fr;
   gap: 0.8rem;
-  align-items: start;
+  align-items: center;
   padding-bottom: 1rem;
 }
 
@@ -604,7 +604,6 @@ a {
   display: grid;
   place-items: center;
   position: relative;
-  margin-top: 0.28rem;
 }
 
 .timeline-dot {
