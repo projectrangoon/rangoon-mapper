@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Myanmar:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 @import 'tailwindcss';
 
 :root {
@@ -45,6 +45,10 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: 'Inter', sans-serif;
+}
+
+html[data-locale='my'] body {
+  font-family: 'Noto Sans Myanmar', 'Inter', sans-serif;
 }
 
 a {
@@ -1101,6 +1105,47 @@ a {
   border-radius: 999px;
   border: 1px solid #fff;
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.35);
+}
+
+html[data-locale='my'] .route-panel-kicker,
+html[data-locale='my'] .route-live-badge,
+html[data-locale='my'] .timeline-header span,
+html[data-locale='my'] .timeline-eyebrow,
+html[data-locale='my'] .timeline-leg-toggle,
+html[data-locale='my'] .timeline-step small,
+html[data-locale='my'] .autocomplete-meta,
+html[data-locale='my'] .metric-card h4,
+html[data-locale='my'] .route-stop-label small,
+html[data-locale='my'] .route-stop-label strong,
+html[data-locale='my'] .service-stops small {
+  font-family: 'Noto Sans Myanmar', 'Inter', sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+html[data-locale='my'] .route-panel-kicker,
+html[data-locale='my'] .route-live-badge,
+html[data-locale='my'] .timeline-header span,
+html[data-locale='my'] .timeline-eyebrow,
+html[data-locale='my'] .metric-card h4 {
+  font-weight: 600;
+}
+
+html[data-locale='my'] .timeline-step strong,
+html[data-locale='my'] .timeline-step small,
+html[data-locale='my'] .timeline-stop-item,
+html[data-locale='my'] .service-stops li {
+  line-height: 1.55;
+}
+
+html[data-locale='my'] .timeline-leg-toggle {
+  font-size: 0.78rem;
+}
+
+html[data-locale='my'] .timeline-step small,
+html[data-locale='my'] .autocomplete-meta,
+html[data-locale='my'] .service-stops small {
+  font-size: 0.78rem;
 }
 
 @media (max-width: 768px) {
