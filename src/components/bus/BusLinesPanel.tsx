@@ -1,5 +1,6 @@
 import BusServiceItem from '@/components/bus/BusServiceItem';
 import Panel from '@/components/ui/Panel';
+import { cn } from '@/lib/cn';
 import { t } from '@/lib/i18n';
 import type { AppLocale, BusServicesMap } from '@/types';
 
@@ -24,10 +25,14 @@ export default function BusLinesPanel({
 
   return (
     <Panel className="lines-panel">
-      <h2>{t(locale, 'busLines')}</h2>
-      <p className="panel-caption">{t(locale, 'busLinesCaption')}</p>
+      <h2 className={cn('m-0 text-[1.55rem] font-[650] leading-[1.05] tracking-[-0.04em]', locale === 'my' && 'font-["Noto_Sans_Myanmar","Inter",sans-serif] tracking-[0]')}>
+        {t(locale, 'busLines')}
+      </h2>
+      <p className={cn('mt-[0.35rem] mb-0 text-[0.875rem] text-[var(--ink-dim)]', locale === 'my' && 'font-["Noto_Sans_Myanmar","Inter",sans-serif] leading-[1.55]')}>
+        {t(locale, 'busLinesCaption')}
+      </p>
 
-      <ul className="services-list">
+      <ul className="m-0 mt-4 grid max-h-[min(62dvh,620px)] list-none gap-0 overflow-auto p-0">
         {serviceIds.map((serviceId) => {
           const service = busServices[serviceId];
           if (!service) {
