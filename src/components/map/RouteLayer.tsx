@@ -44,15 +44,23 @@ const getCoordinatesFromSteps = (steps: RouteStep[]): [number, number][] => {
 const findNearestShapePointIndex = (
   shapeCoordinates: [number, number][],
   step: RouteStep | undefined,
+  startIndex = 0,
 ): { index: number; distanceKm: number } | null => {
-  if (!step || typeof step.lng !== 'number' || typeof step.lat !== 'number' || shapeCoordinates.length === 0) {
+  if (
+    !step ||
+    typeof step.lng !== 'number' ||
+    typeof step.lat !== 'number' ||
+    shapeCoordinates.length === 0 ||
+    startIndex >= shapeCoordinates.length
+  ) {
     return null;
   }
 
   let bestIndex = -1;
   let bestDistance = Number.POSITIVE_INFINITY;
 
-  shapeCoordinates.forEach(([lng, lat], index) => {
+  shapeCoordinates.slice(startIndex).forEach(([lng, lat], offset) => {
+    const index = startIndex + offset;
     const distance = getDistance(step.lat!, step.lng!, lat, lng);
     if (distance < bestDistance) {
       bestDistance = distance;
@@ -67,43 +75,52 @@ const findNearestShapePointIndex = (
   return { index: bestIndex, distanceKm: bestDistance };
 };
 
-const getShapeRunCoordinates = (
+const getAnchoredShapeRunCoordinates = (
   service: BusService | undefined,
   runSteps: RouteStep[],
 ): [number, number][] | null => {
   const shapeCoordinates = service?.shape?.map((point) => [point.lng, point.lat] as [number, number]) ?? [];
-  const first = runSteps[0];
-  const last = runSteps[runSteps.length - 1];
-
-  if (!service || !first || !last || shapeCoordinates.length < 2) {
+  if (!service || runSteps.length === 0 || shapeCoordinates.length < 2) {
     return null;
   }
 
-  const startMatch = findNearestShapePointIndex(shapeCoordinates, first);
-  const endMatch = findNearestShapePointIndex(shapeCoordinates, last);
+  const matches: Array<{ index: number; step: RouteStep }> = [];
+  let searchStartIndex = 0;
 
-  if (
-    !startMatch ||
-    !endMatch ||
-    startMatch.distanceKm > SHAPE_MATCH_DISTANCE_KM ||
-    endMatch.distanceKm > SHAPE_MATCH_DISTANCE_KM ||
-    startMatch.index === endMatch.index
-  ) {
+  for (const step of runSteps) {
+    const match = findNearestShapePointIndex(shapeCoordinates, step, searchStartIndex);
+    if (!match || match.distanceKm > SHAPE_MATCH_DISTANCE_KM) {
+      return null;
+    }
+
+    matches.push({ index: match.index, step });
+    searchStartIndex = match.index;
+  }
+
+  const startIndex = matches[0]!.index;
+  const endIndex = matches[matches.length - 1]!.index;
+  if (startIndex === endIndex) {
     return null;
   }
 
-  const lowerIndex = Math.min(startMatch.index, endMatch.index);
-  const upperIndex = Math.max(startMatch.index, endMatch.index);
-  const slicedShape = shapeCoordinates.slice(lowerIndex, upperIndex + 1);
+  const anchoredShape = shapeCoordinates.slice(startIndex, endIndex + 1);
 
-  return startMatch.index <= endMatch.index ? slicedShape : slicedShape.reverse();
+  matches.forEach(({ index, step }) => {
+    if (typeof step.lng !== 'number' || typeof step.lat !== 'number') {
+      return;
+    }
+
+    anchoredShape[index - startIndex] = [step.lng, step.lat];
+  });
+
+  return anchoredShape;
 };
 
 const getServiceRunCoordinates = (
   service: BusService | undefined,
   runSteps: RouteStep[],
 ): [number, number][] => {
-  const shapeCoordinates = getShapeRunCoordinates(service, runSteps);
+  const shapeCoordinates = getAnchoredShapeRunCoordinates(service, runSteps);
   if (shapeCoordinates && shapeCoordinates.length >= 2) {
     return shapeCoordinates;
   }

@@ -64,13 +64,14 @@ const busServices: BusServicesMap = {
 };
 
 describe('buildRouteFeatures', () => {
-  it('uses the service shape geometry when available for bus legs', () => {
+  it('uses the service shape geometry and anchors it through the matched route stops', () => {
     const routePath: RoutePath = {
       currCost: 1,
       currDistance: 2,
       currTransfers: 0,
       path: [
         { bus_stop_id: 1, service_name: 1, lat: startStop.lat, lng: startStop.lng, color: '#44ccaa' },
+        { bus_stop_id: 2, service_name: 1, lat: midStop.lat, lng: midStop.lng, color: '#44ccaa' },
         { bus_stop_id: 3, service_name: 1, lat: endStop.lat, lng: endStop.lng, color: '#44ccaa' },
       ],
     };
@@ -95,11 +96,11 @@ describe('buildRouteFeatures', () => {
     const busFeature = features.features.find((feature) => feature.properties.walk === false);
 
     expect(busFeature?.geometry.coordinates).toEqual([
-      [96.099, 16.799],
+      [96.1, 16.8],
       [96.115, 16.81],
-      [96.135, 16.822],
+      [96.14, 16.82],
       [96.155, 16.84],
-      [96.181, 16.852],
+      [96.18, 16.85],
     ]);
   });
 
