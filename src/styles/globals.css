@@ -1109,12 +1109,24 @@ a {
 
 html[data-locale='my'] .route-panel-kicker,
 html[data-locale='my'] .route-live-badge,
+html[data-locale='my'] .route-inputs-header span,
+html[data-locale='my'] .autocomplete label,
+html[data-locale='my'] .search-island input,
+html[data-locale='my'] .search-results strong,
+html[data-locale='my'] .search-results small,
+html[data-locale='my'] .search-results .empty,
+html[data-locale='my'] .autocomplete-results strong,
+html[data-locale='my'] .autocomplete-results small,
+html[data-locale='my'] .autocomplete-results .empty,
 html[data-locale='my'] .timeline-header span,
 html[data-locale='my'] .timeline-eyebrow,
 html[data-locale='my'] .timeline-leg-toggle,
 html[data-locale='my'] .timeline-step small,
 html[data-locale='my'] .autocomplete-meta,
+html[data-locale='my'] .calculating,
 html[data-locale='my'] .metric-card h4,
+html[data-locale='my'] .mode-toggle button,
+html[data-locale='my'] .service-expand span,
 html[data-locale='my'] .route-stop-label small,
 html[data-locale='my'] .route-stop-label strong,
 html[data-locale='my'] .service-stops small {
@@ -1132,10 +1144,20 @@ html[data-locale='my'] .metric-card h4 {
 }
 
 html[data-locale='my'] .timeline-step strong,
+html[data-locale='my'] .search-island input,
+html[data-locale='my'] .search-results strong,
+html[data-locale='my'] .search-results small,
+html[data-locale='my'] .autocomplete-results strong,
+html[data-locale='my'] .autocomplete-results small,
 html[data-locale='my'] .timeline-step small,
 html[data-locale='my'] .timeline-stop-item,
+html[data-locale='my'] .service-expand span,
 html[data-locale='my'] .service-stops li {
   line-height: 1.55;
+}
+
+html[data-locale='my'] .search-island input {
+  font-size: 0.97rem;
 }
 
 html[data-locale='my'] .timeline-leg-toggle {
