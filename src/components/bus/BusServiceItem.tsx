@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
 import ServiceStops from '@/components/bus/ServiceStops';
+import { normalizeServiceName } from '@/lib/serviceNames';
 import type { AppLocale, BusService } from '@/types';
 
 interface BusServiceItemProps {
@@ -34,7 +35,7 @@ export default function BusServiceItem({
         </span>
 
         <button type="button" className="service-expand" onClick={onExpand}>
-          <span>{service.service_name}</span>
+          <span>{normalizeServiceName(service.service_name)}</span>
           {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
         </button>
       </div>

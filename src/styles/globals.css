@@ -753,18 +753,18 @@ a {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 0.55rem;
+  gap: 0;
   max-height: min(62dvh, 620px);
   overflow: auto;
 }
 
 .service-item {
-  border-radius: 12px;
-  background:
-    radial-gradient(circle at top left, var(--halftone-dot) 0 1px, transparent 1px),
-    color-mix(in srgb, var(--surface) 90%, transparent);
-  background-size: 12px 12px, auto;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 8%, transparent);
+  position: relative;
+  padding: 0.4rem 0;
+}
+
+.service-item + .service-item {
+  border-top: 1px solid color-mix(in srgb, var(--ink) 9%, transparent);
 }
 
 .service-row {
@@ -772,7 +772,7 @@ a {
   grid-template-columns: auto auto 1fr;
   gap: 0.5rem;
   align-items: center;
-  padding: 0.45rem;
+  padding: 0.25rem 0;
 }
 
 .service-toggle,
@@ -807,23 +807,29 @@ a {
 .service-expand {
   width: 100%;
   text-align: left;
-  padding: 0.35rem 0.5rem;
+  padding: 0.4rem 0.35rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
+  border-radius: 10px;
+  transition: background-color 0.18s ease;
+}
+
+.service-expand:hover {
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
 }
 
 .service-expand span {
-  color: var(--ink-dim);
+  color: var(--ink);
   font-size: 0.85rem;
 }
 
 .service-stops {
   list-style: none;
   margin: 0;
-  padding: 0.2rem 0.5rem 0.65rem;
+  padding: 0.15rem 0.35rem 0.2rem 3rem;
   display: grid;
   gap: 0.35rem;
 }
