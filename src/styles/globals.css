@@ -132,6 +132,8 @@ a {
 }
 
 .panel {
+  position: relative;
+  isolation: isolate;
   margin-top: 0.75rem;
   border-radius: 22px;
   padding: 1.1rem;
@@ -322,6 +324,8 @@ a {
 }
 
 .route-inputs {
+  position: relative;
+  z-index: 10;
   display: grid;
   gap: 0.7rem;
   isolation: isolate;
@@ -386,7 +390,7 @@ a {
 }
 
 .autocomplete:focus-within {
-  z-index: 20;
+  z-index: 30;
 }
 
 .autocomplete label {
@@ -510,6 +514,8 @@ a {
 }
 
 .calculating {
+  position: relative;
+  z-index: 0;
   margin: 0.8rem 0;
   color: #f2c96b;
   font-size: 0.86rem;
@@ -517,6 +523,8 @@ a {
 }
 
 .metrics-grid {
+  position: relative;
+  z-index: 0;
   margin: 0.8rem 0 1rem;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -553,6 +561,8 @@ a {
 }
 
 .timeline-header {
+  position: relative;
+  z-index: 0;
   margin: 0.2rem 0 0.9rem;
   padding-bottom: 0.55rem;
   border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
@@ -569,6 +579,7 @@ a {
 
 .timeline-shell {
   position: relative;
+  z-index: 0;
 }
 
 .timeline-guide {
