@@ -96,4 +96,105 @@ describe('buildRouteStopPoints', () => {
     });
     expect(highZoomPoints.map((point) => point.kind)).toEqual(['pass', 'transfer', 'pass']);
   });
+
+  it('hides boarded and alighted route-stop markers when they duplicate the selected endpoints', () => {
+    const selectedStart: BusStop = {
+      ...startStop,
+      bus_stop_id: 121,
+      lat: 16.774918,
+      lng: 96.142353,
+      name_en: 'Maw Tin',
+    };
+    const boardedStop = {
+      bus_stop_id: 122,
+      service_name: 39,
+      lat: 16.774622,
+      lng: 96.142243,
+      name_en: 'Maw Tin',
+      color: '#405CAA',
+    };
+    const midStop = {
+      bus_stop_id: 123,
+      service_name: 39,
+      lat: 16.78,
+      lng: 96.15,
+      name_en: 'Sanpya',
+      color: '#405CAA',
+    };
+    const alightedStop = {
+      bus_stop_id: 44,
+      service_name: 39,
+      lat: 16.904243,
+      lng: 96.097559,
+      name_en: 'Japan Lan',
+      color: '#405CAA',
+    };
+    const selectedEnd: BusStop = {
+      ...endStop,
+      bus_stop_id: 43,
+      lat: 16.903832,
+      lng: 96.097151,
+      name_en: 'Japan Lan',
+    };
+    const routePath: RoutePath = {
+      currCost: 1,
+      currDistance: 2,
+      currTransfers: 0,
+      path: [boardedStop, midStop, alightedStop],
+    };
+
+    const points = getVisibleRouteStopPoints(
+      routePath,
+      selectedStart,
+      selectedEnd,
+      ROUTE_STOP_MARKER_ZOOM + 1,
+    );
+
+    expect(points.map((point) => point.busStopId)).toEqual([123]);
+  });
+
+  it('keeps transfer markers visible even when they are close to an endpoint', () => {
+    const selectedStart: BusStop = {
+      ...startStop,
+      bus_stop_id: 1,
+      lat: 16.8,
+      lng: 96.1,
+      name_en: 'Start',
+    };
+    const selectedEnd: BusStop = {
+      ...endStop,
+      bus_stop_id: 2,
+      lat: 16.9,
+      lng: 96.2,
+      name_en: 'End',
+    };
+    const transferStop = {
+      bus_stop_id: 3,
+      service_name: 1,
+      lat: 16.90005,
+      lng: 96.20005,
+      name_en: 'End',
+      color: '#405CAA',
+    };
+    const routePath: RoutePath = {
+      currCost: 1,
+      currDistance: 2,
+      currTransfers: 1,
+      path: [
+        { bus_stop_id: 1, service_name: 1, lat: 16.8, lng: 96.1, name_en: 'Start', color: '#405CAA' },
+        transferStop,
+        { ...transferStop, service_name: 2, color: '#86603E' },
+      ],
+    };
+
+    const points = getVisibleRouteStopPoints(
+      routePath,
+      selectedStart,
+      selectedEnd,
+      ROUTE_STOP_MARKER_ZOOM + 1,
+    );
+
+    expect(points).toHaveLength(1);
+    expect(points[0]).toMatchObject({ kind: 'transfer' });
+  });
 });

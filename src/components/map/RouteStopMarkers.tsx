@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import { Marker } from 'react-map-gl/maplibre';
 
+import { getDistance } from '@/lib/geo';
 import type { BusStop, RoutePath } from '@/types';
 
 interface RouteStopMarkersProps {
@@ -32,6 +33,7 @@ const kindPriority: Record<RouteStopKind, number> = {
 };
 
 export const ROUTE_STOP_MARKER_ZOOM = 13.25;
+const ENDPOINT_DUPLICATE_DISTANCE_KM = 0.12;
 
 const collapseConsecutiveStops = (routePath: RoutePath): RouteStopPoint[] => {
   const points: RouteStopPoint[] = [];
@@ -108,12 +110,28 @@ export const getVisibleRouteStopPoints = (
   endStop: BusStop | null,
   zoom: number,
 ): RouteStopPoint[] => {
+  const matchesEndpoint = (point: RouteStopPoint, stop: BusStop | null): boolean => {
+    if (!stop) {
+      return false;
+    }
+
+    if (point.busStopId === stop.bus_stop_id) {
+      return true;
+    }
+
+    if (point.name !== stop.name_en) {
+      return false;
+    }
+
+    return getDistance(point.lat, point.lng, stop.lat, stop.lng) <= ENDPOINT_DUPLICATE_DISTANCE_KM;
+  };
+
   const points = buildRouteStopPoints(routePath).filter((point) => {
     if (point.kind === 'transfer') {
       return true;
     }
 
-    return point.busStopId !== startStop?.bus_stop_id && point.busStopId !== endStop?.bus_stop_id;
+    return !matchesEndpoint(point, startStop) && !matchesEndpoint(point, endStop);
   });
 
   if (shouldShowRouteStopMarkers(zoom)) {
