@@ -984,8 +984,8 @@ a {
 }
 
 .route-stop-label-transfer {
-  min-width: 5.1rem;
-  max-width: 7.8rem;
+  min-width: max-content;
+  max-width: 10.5rem;
   opacity: 0.98;
 }
 
@@ -993,6 +993,7 @@ a {
   margin-bottom: 0.1rem;
   font-size: 0.56rem;
   letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
 .route-stop-label-transfer strong {
