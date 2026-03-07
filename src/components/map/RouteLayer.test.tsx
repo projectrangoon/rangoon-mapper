@@ -32,6 +32,15 @@ const endStop: BusStop = {
   services: [{ service_name: 1, color: '#44ccaa', sequence: 3 }],
 };
 
+const midStopTwo: BusStop = {
+  ...startStop,
+  bus_stop_id: 4,
+  lat: 16.821,
+  lng: 96.141,
+  name_en: 'Mid Two',
+  services: [{ service_name: 1, color: '#44ccaa', sequence: 3 }],
+};
+
 const busServices: BusServicesMap = {
   '1': {
     color: '#44ccaa',
@@ -121,6 +130,55 @@ describe('buildRouteFeatures', () => {
     expect(busFeature?.geometry.coordinates).toEqual([
       [96.1, 16.8],
       [96.14, 16.82],
+      [96.18, 16.85],
+    ]);
+  });
+
+  it('preserves consecutive stops even when they match the same shape vertex', () => {
+    const routePath: RoutePath = {
+      currCost: 1,
+      currDistance: 2,
+      currTransfers: 0,
+      path: [
+        { bus_stop_id: 1, service_name: 1, lat: startStop.lat, lng: startStop.lng, color: '#44ccaa' },
+        { bus_stop_id: 2, service_name: 1, lat: midStop.lat, lng: midStop.lng, color: '#44ccaa' },
+        { bus_stop_id: 4, service_name: 1, lat: midStopTwo.lat, lng: midStopTwo.lng, color: '#44ccaa' },
+        { bus_stop_id: 3, service_name: 1, lat: endStop.lat, lng: endStop.lng, color: '#44ccaa' },
+      ],
+    };
+
+    const shapedServices: BusServicesMap = {
+      '1': {
+        color: '#44ccaa',
+        service_name: 'Service One',
+        service_no: 1,
+        stops: [
+          busServices['1']!.stops[0]!,
+          busServices['1']!.stops[1]!,
+          {
+            ...midStopTwo,
+            service_name: 1,
+            color: '#44ccaa',
+            sequence: 3,
+            distance: 0.1,
+          },
+          busServices['1']!.stops[2]!,
+        ],
+        shape: [
+          { lat: 16.8, lng: 96.1 },
+          { lat: 16.8205, lng: 96.1405 },
+          { lat: 16.85, lng: 96.18 },
+        ],
+      },
+    };
+
+    const features = buildRouteFeatures(routePath, startStop, endStop, shapedServices);
+    const busFeature = features.features.find((feature) => feature.properties.walk === false);
+
+    expect(busFeature?.geometry.coordinates).toEqual([
+      [96.1, 16.8],
+      [96.14, 16.82],
+      [96.141, 16.821],
       [96.18, 16.85],
     ]);
   });

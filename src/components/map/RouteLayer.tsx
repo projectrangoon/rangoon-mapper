@@ -41,6 +41,18 @@ const getCoordinatesFromSteps = (steps: RouteStep[]): [number, number][] => {
   });
 };
 
+const appendCoordinate = (
+  coordinates: [number, number][],
+  coordinate: [number, number],
+) => {
+  const lastCoordinate = coordinates[coordinates.length - 1];
+  if (lastCoordinate && lastCoordinate[0] === coordinate[0] && lastCoordinate[1] === coordinate[1]) {
+    return;
+  }
+
+  coordinates.push(coordinate);
+};
+
 const findNearestShapePointIndex = (
   shapeCoordinates: [number, number][],
   step: RouteStep | undefined,
@@ -103,14 +115,27 @@ const getAnchoredShapeRunCoordinates = (
     return null;
   }
 
-  const anchoredShape = shapeCoordinates.slice(startIndex, endIndex + 1);
-
-  matches.forEach(({ index, step }) => {
+  const anchoredShape: [number, number][] = [];
+  const matchedStopsByIndex = matches.reduce<Map<number, [number, number][]>>((accumulator, { index, step }) => {
     if (typeof step.lng !== 'number' || typeof step.lat !== 'number') {
+      return accumulator;
+    }
+
+    const localIndex = index - startIndex;
+    const stopsAtIndex = accumulator.get(localIndex) ?? [];
+    stopsAtIndex.push([step.lng, step.lat]);
+    accumulator.set(localIndex, stopsAtIndex);
+    return accumulator;
+  }, new Map<number, [number, number][]>());
+
+  shapeCoordinates.slice(startIndex, endIndex + 1).forEach((shapeCoordinate, localIndex) => {
+    const anchoredStops = matchedStopsByIndex.get(localIndex);
+    if (anchoredStops && anchoredStops.length > 0) {
+      anchoredStops.forEach((stopCoordinate) => appendCoordinate(anchoredShape, stopCoordinate));
       return;
     }
 
-    anchoredShape[index - startIndex] = [step.lng, step.lat];
+    appendCoordinate(anchoredShape, shapeCoordinate);
   });
 
   return anchoredShape;
