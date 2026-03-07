@@ -11,7 +11,7 @@ interface StopMarkerProps {
 
 export default function StopMarker({ lat, lng, label, color, variant }: StopMarkerProps) {
   return (
-    <Marker latitude={lat} longitude={lng} anchor="center">
+    <Marker latitude={lat} longitude={lng} anchor="bottom">
       <div
         className={`stop-marker stop-marker-${variant}`}
         style={{ '--marker-color': color } as CSSProperties}
@@ -21,7 +21,7 @@ export default function StopMarker({ lat, lng, label, color, variant }: StopMark
           <small>{variant === 'start' ? 'Start' : 'Destination'}</small>
           <strong>{label}</strong>
         </div>
-        <span />
+        <span className="stop-marker-pin" />
       </div>
     </Marker>
   );

@@ -2,6 +2,7 @@ import AutoComplete from '@/components/route/AutoComplete';
 import MetricsGrid from '@/components/route/MetricsGrid';
 import Timeline from '@/components/route/Timeline';
 import Panel from '@/components/ui/Panel';
+import { ArrowDown, ArrowRight } from 'lucide-react';
 import type { BusStop, RoutePath, UniqueStop } from '@/types';
 
 interface RoutePanelProps {
@@ -32,22 +33,25 @@ export default function RoutePanel({
 
       {routePlanned && startStop && endStop && (
         <section className="route-waypoint-card" aria-label="Planned Route Waypoints">
-          <div className="route-waypoint-row route-waypoint-start">
-            <span className="route-waypoint-glyph route-waypoint-glyph-start" aria-hidden="true" />
-            <div className="route-waypoint-copy">
-              <small>Start</small>
+          <div className="route-waypoint-block route-waypoint-block-start">
+            <small>Start</small>
+            <div className="route-waypoint-inline">
+              <span className="route-waypoint-glyph route-waypoint-glyph-start" aria-hidden="true" />
               <strong>{startStop.name_en}</strong>
-              <span>{startStop.road_en} · {startStop.township_en}</span>
             </div>
+            <span>{startStop.road_en} · {startStop.township_en}</span>
           </div>
-          <div className="route-waypoint-divider" aria-hidden="true" />
-          <div className="route-waypoint-row route-waypoint-end">
-            <span className="route-waypoint-glyph route-waypoint-glyph-end" aria-hidden="true" />
-            <div className="route-waypoint-copy">
-              <small>Destination</small>
+          <div className="route-waypoint-arrow" aria-hidden="true">
+            <ArrowRight size={16} className="route-waypoint-arrow-desktop" />
+            <ArrowDown size={16} className="route-waypoint-arrow-mobile" />
+          </div>
+          <div className="route-waypoint-block route-waypoint-block-end">
+            <small>Destination</small>
+            <div className="route-waypoint-inline">
+              <span className="route-waypoint-glyph route-waypoint-glyph-end" aria-hidden="true" />
               <strong>{endStop.name_en}</strong>
-              <span>{endStop.road_en} · {endStop.township_en}</span>
             </div>
+            <span>{endStop.road_en} · {endStop.township_en}</span>
           </div>
         </section>
       )}
