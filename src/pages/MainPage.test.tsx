@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import MainPage from '@/pages/MainPage';
@@ -111,12 +111,16 @@ describe('MainPage routing behavior', () => {
   });
 
   it('loads directions deep link into route mode', async () => {
+    useBusStore.setState({ selectedServices: new Set<string>(['1']), expandedService: '1' });
+
     renderWithRoute('/directions/1/2');
 
     expect(screen.getByText('Route Planner')).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.getByDisplayValue('Start Stop (1)')).toBeInTheDocument();
       expect(screen.getByDisplayValue('End Stop (2)')).toBeInTheDocument();
+      expect(useBusStore.getState().selectedServices.size).toBe(0);
+      expect(useBusStore.getState().expandedService).toBeNull();
     });
   });
 
@@ -126,6 +130,23 @@ describe('MainPage routing behavior', () => {
     await waitFor(() => {
       expect(screen.getByText('Bus Lines')).toBeInTheDocument();
       expect(screen.getByText('Service One')).toBeInTheDocument();
+    });
+  });
+
+  it('clears selected lines when switching back to route mode', async () => {
+    renderWithRoute('/bus/1');
+
+    await waitFor(() => {
+      expect(useBusStore.getState().selectedServices.has('1')).toBe(true);
+      expect(screen.getByText('Bus Lines')).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Route' }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Route Planner')).toBeInTheDocument();
+      expect(useBusStore.getState().selectedServices.size).toBe(0);
+      expect(useBusStore.getState().expandedService).toBeNull();
     });
   });
 });

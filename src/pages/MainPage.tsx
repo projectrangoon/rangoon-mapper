@@ -62,6 +62,7 @@ export default function MainPage() {
   const toggleService = useBusStore((state) => state.toggleService);
   const setExpandedService = useBusStore((state) => state.setExpandedService);
   const selectOnly = useBusStore((state) => state.selectOnly);
+  const clearServices = useBusStore((state) => state.clearServices);
 
   const { theme, toggleTheme } = useTheme();
   const { isCalculating } = useRouteCalculation();
@@ -97,6 +98,8 @@ export default function MainPage() {
     }
 
     setMode('route');
+    clearServices();
+    setExpandedService(null);
     const startId = parseStopId(startStopParam);
     const endId = parseStopId(endStopParam);
 
@@ -124,6 +127,8 @@ export default function MainPage() {
     setStartStop,
     setEndStop,
     selectOnly,
+    clearServices,
+    setExpandedService,
     isDataReady,
   ]);
 
@@ -167,6 +172,8 @@ export default function MainPage() {
   const handleModeChange = (nextMode: AppMode) => {
     setMode(nextMode);
     if (nextMode === 'route') {
+      clearServices();
+      setExpandedService(null);
       return;
     }
 
@@ -175,6 +182,8 @@ export default function MainPage() {
 
   const applySearchSelection = (stop: UniqueStop) => {
     if (mode === 'lines') {
+      clearServices();
+      setExpandedService(null);
       setMode('route');
       setStartStop(stop);
       setEndStop(null);
