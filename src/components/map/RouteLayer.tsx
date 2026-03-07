@@ -85,6 +85,7 @@ const getRunSpanLimit = (
     return null;
   }
 
+  // Shape samples are denser than service-stop sequences, so the limit is intentionally loose rather than exact.
   return Math.max(bestSpan * 2 + 4, runSteps.length + 4);
 };
 
@@ -212,6 +213,8 @@ const matchShapeRun = (
     return null;
   }
 
+  // Dynamic-program the best monotonic shape match for the routed stops. This lets us choose the best
+  // occurrence when a looped shape passes near the same stop name more than once.
   let bestMatch: ShapeMatch | null = null;
 
   startCandidates.forEach((startCandidate) => {
@@ -339,6 +342,8 @@ const matchShapeRun = (
         currentMatch.step.lng,
       );
       const allowedSegmentGapKm = Math.max(0.75, directStepDistanceKm * 4 + 0.35);
+      // Broken crawler shapes occasionally contain seam jumps. If a matched segment is wildly larger than the
+      // actual stop-to-stop distance, reject this shape run and fall back to service-stop geometry instead.
       if (getMaxAdjacentDistanceKm(segmentCoordinates) > allowedSegmentGapKm) {
         return;
       }
@@ -390,6 +395,8 @@ const getAnchoredShapeRunCoordinates = (
     { coordinates: reversedShapeCoordinates },
   ];
 
+  // Only wrap circular services when the raw shape is actually closed. Wrapping an open polyline creates
+  // a fake seam jump across the city.
   if (isCircularService && hasClosedShape) {
     variants.push({
       coordinates: shapeCoordinates.concat(shapeCoordinates),
@@ -449,6 +456,8 @@ const matchServiceRunCoordinates = (
   const isCircularService = service.stops[0]?.bus_stop_id === service.stops[service.stops.length - 1]?.bus_stop_id;
   const variants: Array<{ stops: BusService['stops']; maxSpan?: number }> = [{ stops: service.stops }];
 
+  // Some services are circular in stop order but only have partial or low-quality shape data.
+  // This pure stop-sequence matcher is the safer fallback for those runs.
   if (isCircularService) {
     variants.push({
       stops: service.stops.concat(service.stops.slice(1)),
@@ -524,6 +533,8 @@ const getServiceRunCoordinates = (
   service: BusService | undefined,
   runSteps: RouteStep[],
 ): [number, number][] => {
+  // Prefer road-shaped geometry when it matches cleanly, then degrade to service-stop order, then to the
+  // literal routed steps. That keeps the route readable even when the source data is inconsistent.
   const shapeCoordinates = getAnchoredShapeRunCoordinates(service, runSteps);
   if (shapeCoordinates && shapeCoordinates.length >= 2) {
     return shapeCoordinates;

@@ -60,6 +60,7 @@ export const calculateRoute = (
   } = options;
 
   const seen = new Set<string>();
+  // Dijkstra queue ordered by weighted journey cost, then by raw travelled distance as a tie-breaker.
   const queue = new TinyQueue<RouteCandidate>([], (a, b) => {
     if (a.currCost === b.currCost) {
       return a.currDistance - b.currDistance;
@@ -110,6 +111,8 @@ export const calculateRoute = (
     const found = nearbyLastKnownStops.find((stop) => stop.bus_stop_id === endStop.bus_stop_id);
     if (found) {
       const distance = found.distance ?? 0;
+      // Walking the final leg is treated as another candidate in the queue instead of an early return,
+      // so the planner can still compare "get off and walk now" against "stay on the bus a bit longer".
       const candidate = {
         ...top,
         currCost: top.currCost + distance * walkingCost,
@@ -133,6 +136,7 @@ export const calculateRoute = (
     if (seen.has(lastStopId)) {
       continue;
     }
+    // Visiting by stop+service keeps circular routes explorable while still pruning worse repeats.
     seen.add(lastStopId);
 
     const neighbours = graph[lastKnownStop.bus_stop_id] ?? [];
@@ -153,6 +157,7 @@ export const calculateRoute = (
 
       if (lastKnownServiceName !== neighbour.service_name) {
         candidate.currTransfers = top.currTransfers + 1;
+        // Boarding the first bus should not count as a transfer; only service changes after that do.
         candidate.currCost = top.currCost + (lastKnownServiceName === 0 ? 0 : perTransferCost);
       } else {
         candidate.currCost = top.currCost;
