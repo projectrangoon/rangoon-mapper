@@ -18,6 +18,13 @@ interface RouteProperties {
 
 const WALK_COLOR = '#2f343d';
 const SHAPE_MATCH_DISTANCE_KM = 1.5;
+const MAX_SHAPE_START_CANDIDATES = 12;
+
+interface ShapeMatch {
+  coordinates: [number, number][];
+  totalDistanceKm: number;
+  span: number;
+}
 
 const toFeature = (coords: [number, number][], color: string, walk: boolean): Feature<LineString, RouteProperties> => ({
   type: 'Feature',
@@ -87,6 +94,127 @@ const findNearestShapePointIndex = (
   return { index: bestIndex, distanceKm: bestDistance };
 };
 
+const getShapeStartCandidates = (
+  shapeCoordinates: [number, number][],
+  step: RouteStep | undefined,
+): Array<{ index: number; distanceKm: number }> => {
+  if (!step || typeof step.lng !== 'number' || typeof step.lat !== 'number') {
+    return [];
+  }
+
+  return shapeCoordinates
+    .map(([lng, lat], index) => ({
+      index,
+      distanceKm: getDistance(step.lat!, step.lng!, lat, lng),
+    }))
+    .filter((candidate) => candidate.distanceKm <= SHAPE_MATCH_DISTANCE_KM)
+    .sort((left, right) => {
+      if (left.distanceKm === right.distanceKm) {
+        return left.index - right.index;
+      }
+
+      return left.distanceKm - right.distanceKm;
+    })
+    .slice(0, MAX_SHAPE_START_CANDIDATES);
+};
+
+const matchShapeRun = (
+  shapeCoordinates: [number, number][],
+  runSteps: RouteStep[],
+  maxSpan?: number,
+): ShapeMatch | null => {
+  if (runSteps.length === 0 || shapeCoordinates.length < 2) {
+    return null;
+  }
+
+  const startCandidates = getShapeStartCandidates(shapeCoordinates, runSteps[0]);
+  if (startCandidates.length === 0) {
+    return null;
+  }
+
+  let bestMatch: ShapeMatch | null = null;
+
+  startCandidates.forEach((startCandidate) => {
+    const matches: Array<{ index: number; step: RouteStep; distanceKm: number }> = [];
+    let searchStartIndex = startCandidate.index;
+
+    matches.push({
+      index: startCandidate.index,
+      step: runSteps[0]!,
+      distanceKm: startCandidate.distanceKm,
+    });
+
+    for (let index = 1; index < runSteps.length; index += 1) {
+      const step = runSteps[index];
+      const match = findNearestShapePointIndex(shapeCoordinates, step, searchStartIndex);
+      if (!match || match.distanceKm > SHAPE_MATCH_DISTANCE_KM) {
+        return;
+      }
+
+      matches.push({ index: match.index, step: step!, distanceKm: match.distanceKm });
+      searchStartIndex = match.index;
+    }
+
+    if (matches.length < 2) {
+      return;
+    }
+
+    const span = matches[matches.length - 1]!.index - matches[0]!.index;
+    if (typeof maxSpan === 'number' && span > maxSpan) {
+      return;
+    }
+
+    const anchoredShape: [number, number][] = [];
+    const firstStep = matches[0]!.step;
+    if (typeof firstStep.lng !== 'number' || typeof firstStep.lat !== 'number') {
+      return;
+    }
+
+    appendCoordinate(anchoredShape, [firstStep.lng, firstStep.lat]);
+
+    for (let index = 1; index < matches.length; index += 1) {
+      const previousMatch = matches[index - 1]!;
+      const currentMatch = matches[index]!;
+
+      if (currentMatch.index > previousMatch.index) {
+        shapeCoordinates
+          .slice(previousMatch.index + 1, currentMatch.index)
+          .forEach((shapeCoordinate) => appendCoordinate(anchoredShape, shapeCoordinate));
+      }
+
+      if (typeof currentMatch.step.lng !== 'number' || typeof currentMatch.step.lat !== 'number') {
+        return;
+      }
+
+      appendCoordinate(anchoredShape, [currentMatch.step.lng, currentMatch.step.lat]);
+    }
+
+    if (anchoredShape.length < 2) {
+      return;
+    }
+
+    const totalDistanceKm = matches.reduce((sum, match) => sum + match.distanceKm, 0);
+    const candidateMatch: ShapeMatch = {
+      coordinates: anchoredShape,
+      totalDistanceKm,
+      span,
+    };
+
+    if (
+      !bestMatch ||
+      candidateMatch.totalDistanceKm < bestMatch.totalDistanceKm ||
+      (
+        candidateMatch.totalDistanceKm === bestMatch.totalDistanceKm &&
+        candidateMatch.span < bestMatch.span
+      )
+    ) {
+      bestMatch = candidateMatch;
+    }
+  });
+
+  return bestMatch;
+};
+
 const getAnchoredShapeRunCoordinates = (
   service: BusService | undefined,
   runSteps: RouteStep[],
@@ -96,49 +224,42 @@ const getAnchoredShapeRunCoordinates = (
     return null;
   }
 
-  const matches: Array<{ index: number; step: RouteStep }> = [];
-  let searchStartIndex = 0;
+  const reversedShapeCoordinates = [...shapeCoordinates].reverse();
+  const isCircularService = service.stops[0]?.bus_stop_id === service.stops[service.stops.length - 1]?.bus_stop_id;
+  const variants: Array<{ coordinates: [number, number][]; maxSpan?: number }> = [
+    { coordinates: shapeCoordinates },
+    { coordinates: reversedShapeCoordinates },
+  ];
 
-  for (const step of runSteps) {
-    const match = findNearestShapePointIndex(shapeCoordinates, step, searchStartIndex);
-    if (!match || match.distanceKm > SHAPE_MATCH_DISTANCE_KM) {
-      return null;
+  if (isCircularService) {
+    variants.push({
+      coordinates: shapeCoordinates.concat(shapeCoordinates),
+      maxSpan: shapeCoordinates.length,
+    });
+    variants.push({
+      coordinates: reversedShapeCoordinates.concat(reversedShapeCoordinates),
+      maxSpan: reversedShapeCoordinates.length,
+    });
+  }
+
+  const bestMatch = variants.reduce<ShapeMatch | null>((currentBest, variant) => {
+    const candidate = matchShapeRun(variant.coordinates, runSteps, variant.maxSpan);
+    if (!candidate) {
+      return currentBest;
     }
 
-    matches.push({ index: match.index, step });
-    searchStartIndex = match.index;
-  }
-
-  if (matches.length < 2) {
-    return null;
-  }
-
-  const anchoredShape: [number, number][] = [];
-  const firstStep = matches[0]!.step;
-  if (typeof firstStep.lng !== 'number' || typeof firstStep.lat !== 'number') {
-    return null;
-  }
-
-  appendCoordinate(anchoredShape, [firstStep.lng, firstStep.lat]);
-
-  for (let index = 1; index < matches.length; index += 1) {
-    const previousMatch = matches[index - 1]!;
-    const currentMatch = matches[index]!;
-
-    if (currentMatch.index > previousMatch.index) {
-      shapeCoordinates
-        .slice(previousMatch.index + 1, currentMatch.index)
-        .forEach((shapeCoordinate) => appendCoordinate(anchoredShape, shapeCoordinate));
+    if (
+      !currentBest ||
+      candidate.totalDistanceKm < currentBest.totalDistanceKm ||
+      (candidate.totalDistanceKm === currentBest.totalDistanceKm && candidate.span < currentBest.span)
+    ) {
+      return candidate;
     }
 
-    if (typeof currentMatch.step.lng !== 'number' || typeof currentMatch.step.lat !== 'number') {
-      return null;
-    }
+    return currentBest;
+  }, null);
 
-    appendCoordinate(anchoredShape, [currentMatch.step.lng, currentMatch.step.lat]);
-  }
-
-  return anchoredShape.length >= 2 ? anchoredShape : null;
+  return bestMatch?.coordinates ?? null;
 };
 
 const getServiceRunCoordinates = (
