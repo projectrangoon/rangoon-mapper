@@ -13,15 +13,13 @@ export default function TimelineStep({ kind, title, subtitle, color, stops = [] 
   const [expanded, setExpanded] = useState(true);
   const isBusLeg = kind === 'bus';
   const hasIntermediateStops = isBusLeg && stops.length > 0;
-  const showsExpandedRail = hasIntermediateStops && expanded;
   const stopsId = `${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-stops`;
 
   return (
     <li
-      className={`timeline-step${showsExpandedRail ? ' timeline-step-has-rail' : ''}`}
+      className={`timeline-step${hasIntermediateStops && expanded ? ' timeline-step-has-rail' : ''}`}
       style={{ '--timeline-leg-color': color ?? '#999' } as CSSProperties}
     >
-      {showsExpandedRail && <span className="timeline-marker-connector" aria-hidden="true" />}
       <span className="timeline-marker" style={{ '--timeline-accent': color ?? '#999' } as CSSProperties}>
         <span className="timeline-dot" />
       </span>
@@ -47,7 +45,7 @@ export default function TimelineStep({ kind, title, subtitle, color, stops = [] 
           </div>
         )}
       </div>
-      {showsExpandedRail && (
+      {hasIntermediateStops && expanded && (
         <div
           id={stopsId}
           className="timeline-leg-details"

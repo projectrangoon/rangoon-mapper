@@ -599,19 +599,6 @@ a {
   padding-bottom: 1rem;
 }
 
-.timeline-marker-connector {
-  grid-column: 1;
-  grid-row: 1 / span 2;
-  justify-self: center;
-  align-self: stretch;
-  width: 0.18rem;
-  margin-top: 1rem;
-  margin-bottom: 0.2rem;
-  border-radius: 999px;
-  background: var(--timeline-leg-color);
-  z-index: 0;
-}
-
 .timeline-marker {
   width: 1rem;
   height: 1rem;
@@ -700,15 +687,14 @@ a {
 }
 
 .timeline-leg-line {
-  grid-column: 1;
-  grid-row: 1;
-  justify-self: center;
-  align-self: stretch;
+  position: absolute;
+  left: 0.41rem;
+  top: -3.85rem;
+  bottom: 0.1rem;
   width: 0.18rem;
-  min-height: 100%;
   border-radius: 999px;
   background: var(--timeline-leg-color);
-  opacity: 0;
+  z-index: 0;
 }
 
 .timeline-leg-icon-spacer {
@@ -724,6 +710,8 @@ a {
   padding: 0;
   display: grid;
   gap: 0.38rem;
+  position: relative;
+  z-index: 1;
 }
 
 .timeline-stop-item {
