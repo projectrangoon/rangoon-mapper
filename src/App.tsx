@@ -1,7 +1,8 @@
+import { Effect } from 'effect';
 import { useEffect, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
-import { loadStaticData } from '@/lib/dataLoader';
+import { formatDataLoadError, loadStaticData, type DataLoadError } from '@/lib/dataLoader';
 import AppRouter from '@/router/AppRouter';
 import { useMapStore } from '@/stores/useMapStore';
 
@@ -12,28 +13,30 @@ export default function App() {
 
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
 
-    const run = async () => {
-      try {
-        const data = await loadStaticData();
-        if (!active) {
-          return;
-        }
-
-        loadData(data);
-      } catch (fetchError) {
-        if (!active) {
-          return;
-        }
-
-        setError(fetchError instanceof Error ? fetchError.message : 'Failed to load app data');
-      }
-    };
-
-    void run();
+    void Effect.runPromise(
+      loadStaticData(controller.signal).pipe(
+        Effect.tap((data) =>
+          Effect.sync(() => {
+            if (active) {
+              loadData(data);
+            }
+          }),
+        ),
+        Effect.catchAll((fetchError: DataLoadError) =>
+          Effect.sync(() => {
+            if (active) {
+              setError(formatDataLoadError(fetchError));
+            }
+          }),
+        ),
+      ),
+    );
 
     return () => {
       active = false;
+      controller.abort();
     };
   }, [loadData]);
 

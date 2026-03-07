@@ -1,6 +1,7 @@
+import { Effect } from 'effect';
 import { create } from 'zustand';
 
-import { calculateRoute } from '@/lib/routeCalculator';
+import { calculateRouteEffect } from '@/lib/routeCalculatorEffect';
 import type { AdjacencyList, BusService, BusServicesMap, BusStop, BusStopsMap, RoutePath, UniqueStop } from '@/types';
 
 interface MapStoreState {
@@ -69,18 +70,24 @@ export const useMapStore = create<MapStoreState>((set, get) => ({
     }
     return busStopsMap[stopId] ?? null;
   },
-  calculateCurrentRoute: async () => {
+  calculateCurrentRoute: () => {
     const { graph, busStopsMap, startStop, endStop } = get();
-    if (!graph || !busStopsMap || !startStop || !endStop) {
-      set({ routePath: null });
-      return null;
-    }
+    const program = Effect.gen(function* () {
+      if (!graph || !busStopsMap || !startStop || !endStop) {
+        yield* Effect.sync(() => set({ routePath: null }));
+        return null;
+      }
 
-    set({ isCalculating: true });
+      yield* Effect.sync(() => set({ isCalculating: true }));
 
-    const routePath = calculateRoute(graph, busStopsMap, startStop, endStop);
+      const routePath = yield* calculateRouteEffect(graph, busStopsMap, startStop, endStop);
 
-    set({ routePath, isCalculating: false });
-    return routePath;
+      yield* Effect.sync(() => set({ routePath }));
+      return routePath;
+    }).pipe(
+      Effect.ensuring(Effect.sync(() => set({ isCalculating: false }))),
+    );
+
+    return Effect.runPromise(program);
   },
 }));

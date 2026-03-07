@@ -1,3 +1,5 @@
+import { Data, Effect } from 'effect';
+
 import type { AdjacencyList, BusService, BusServicesMap, BusStop, BusStopsMap, RouteShapePoint, UniqueStop } from '@/types';
 
 interface RawDataPayload {
@@ -16,13 +18,32 @@ export interface LoadedData {
   uniqueStops: UniqueStop[];
 }
 
-const fetchJson = async <T>(url: string): Promise<T> => {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${url} (${response.status})`);
-  }
-  return (await response.json()) as T;
-};
+export class DataLoadError extends Data.TaggedError('DataLoadError')<{
+  url: string;
+  reason: string;
+}> {}
+
+const fetchJson = <T>(url: string, signal?: AbortSignal): Effect.Effect<T, DataLoadError> =>
+  Effect.tryPromise({
+    try: async () => {
+      const response = await fetch(url, { signal });
+      if (!response.ok) {
+        throw new DataLoadError({ url, reason: `Failed to fetch (${response.status})` });
+      }
+
+      return (await response.json()) as T;
+    },
+    catch: (error) => {
+      if (error instanceof DataLoadError) {
+        return error;
+      }
+
+      return new DataLoadError({
+        url,
+        reason: error instanceof Error ? error.message : 'Unknown data load error',
+      });
+    },
+  });
 
 const normalizeStopsMap = (rawStopsMap: Record<string, BusStop>): BusStopsMap => {
   return Object.entries(rawStopsMap).reduce<BusStopsMap>((accumulator, [stopId, stop]) => {
@@ -45,19 +66,22 @@ const normalizeBusServices = (
   }, {});
 };
 
-export const loadStaticData = async (): Promise<LoadedData> => {
-  const [adjancencyList, stopsMap, busServices, uniqueStops, routeShapes] = await Promise.all([
-    fetchJson<RawDataPayload['adjancencyList']>('/data/adjancencyList.json'),
-    fetchJson<RawDataPayload['stopsMap']>('/data/stops_map.json'),
-    fetchJson<RawDataPayload['busServices']>('/data/bus_services.json'),
-    fetchJson<RawDataPayload['uniqueStops']>('/data/unique_stops.json'),
-    fetchJson<RawRouteShapes>('/data/route_shapes.json'),
-  ]);
+export const loadStaticData = (signal?: AbortSignal): Effect.Effect<LoadedData, DataLoadError> =>
+  Effect.gen(function* () {
+    const [adjancencyList, stopsMap, busServices, uniqueStops, routeShapes] = yield* Effect.all([
+      fetchJson<RawDataPayload['adjancencyList']>('/data/adjancencyList.json', signal),
+      fetchJson<RawDataPayload['stopsMap']>('/data/stops_map.json', signal),
+      fetchJson<RawDataPayload['busServices']>('/data/bus_services.json', signal),
+      fetchJson<RawDataPayload['uniqueStops']>('/data/unique_stops.json', signal),
+      fetchJson<RawRouteShapes>('/data/route_shapes.json', signal),
+    ]);
 
-  return {
-    graph: adjancencyList,
-    busStopsMap: normalizeStopsMap(stopsMap),
-    busServices: normalizeBusServices(busServices, routeShapes),
-    uniqueStops,
-  };
-};
+    return {
+      graph: adjancencyList,
+      busStopsMap: normalizeStopsMap(stopsMap),
+      busServices: normalizeBusServices(busServices, routeShapes),
+      uniqueStops,
+    };
+  });
+
+export const formatDataLoadError = (error: DataLoadError): string => `${error.url}: ${error.reason}`;
