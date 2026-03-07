@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import MainPage from '@/pages/MainPage';
@@ -165,6 +166,26 @@ describe('MainPage routing behavior', () => {
       expect(screen.getByDisplayValue('Start Stop')).toBeInTheDocument();
       expect(useMapStore.getState().startStop?.bus_stop_id).toBe(2);
       expect(useMapStore.getState().endStop?.bus_stop_id).toBe(1);
+    });
+  });
+
+  it('clears the selected waypoint when the route field x button is clicked', async () => {
+    const user = userEvent.setup();
+
+    renderWithRoute('/directions/1/2');
+
+    await waitFor(() => {
+      expect(screen.getByDisplayValue('Start Stop')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('End Stop')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Clear From' }));
+
+    await waitFor(() => {
+      expect(useMapStore.getState().startStop).toBeNull();
+      expect(useMapStore.getState().endStop?.bus_stop_id).toBe(2);
+      expect(useMapStore.getState().routePath).toBeNull();
+      expect(screen.getAllByPlaceholderText('Search bus stop')[0]).toHaveValue('');
     });
   });
 });

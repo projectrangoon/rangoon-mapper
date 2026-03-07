@@ -27,6 +27,9 @@ export default function AutoComplete({
 
   useEffect(() => {
     if (!selectedStop) {
+      setQuery('');
+      setOpen(false);
+      setActiveIndex(0);
       return;
     }
 
@@ -80,8 +83,13 @@ export default function AutoComplete({
           <button
             type="button"
             aria-label={`Clear ${label}`}
+            onMouseDown={(event) => {
+              event.preventDefault();
+            }}
             onClick={() => {
               setQuery('');
+              setOpen(false);
+              setActiveIndex(0);
               onSelect(null);
             }}
           >
