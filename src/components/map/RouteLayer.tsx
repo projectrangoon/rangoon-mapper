@@ -1,12 +1,13 @@
 import type { Feature, FeatureCollection, LineString } from 'geojson';
 import { Layer, Source } from 'react-map-gl/maplibre';
 
-import type { BusStop, RoutePath } from '@/types';
+import type { BusService, BusServicesMap, BusStop, RoutePath, RouteStep } from '@/types';
 
 interface RouteLayerProps {
   routePath: RoutePath | null;
   startStop: BusStop | null;
   endStop: BusStop | null;
+  busServices: BusServicesMap;
 }
 
 interface RouteProperties {
@@ -26,30 +27,84 @@ const toFeature = (coords: [number, number][], color: string, walk: boolean): Fe
   },
 });
 
-const buildFeatures = (routePath: RoutePath | null, startStop: BusStop | null, endStop: BusStop | null): FeatureCollection<LineString, RouteProperties> => {
+const getCoordinatesFromSteps = (steps: RouteStep[]): [number, number][] => {
+  return steps.flatMap((step) => {
+    if (typeof step.lng !== 'number' || typeof step.lat !== 'number') {
+      return [];
+    }
+
+    return [[step.lng, step.lat] as [number, number]];
+  });
+};
+
+const getServiceRunCoordinates = (
+  service: BusService | undefined,
+  runSteps: RouteStep[],
+): [number, number][] => {
+  const fallbackCoordinates = getCoordinatesFromSteps(runSteps);
+  const first = runSteps[0];
+  const last = runSteps[runSteps.length - 1];
+  if (!service || !first || !last) {
+    return fallbackCoordinates;
+  }
+
+  const startIndex = service.stops.findIndex((stop) => stop.bus_stop_id === first.bus_stop_id);
+  const endIndex = service.stops.findIndex((stop) => stop.bus_stop_id === last.bus_stop_id);
+  if (startIndex === -1 || endIndex === -1) {
+    return fallbackCoordinates;
+  }
+
+  const lowerIndex = Math.min(startIndex, endIndex);
+  const upperIndex = Math.max(startIndex, endIndex);
+  const slicedStops = service.stops.slice(lowerIndex, upperIndex + 1);
+  const coordinates = slicedStops.map((stop) => [stop.lng, stop.lat] as [number, number]);
+  return startIndex <= endIndex ? coordinates : coordinates.reverse();
+};
+
+export const buildRouteFeatures = (
+  routePath: RoutePath | null,
+  startStop: BusStop | null,
+  endStop: BusStop | null,
+  busServices: BusServicesMap,
+): FeatureCollection<LineString, RouteProperties> => {
   if (!routePath || routePath.path.length === 0) {
     return { type: 'FeatureCollection', features: [] };
   }
 
   const features: Feature<LineString, RouteProperties>[] = [];
+  let runStartIndex = -1;
 
-  for (let index = 0; index < routePath.path.length - 1; index += 1) {
-    const from = routePath.path[index];
-    const to = routePath.path[index + 1];
+  for (let index = 0; index <= routePath.path.length; index += 1) {
+    const step = routePath.path[index];
+    const previous = routePath.path[index - 1];
+    const isBusStep = Boolean(step && step.service_name > 0);
+    const serviceChanged = Boolean(step && previous && step.service_name !== previous.service_name);
 
-    if (!from || !to || typeof from.lng !== 'number' || typeof from.lat !== 'number' || typeof to.lng !== 'number' || typeof to.lat !== 'number') {
+    if (isBusStep && runStartIndex === -1) {
+      runStartIndex = index;
+    }
+
+    const shouldFlushRun = runStartIndex !== -1 && (!isBusStep || serviceChanged || index === routePath.path.length);
+    if (!shouldFlushRun) {
       continue;
     }
 
-    const walk = from.walk === true || to.walk === true || from.service_name === 0 || to.service_name === 0;
-    features.push(toFeature(
-      [
-        [from.lng, from.lat],
-        [to.lng, to.lat],
-      ],
-      walk ? '#f0f0f0' : from.color ?? '#42f5dd',
-      walk,
-    ));
+    const runEndIndex = serviceChanged ? index - 1 : index - 1;
+    const runSteps = routePath.path.slice(runStartIndex, runEndIndex + 1);
+    const serviceName = runSteps[0]?.service_name;
+    const coordinates = getServiceRunCoordinates(busServices[String(serviceName ?? '')], runSteps);
+
+    if (coordinates.length >= 2) {
+      features.push(
+        toFeature(
+          coordinates,
+          runSteps[0]?.color ?? '#42f5dd',
+          false,
+        ),
+      );
+    }
+
+    runStartIndex = isBusStep ? index : -1;
   }
 
   const first = routePath.path[0];
@@ -86,8 +141,8 @@ const buildFeatures = (routePath: RoutePath | null, startStop: BusStop | null, e
   };
 };
 
-export default function RouteLayer({ routePath, startStop, endStop }: RouteLayerProps) {
-  const data = buildFeatures(routePath, startStop, endStop);
+export default function RouteLayer({ routePath, startStop, endStop, busServices }: RouteLayerProps) {
+  const data = buildRouteFeatures(routePath, startStop, endStop, busServices);
 
   if (data.features.length === 0) {
     return null;

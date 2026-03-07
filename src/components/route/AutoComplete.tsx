@@ -6,12 +6,21 @@ import type { BusStop, UniqueStop } from '@/types';
 
 interface AutoCompleteProps {
   label: string;
+  variant: 'start' | 'end';
   stops: UniqueStop[];
   selectedStop: BusStop | null;
+  routePlanned: boolean;
   onSelect: (stop: BusStop | null) => void;
 }
 
-export default function AutoComplete({ label, stops, selectedStop, onSelect }: AutoCompleteProps) {
+export default function AutoComplete({
+  label,
+  variant,
+  stops,
+  selectedStop,
+  routePlanned,
+  onSelect,
+}: AutoCompleteProps) {
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
   const [open, setOpen] = useState(false);
@@ -35,9 +44,14 @@ export default function AutoComplete({ label, stops, selectedStop, onSelect }: A
   };
 
   return (
-    <div className="autocomplete" onFocus={() => setOpen(true)} onBlur={() => setTimeout(() => setOpen(false), 100)}>
+    <div
+      className={`autocomplete autocomplete-${variant} ${routePlanned && selectedStop ? 'autocomplete-planned' : ''}`}
+      onFocus={() => setOpen(true)}
+      onBlur={() => setTimeout(() => setOpen(false), 100)}
+    >
       <label>{label}</label>
       <div className="autocomplete-input-wrap">
+        <span className={`waypoint-marker waypoint-marker-${variant}`} aria-hidden="true" />
         <input
           value={query}
           onChange={(event) => {
@@ -75,6 +89,11 @@ export default function AutoComplete({ label, stops, selectedStop, onSelect }: A
           </button>
         )}
       </div>
+      {routePlanned && selectedStop && (
+        <p className="autocomplete-meta">
+          {selectedStop.road_en} · {selectedStop.township_en}
+        </p>
+      )}
 
       {open && query.trim().length > 0 && (
         <ul className="autocomplete-results">

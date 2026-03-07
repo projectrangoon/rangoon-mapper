@@ -59,11 +59,11 @@ export default function MapView({
       <ScaleControl position="bottom-left" />
       <NavigationControl position="bottom-right" />
 
-      <RouteLayer routePath={routePath} startStop={startStop} endStop={endStop} />
+      <RouteLayer routePath={routePath} startStop={startStop} endStop={endStop} busServices={busServices} />
       <BusLineLayer busServices={busServices} selectedServices={selectedServices} />
 
-      {startStop && <StopMarker lat={startStop.lat} lng={startStop.lng} label={startStop.name_en} color="#6ce8ff" />}
-      {endStop && <StopMarker lat={endStop.lat} lng={endStop.lng} label={endStop.name_en} color="#ffd66c" />}
+      {startStop && <StopMarker lat={startStop.lat} lng={startStop.lng} label={startStop.name_en} color="#6ce8ff" variant="start" />}
+      {endStop && <StopMarker lat={endStop.lat} lng={endStop.lng} label={endStop.name_en} color="#ffd66c" variant="end" />}
     </Map>
   );
 }
