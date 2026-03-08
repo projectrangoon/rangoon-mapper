@@ -44,7 +44,7 @@ Live site: [rangoonmapper.khzaw.dev](https://rangoonmapper.khzaw.dev)
 - Animated bus line rendering with service-specific colors
 - Deep links for routes and bus services
 - English and Burmese locale support
-- Dark-first theme with persistent theme preference
+- Dual theme modes with persistent theme preference
 - Hoverable route stop markers and persistent transfer markers
 - Docker image build and GHCR publishing workflow
 
