@@ -23,4 +23,4 @@ ENV SERVER_PORT=8080 \
     SERVER_LOG_LEVEL=warn \
     SERVER_COMPRESSION=true \
     SERVER_HEALTH=true \
-    SERVER_FALLBACK_PAGE=/index.html
+    SERVER_FALLBACK_PAGE=/public/index.html
