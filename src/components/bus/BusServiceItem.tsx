@@ -2,7 +2,7 @@ import { cva } from 'class-variance-authority';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
 import ServiceStops from '@/components/bus/ServiceStops';
-import { cn } from '@/lib/cn';
+import { MY_FONT, cn } from '@/lib/cn';
 import { normalizeServiceName } from '@/lib/serviceNames';
 import type { AppLocale, BusService } from '@/types';
 
@@ -67,7 +67,7 @@ export default function BusServiceItem({
           <span
             className={cn(
               'min-w-0 flex-1 text-[0.95rem] font-medium leading-[1.35] text-[var(--ink)]',
-              locale === 'my' && 'font-["Noto_Sans_Myanmar","Inter",sans-serif] leading-[1.55]',
+              locale === 'my' && MY_FONT,
             )}
           >
             {normalizeServiceName(service.service_name)}
