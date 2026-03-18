@@ -254,11 +254,10 @@ export default function MainPage() {
     );
 
   const leftPanel = (
-    <AnimatePresence mode="wait">
+    <AnimatePresence initial={false}>
       {panelOpen && (
         <motion.div
           className="panel-stack"
-          key={mode}
           initial={{ x: -16, y: 10, opacity: 0 }}
           animate={{ x: 0, y: 0, opacity: 1 }}
           exit={{ x: -16, y: 10, opacity: 0 }}
