@@ -1,5 +1,6 @@
 import { along, length as turfLength, lineString } from '@turf/turf';
 import type { Feature, LineString } from 'geojson';
+import type { CSSProperties } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { Layer, Marker, Source } from 'react-map-gl/maplibre';
 
@@ -16,6 +17,18 @@ interface ServicePath {
   line: Feature<LineString>;
   distance: number;
 }
+
+const FLOW_LOOP_MS = 12000;
+const FLOW_LOOKAHEAD = 0.01;
+
+const getFlowHeading = (
+  current: [number, number],
+  next: [number, number],
+): number => {
+  const [currentLng, currentLat] = current;
+  const [nextLng, nextLat] = next;
+  return (Math.atan2(nextLat - currentLat, nextLng - currentLng) * 180) / Math.PI;
+};
 
 const buildServicePath = (id: string, busServices: BusServicesMap): ServicePath | null => {
   const service = busServices[id];
@@ -39,15 +52,11 @@ export default function BusLineLayer({ busServices, selectedServices }: BusLineL
 
   useEffect(() => {
     let frame = 0;
+    const startedAt = performance.now();
 
     const tick = () => {
-      setProgress((value) => {
-        const next = value + 0.0016;
-        if (next >= 1) {
-          return 0;
-        }
-        return next;
-      });
+      const elapsed = performance.now() - startedAt;
+      setProgress((elapsed % FLOW_LOOP_MS) / FLOW_LOOP_MS);
       frame = requestAnimationFrame(tick);
     };
 
@@ -69,11 +78,21 @@ export default function BusLineLayer({ busServices, selectedServices }: BusLineL
     <>
       {servicePaths.map((path, index) => {
         const phase = (progress + index * 0.21) % 1;
+        const nextPhase = (phase + FLOW_LOOKAHEAD) % 1;
         const point = along(path.line, path.distance * phase, { units: 'kilometers' });
+        const nextPoint = along(path.line, path.distance * nextPhase, { units: 'kilometers' });
         const [lng, lat] = point.geometry.coordinates;
-        if (typeof lng !== 'number' || typeof lat !== 'number') {
+        const [nextLng, nextLat] = nextPoint.geometry.coordinates;
+        if (
+          typeof lng !== 'number' ||
+          typeof lat !== 'number' ||
+          typeof nextLng !== 'number' ||
+          typeof nextLat !== 'number'
+        ) {
           return null;
         }
+
+        const heading = getFlowHeading([lng, lat], [nextLng, nextLat]);
 
         return (
           <div key={path.id}>
@@ -89,7 +108,17 @@ export default function BusLineLayer({ busServices, selectedServices }: BusLineL
               />
             </Source>
             <Marker longitude={lng} latitude={lat} anchor="center">
-              <div className="bus-point" style={{ backgroundColor: path.color }} />
+              <div
+                className="bus-flow-marker"
+                style={{
+                  '--flow-color': path.color,
+                  '--flow-rotation': `${heading}deg`,
+                } as CSSProperties}
+              >
+                <span className="bus-flow-pulse" />
+                <span className="bus-flow-trail" />
+                <span className="bus-flow-core" />
+              </div>
             </Marker>
           </div>
         );
