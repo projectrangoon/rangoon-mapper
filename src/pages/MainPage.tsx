@@ -281,6 +281,7 @@ export default function MainPage() {
         startStop={mode === 'route' ? startStop : null}
         endStop={mode === 'route' ? endStop : null}
         busServices={busServices ?? {}}
+        focusedServiceId={mode === 'lines' ? expandedService ?? (selectedServices.size === 1 ? Array.from(selectedServices)[0] ?? null : null) : null}
         selectedServices={selectedServices}
         onMove={setViewport}
         onReady={(instance) => {

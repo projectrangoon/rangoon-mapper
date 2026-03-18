@@ -17,6 +17,7 @@ interface MapViewProps {
   startStop: BusStop | null;
   endStop: BusStop | null;
   busServices: BusServicesMap;
+  focusedServiceId: string | null;
   selectedServices: Set<string>;
   onMove: (center: { lat: number; lng: number }, zoom: number) => void;
   onReady: (map: MapRef | null) => void;
@@ -34,6 +35,7 @@ export default function MapView({
   startStop,
   endStop,
   busServices,
+  focusedServiceId,
   selectedServices,
   onMove,
   onReady,
@@ -65,7 +67,12 @@ export default function MapView({
 
       <RouteLayer routePath={routePath} startStop={startStop} endStop={endStop} busServices={busServices} />
       <RouteStopMarkers locale={locale} routePath={routePath} startStop={startStop} endStop={endStop} zoom={zoom} />
-      <BusLineLayer busServices={busServices} selectedServices={selectedServices} />
+      <BusLineLayer
+        locale={locale}
+        busServices={busServices}
+        focusedServiceId={focusedServiceId}
+        selectedServices={selectedServices}
+      />
 
       {startStop && <StopMarker lat={startStop.lat} lng={startStop.lng} label={getLocalizedStopName(startStop, locale)} color="var(--accent)" locale={locale} variant="start" />}
       {endStop && <StopMarker lat={endStop.lat} lng={endStop.lng} label={getLocalizedStopName(endStop, locale)} color="var(--ink)" locale={locale} variant="end" />}

@@ -4,10 +4,14 @@ import type { CSSProperties } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { Layer, Marker, Source } from 'react-map-gl/maplibre';
 
-import type { BusServicesMap } from '@/types';
+import StopMarker from '@/components/map/StopMarker';
+import { getLocalizedStopName } from '@/lib/i18n';
+import type { AppLocale, BusServicesMap } from '@/types';
 
 interface BusLineLayerProps {
+  locale: AppLocale;
   busServices: BusServicesMap;
+  focusedServiceId: string | null;
   selectedServices: Set<string>;
 }
 
@@ -47,7 +51,12 @@ const buildServicePath = (id: string, busServices: BusServicesMap): ServicePath 
   };
 };
 
-export default function BusLineLayer({ busServices, selectedServices }: BusLineLayerProps) {
+export default function BusLineLayer({
+  locale,
+  busServices,
+  focusedServiceId,
+  selectedServices,
+}: BusLineLayerProps) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -69,6 +78,31 @@ export default function BusLineLayer({ busServices, selectedServices }: BusLineL
       .map((serviceId) => buildServicePath(serviceId, busServices))
       .filter((path): path is ServicePath => path !== null);
   }, [selectedServices, busServices]);
+
+  const endpointService = useMemo(() => {
+    const fallbackServiceId = selectedServices.size === 1 ? Array.from(selectedServices)[0] ?? null : null;
+    const activeServiceId =
+      focusedServiceId && selectedServices.has(focusedServiceId)
+        ? focusedServiceId
+        : fallbackServiceId;
+
+    if (!activeServiceId) {
+      return null;
+    }
+
+    const service = busServices[activeServiceId];
+    if (!service || service.stops.length === 0) {
+      return null;
+    }
+
+    const start = service.stops[0];
+    const end = service.stops[service.stops.length - 1];
+    if (!start || !end) {
+      return null;
+    }
+
+    return { start, end };
+  }, [busServices, focusedServiceId, selectedServices]);
 
   if (servicePaths.length === 0) {
     return null;
@@ -123,6 +157,26 @@ export default function BusLineLayer({ busServices, selectedServices }: BusLineL
           </div>
         );
       })}
+      {endpointService && (
+        <>
+          <StopMarker
+            lat={endpointService.start.lat}
+            lng={endpointService.start.lng}
+            label={getLocalizedStopName(endpointService.start, locale)}
+            color="var(--accent)"
+            locale={locale}
+            variant="start"
+          />
+          <StopMarker
+            lat={endpointService.end.lat}
+            lng={endpointService.end.lng}
+            label={getLocalizedStopName(endpointService.end, locale)}
+            color="var(--ink)"
+            locale={locale}
+            variant="end"
+          />
+        </>
+      )}
     </>
   );
 }
