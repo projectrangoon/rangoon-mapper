@@ -257,11 +257,12 @@ export default function MainPage() {
     <AnimatePresence mode="wait">
       {panelOpen && (
         <motion.div
+          className="panel-stack"
           key={mode}
-          initial={{ x: -20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: -20, opacity: 0 }}
-          transition={{ duration: 0.2 }}
+          initial={{ x: -16, y: 10, opacity: 0 }}
+          animate={{ x: 0, y: 0, opacity: 1 }}
+          exit={{ x: -16, y: 10, opacity: 0 }}
+          transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
         >
           <ModeToggle mode={mode} onChange={handleModeChange} />
           {panelBody}
@@ -295,6 +296,7 @@ export default function MainPage() {
     <ControlCluster
       locale={locale}
       theme={theme}
+      panelOpen={panelOpen}
       onToggleLocale={toggleLocale}
       onToggleTheme={toggleTheme}
       onTogglePanel={() => setPanelOpen(!panelOpen)}

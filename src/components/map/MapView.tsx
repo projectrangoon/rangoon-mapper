@@ -67,8 +67,8 @@ export default function MapView({
       <RouteStopMarkers locale={locale} routePath={routePath} startStop={startStop} endStop={endStop} zoom={zoom} />
       <BusLineLayer busServices={busServices} selectedServices={selectedServices} />
 
-      {startStop && <StopMarker lat={startStop.lat} lng={startStop.lng} label={getLocalizedStopName(startStop, locale)} color="#245dff" locale={locale} variant="start" />}
-      {endStop && <StopMarker lat={endStop.lat} lng={endStop.lng} label={getLocalizedStopName(endStop, locale)} color="#161616" locale={locale} variant="end" />}
+      {startStop && <StopMarker lat={startStop.lat} lng={startStop.lng} label={getLocalizedStopName(startStop, locale)} color="var(--accent)" locale={locale} variant="start" />}
+      {endStop && <StopMarker lat={endStop.lat} lng={endStop.lng} label={getLocalizedStopName(endStop, locale)} color="var(--ink)" locale={locale} variant="end" />}
     </Map>
   );
 }

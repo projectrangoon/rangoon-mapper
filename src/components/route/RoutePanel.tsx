@@ -31,6 +31,7 @@ export default function RoutePanel({
 }: RoutePanelProps) {
   const routePlanned = Boolean(routePath && startStop && endStop);
   const destinationLabel = routePlanned && endStop ? getLocalizedStopName(endStop, locale) : t(locale, 'chooseDestination');
+  const showLiveBadge = routePlanned || isCalculating;
 
   return (
     <Panel className="route-panel">
@@ -42,7 +43,7 @@ export default function RoutePanel({
             <p className="panel-caption">{t(locale, 'quickestJourneyCaption')}</p>
           )}
         </div>
-        <div className="route-live-badge">{t(locale, 'live')}</div>
+        {showLiveBadge && <div className="route-live-badge">{t(locale, 'live')}</div>}
       </header>
 
       <div className="route-inputs-header">

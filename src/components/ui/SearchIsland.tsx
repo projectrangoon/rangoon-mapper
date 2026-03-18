@@ -22,7 +22,12 @@ const SearchIsland = forwardRef<HTMLInputElement, SearchIslandProps>(function Se
   const shownResults = useMemo(() => results.slice(0, 8), [results]);
 
   return (
-    <div className="search-island" onFocus={() => setOpen(true)} onBlur={() => setTimeout(() => setOpen(false), 120)}>
+    <div
+      className="search-island"
+      data-open={open && query.trim().length > 0 ? 'true' : 'false'}
+      onFocus={() => setOpen(true)}
+      onBlur={() => setTimeout(() => setOpen(false), 120)}
+    >
       <div className="search-icon-shell">
         <Search size={16} className="search-icon" />
       </div>

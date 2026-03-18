@@ -1,4 +1,4 @@
-import { Crosshair, Maximize2, Star } from 'lucide-react';
+import { Crosshair, Maximize2, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 
 import Compass from '@/components/ui/Compass';
 import Fab from '@/components/ui/Fab';
@@ -9,6 +9,7 @@ import type { AppLocale } from '@/types';
 interface ControlClusterProps {
   locale: AppLocale;
   theme: 'dark' | 'light';
+  panelOpen: boolean;
   onToggleLocale: () => void;
   onToggleTheme: () => void;
   onResetBearing: () => void;
@@ -19,6 +20,7 @@ interface ControlClusterProps {
 export default function ControlCluster({
   locale,
   theme,
+  panelOpen,
   onToggleLocale,
   onToggleTheme,
   onResetBearing,
@@ -28,8 +30,8 @@ export default function ControlCluster({
   return (
     <div className="control-cluster">
       <div className="control-column">
-        <Fab onClick={onTogglePanel} aria-label="Toggle Panel">
-          <Star size={18} />
+        <Fab onClick={onTogglePanel} aria-label={panelOpen ? 'Hide Panel' : 'Show Panel'} active={panelOpen}>
+          {panelOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
         </Fab>
         <Fab onClick={onResetView} aria-label="Reset View">
           <Maximize2 size={18} />

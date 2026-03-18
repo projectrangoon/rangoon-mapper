@@ -1,4 +1,3 @@
-import { cva } from 'class-variance-authority';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
 import ServiceStops from '@/components/bus/ServiceStops';
@@ -16,18 +15,6 @@ interface BusServiceItemProps {
   onExpand: () => void;
 }
 
-const serviceExpandVariants = cva(
-  'flex w-full items-center justify-between gap-3 rounded-2xl px-3 py-3 text-left transition-colors',
-  {
-    variants: {
-      expanded: {
-        true: 'bg-[color:color-mix(in_srgb,var(--ink)_5%,transparent)]',
-        false: 'hover:bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)]',
-      },
-    },
-  },
-);
-
 export default function BusServiceItem({
   locale,
   serviceId,
@@ -38,35 +25,36 @@ export default function BusServiceItem({
   onExpand,
 }: BusServiceItemProps) {
   return (
-    <li className="relative py-1 first:pt-0 before:absolute before:left-0 before:right-0 before:top-0 before:h-px before:bg-[color:color-mix(in_srgb,var(--ink)_9%,transparent)] first:before:hidden">
-      <div className="grid grid-cols-[auto_auto_1fr] items-center gap-2">
+    <li className={cn('service-item', checked && 'service-item-checked', expanded && 'service-item-expanded')}>
+      <div className="service-item-row">
         <button
           type="button"
-          className="border-0 bg-transparent p-0 text-inherit"
+          className="service-select"
           onClick={onToggle}
+          aria-pressed={checked}
           aria-label={`Toggle ${serviceId}`}
         >
           <span
-            className="inline-block h-[0.9rem] w-[0.9rem] rounded-full border-2"
+            className="service-select-dot"
             style={{ borderColor: service.color, backgroundColor: checked ? service.color : 'transparent' }}
           />
+          <span
+            className="service-id-chip"
+            style={{ backgroundColor: service.color }}
+          >
+            {serviceId}
+          </span>
         </button>
-
-        <span
-          className="min-w-[2.5rem] rounded-full px-3 py-2 text-center font-['Space_Mono',monospace] text-[1.5rem] leading-none font-bold text-white"
-          style={{ backgroundColor: service.color }}
-        >
-          {serviceId}
-        </span>
 
         <button
           type="button"
-          className={serviceExpandVariants({ expanded })}
+          className="service-expand"
           onClick={onExpand}
+          aria-expanded={expanded}
         >
           <span
             className={cn(
-              'min-w-0 flex-1 text-[0.95rem] font-medium leading-[1.35] text-[var(--ink)]',
+              'service-name',
               locale === 'my' && MY_FONT,
             )}
           >
