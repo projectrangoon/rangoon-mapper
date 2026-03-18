@@ -1252,17 +1252,121 @@ html[data-locale='my'] .timeline-stop-item {
   line-height: 1.55;
 }
 
+html[data-locale='my'] .mode-toggle button {
+  line-height: 1.35;
+}
+
+html[data-locale='my'] .route-panel-header {
+  align-items: flex-start;
+  margin-bottom: 1.2rem;
+}
+
+html[data-locale='my'] .route-panel-header h2 {
+  line-height: 1.2;
+  letter-spacing: 0;
+  max-width: 9ch;
+}
+
+html[data-locale='my'] .panel-caption,
+html[data-locale='my'] .timeline-empty {
+  line-height: 1.65;
+}
+
+html[data-locale='my'] .route-inputs {
+  gap: 0.92rem;
+}
+
+html[data-locale='my'] .route-inputs-header {
+  margin-bottom: 0.42rem;
+}
+
+html[data-locale='my'] .autocomplete label {
+  margin-bottom: 0.48rem;
+  line-height: 1.45;
+}
+
+html[data-locale='my'] .autocomplete-input-wrap {
+  min-height: 3.7rem;
+  padding-left: 0.9rem;
+  padding-right: 0.3rem;
+}
+
+html[data-locale='my'] .autocomplete-input-wrap input {
+  padding-top: 0.96rem;
+  padding-bottom: 0.96rem;
+  line-height: 1.45;
+}
+
+html[data-locale='my'] .autocomplete-input-wrap button {
+  margin-right: 0.12rem;
+}
+
+html[data-locale='my'] .autocomplete-meta {
+  margin-top: 0.42rem;
+  margin-left: 1.72rem;
+  line-height: 1.6;
+}
+
+html[data-locale='my'] .metrics-grid h4 {
+  line-height: 1.35;
+}
+
+html[data-locale='my'] .metrics-grid p {
+  margin-top: 0.48rem;
+  line-height: 1.2;
+}
+
+html[data-locale='my'] .metric-card {
+  padding-top: 0.88rem;
+  padding-bottom: 0.88rem;
+}
+
+html[data-locale='my'] .timeline-header {
+  margin-top: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+html[data-locale='my'] .timeline-step {
+  align-items: start;
+  padding-bottom: 1.25rem;
+}
+
+html[data-locale='my'] .timeline-step .content {
+  padding-top: 0.1rem;
+}
+
+html[data-locale='my'] .timeline-step strong {
+  line-height: 1.38;
+}
+
 html[data-locale='my'] .search-island input {
   font-size: 0.97rem;
 }
 
 html[data-locale='my'] .timeline-leg-toggle {
   font-size: 0.78rem;
+  line-height: 1.4;
 }
 
 html[data-locale='my'] .timeline-step small,
 html[data-locale='my'] .autocomplete-meta {
   font-size: 0.78rem;
+}
+
+html[data-locale='my'] .timeline-leg-shell {
+  margin-top: 0.72rem;
+}
+
+html[data-locale='my'] .timeline-stop-list {
+  gap: 0.58rem;
+}
+
+html[data-locale='my'] .timeline-stop-item {
+  align-items: start;
+}
+
+html[data-locale='my'] .timeline-stop-item span:last-child {
+  padding-top: 0.04rem;
 }
 
 @media (max-width: 768px) {
@@ -1351,5 +1455,20 @@ html[data-locale='my'] .autocomplete-meta {
   .route-waypoint-swap-inline {
     width: 2.1rem;
     height: 2.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  html[data-locale='my'] .route-panel-header h2 {
+    max-width: none;
+    font-size: 1.6rem;
+  }
+
+  html[data-locale='my'] .panel-caption {
+    max-width: 20rem;
+  }
+
+  html[data-locale='my'] .metric-card {
+    padding-inline: 0.82rem;
   }
 }
